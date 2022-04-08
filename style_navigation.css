@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+hr {
+    border: 2px solid white;
+  }
+
+
+.span  {
+    border: 2px solid black;
+    height: 62px;
+    width: 64px;
+    border-radius: 50%;
+    font-family: "times";
+    cursor: pointer;
+    margin: 10px;
+    float: right;
+    position: absolute;
+    right: 20px;
+    background-image: url("navigation_button.png");
+    transform:rotate(90deg);
+    transition: 1.2s;
+   }
+   
+.navbar_icon{
+    height: 100px;
+    text-align: center;
+}
+
+.navbar_text{
+
+    text-align: left;
+}
+
+.sidenav {
+  height: 625px;
+  width: 0;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: gray;
+  overflow-x: hidden;
+  transition: 1s;
+  padding-top: 0px;
+} 
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: black;
+  display: block;
+}
+
