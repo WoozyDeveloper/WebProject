@@ -99,7 +99,6 @@ body
     display: flex;
     flex-direction: row;
     border:none;
-    margin-left: 20%;
 }
 
 .icon
@@ -173,6 +172,21 @@ body
 h2 span
 {
     font-size: 0.8rem;
+}
+
+h1
+{
+    font-size: 1.5vw;
+}
+
+h2
+{
+    font-size: 1.5vw;
+}
+
+h3
+{
+    font-size: 1.5vw;
 }
 
 
