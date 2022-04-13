@@ -76,42 +76,42 @@ body
 {   display: flex;
     padding: 0.05vw;
     border: 0.05vw solid;
+    height: 50%;
     width: 100%;
-    
-    flex-direction: column;
-    align-items:flex-start;
-    justify-content: space-evenly;
+    justify-content: center
 }
 
 .mainBox .secondBox .boxes-wrapper div .settingsBox
 {
     padding: 0.05vw;
     border: 0.05vw solid;
-    width: 20vw;
+    width: 100%;
     height: 13vw;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
 }
 
 .mainBox .secondBox .boxes-wrapper div .settingsBox div
 {
-    padding: 0.05vw;
-    border: 0.05vw solid;
-    width: max-content;
-    height: 5vh;
+    margin-right: 20px;
+    border: 0.5vw solid;
+    width: 95%;
+    height: auto;
     justify-content: center;
 }
 
 .mainBox .secondBox .boxes-wrapper div .settingsBox a
 {
+    font-size: SMALL;
+    text-align: center;
     text-decoration: none;
 }
 
 .mainBox .secondBox .boxes-wrapper div  .titleBox .contentBox div
 {
     color: red;
-    width: 80%;
+    width: 20px
 }
 
 .icon
@@ -196,5 +196,15 @@ h2 span
 @media (max-width: 1207px){
     .mainBox .secondBox .boxes-wrapper{
         display: block;
+    }
+    .mainBox .secondBox .boxes-wrapper div .settingsBox
+    {
+        padding: 0.05vw;
+        border: 0.05vw solid;
+        width: 100%;
+        height: 13vw;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
     }
 }
