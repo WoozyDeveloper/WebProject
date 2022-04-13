@@ -7,10 +7,18 @@ body
     background-attachment: fixed;
 }
 
-#closeButton{
+.close-button > img{
     cursor: pointer;
+    width: 10%;
+    
 }
 
+.close-button{
+    padding-top: 10px;
+    padding-right:10px;
+    display: flex;
+    justify-content: flex-end;
+}
 
 .mainBox
 {

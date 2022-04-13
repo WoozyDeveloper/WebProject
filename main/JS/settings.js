@@ -1,5 +1,5 @@
 var modalWindow;
-        var closeButton = document.getElementById("closeButton");
+        var closeButton = document.getElementsByClassName("close-button");
         var settingsButtons = document.getElementsByClassName("settingsButton");
         var clickedOnButton = 0;
 
