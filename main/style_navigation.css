@@ -25,11 +25,11 @@ hr {
     right: 20px;
     background-image: url("Assets/navigation_button.png");
     transform:rotate(90deg);
-    transition: 1.2s;
+    transition: 1s;
    }
    
 .navbar_icon{
-    height: 100px;
+    height: 50px;
     text-align: center;
 }
 
@@ -39,7 +39,8 @@ hr {
 }
 
 .sidenav {
-  height: 625px;
+  text-align: center;
+  height: 430px;
   width: 0;
   position: fixed;
   top: 0;
@@ -51,7 +52,7 @@ hr {
 } 
 
 .sidenav a {
-  padding: 8px 8px 8px 32px;
+  text-align: center;
   text-decoration: none;
   font-size: 25px;
   color: black;
