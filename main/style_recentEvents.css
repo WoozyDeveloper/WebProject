@@ -7,6 +7,11 @@ body
     background-attachment: fixed;
 }
 
+#closeButton{
+    cursor: pointer;
+}
+
+
 .mainBox
 {
     display: flex;
