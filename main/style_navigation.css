@@ -8,8 +8,7 @@
 
 hr {
     border: 2px solid white;
-  }
-
+}
 
 .span  {
     border: 2px solid black;
@@ -26,7 +25,7 @@ hr {
     background-image: url("Assets/navigation_button.png");
     transform:rotate(90deg);
     transition: 1s;
-   }
+}
    
 .navbar_icon{
     height: 50px;
@@ -34,13 +33,11 @@ hr {
 }
 
 .navbar_text{
-
     text-align: left;
 }
 
 .sidenav {
-  text-align: center;
-  height: 430px;
+  height: 400px;
   width: 0;
   position: fixed;
   top: 0;
