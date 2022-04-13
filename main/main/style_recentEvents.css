@@ -1,0 +1,193 @@
+body
+{
+    background-image: url('Assets/background-upscaled.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.close-button > img{
+    cursor: pointer;
+    width: 10%;
+    
+}
+
+.close-button{
+    padding-top: 10px;
+    padding-right:10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.mainBox
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    column-gap: 8vw;
+    flex-wrap: wrap;
+}
+
+
+.mainBox div {
+    width: 25vw;
+    height: 20vw;
+    border: 0.05vw solid;
+    border-radius: 0.8vw;
+    border-width: 0.2vw;
+    border-color: black;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    flex-direction: column;
+    row-gap: 0.5vh;
+  }
+
+.mainBox div .titleBox
+{
+    width: 20vw;
+    height: 8vh;
+    border: 0.05vw solid;
+    flex-direction: row;
+    margin-top: 3%;
+    justify-content: center;
+}
+
+.mainBox div .contentBox
+{
+    padding: 0.05vw;
+    border: 0.05vw solid;
+    width: 20vw;
+    height: 13vw;
+    flex-direction: column;
+    align-items:flex-start;
+    justify-content: space-evenly;
+}
+
+.mainBox div .settingsBox
+{
+    padding: 0.05vw;
+    border: 0.05vw solid;
+    width: 20vw;
+    height: 13vw;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.mainBox div .settingsBox div
+{
+    padding: 0.05vw;
+    border: 0.05vw solid;
+    width: max-content;
+    height: 5vh;
+    justify-content: center;
+}
+
+.mainBox div .settingsBox a
+{
+    text-decoration: none;
+}
+
+.mainBox div .contentBox div
+{
+    width: max-content;
+    height: max-content;
+    display: flex;
+    flex-direction: row;
+    border:none;
+}
+
+.icon
+{
+    width: 4vw;
+    height: 7vh;
+}
+
+.mainBox .searchBar
+{
+    margin-top: -20%;
+    border: none;
+    background-color: transparent;
+    width:20vw;
+    height: 5vh;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.searchBar .searchField
+{
+    width:15vw;
+    height: 3vh;
+    border-radius: 0.3vw;
+}
+
+.searchBar img
+{
+    width:4vh;
+    height: 4vh;
+    margin-right: 0.1vw;
+}
+
+
+.settingsBackground
+{
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    display: none;
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.settingsContent
+{
+    border: 1px solid;
+    border-radius: 1vw;
+    border-color: red;
+    background-color: white;
+    width: 33.33vw;
+    height: 75vh;
+    top: 10vh;
+    left: 33.33vw;
+    position: absolute;
+    text-align: left;
+}
+
+.settingsContent h1
+{
+    text-align: right;
+}
+
+.settingsContent h3
+{
+    text-align: center;
+}
+
+h2 span
+{
+    font-size: 0.8rem;
+}
+
+h1
+{
+    font-size: 1.5vw;
+}
+
+h2
+{
+    font-size: 1.5vw;
+}
+
+h3
+{
+    font-size: 1.5vw;
+}
+
+
+

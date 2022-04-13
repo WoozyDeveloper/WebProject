@@ -1,0 +1,146 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CoSe</title>
+    <link rel="stylesheet" href="style_navigation.css">
+    <link rel="stylesheet" href="style_recentEvents.css">
+</head>
+
+<body>
+
+    <div class="mainBox">
+        <div>
+            <div class="titleBox">
+                <img src="Assets/socialMediaIcon.png" alt="Social media" class="icon">
+                <h1>Social media updates</h1>
+            </div>
+            <div class="contentBox">
+                <div>
+                    <a href="https://twitter.com/USGS">
+                        <img src="Assets/USGSIcon.png" alt="USGS" class="icon">
+                    </a>
+                    <h1>USGS</h1>
+                </div>
+                <div>
+                    <a href="https://twitter.com/envagency">
+                        <img src="Assets/environmentAgencyIcon.png" alt="Environment Agency" class="icon">
+                    </a>
+                    <h1>Environment Agency</h1>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="titleBox">
+                <img src="Assets/newsIcon.png" alt="News" class="icon">
+                <h1>Latest news</h1>
+            </div>
+            <div class="contentBox"></div>
+        </div>
+        <div>
+            <div class="titleBox">
+                <img src="Assets/settingsIcon.png" alt="Settings" class="icon">
+                <h1>Settings</h1>
+            </div>
+            <div class="settingsBox">
+                <a href="#" class="settingsButton">
+                    <div>
+                        <h1>Location</h1>
+                    </div>
+                </a>
+                <a href="#" class="settingsButton">
+                    <div>
+                        <h1>Time line</h1>
+                    </div>
+                </a>
+                <a href="#" class="settingsButton">
+                    <div>
+                        <h1>Advanced</h1>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="searchBar">
+            <img src="Assets/searchIcon.png" alt="Settings" class="icon">
+            <input type="text" placeholder="Search.." class="searchField">
+        </div>
+    </div>
+
+    <div class="settingsBackground" id="modalWindowLocation">
+        <div class="settingsContent" id="settingsContent">
+            <div class="close-button">
+                <img src="Assets/closeIcon.png" alt="close button">
+            </div>
+            <h3>Location settings</h3>
+            <h2>Settings: <span>lorem ipsum</span></h2>
+            <h2>Settings: <span>lorem ipsum</span></h2>
+            <h2>Settings: <span>lorem ipsum</span></h2>
+            <h2>Settings: <span>lorem ipsum</span></h2>
+            <h2>Settings: <span>lorem ipsum</span></h2>
+        </div>
+    </div>
+
+    <div class="settingsBackground" id="modalWindowTimeLine">
+        <div class="settingsContent" id="settingsContent">
+            <div class="close-button">
+                <img src="Assets/closeIcon.png" alt="close button">
+            </div>
+            <h3>Time line settings</h3>
+            <h2>Settings: <span>lorem ipsum</span></h2>
+            <h2>Settings: <span>lorem ipsum</span></h2>
+            <h2>Settings: <span>lorem ipsum</span></h2>
+            <h2>Settings: <span>lorem ipsum</span></h2>
+            <h2>Settings: <span>lorem ipsum</span></h2>
+        </div>
+    </div>
+
+    <div class="settingsBackground" id="modalWindowAdvanced">
+        <div class="settingsContent" id="settingsContent">
+            <div class="close-button">
+                <img src="Assets/closeIcon.png" alt="close button">
+            </div>
+            <h3>Advanced</h3>
+            <h2>Settings: <span>lorem ipsum</span></h2>
+            <h2>Settings: <span>lorem ipsum</span></h2>
+            <h2>Settings: <span>lorem ipsum</span></h2>
+            <h2>Settings: <span>lorem ipsum</span></h2>
+            <h2>Settings: <span>lorem ipsum</span></h2>
+        </div>
+    </div>
+
+    <div id="mySidenav" class="sidenav">
+        <hr>
+        <a href="" onClick="menu_click()">
+            <p class="navbar_text">Home</p>
+            <img alt="home icon" src="Assets/home_icon.png" class="navbar_icon">
+        </a>
+        <hr>
+        <a href="RecentEvents.html" onClick="menu_click()">
+            <p class="navbar_text">Recent events</p>
+            <img alt="latest news" src="Assets/latest_news.png" class="navbar_icon">
+        </a>
+        <hr>
+        <a href="" onClick="menu_click()">
+            <p class="navbar_text">My zone</p>
+            <img alt="my location" src="Assets/my_location.png" class="navbar_icon">
+        </a>
+        <hr>
+        <a href="" onClick="menu_click()">
+            <p class="navbar_text">Contact</p>
+            <img alt="contact" src="Assets/contact.png" class="navbar_icon">
+        </a>
+        <hr>
+    </div>
+
+    <span class="span" id="nav_button" onClick="move()"></span>
+
+    <script src="JS/settings.js"></script>
+    <script src="JS/animatie_buton.js"></script>
+
+</body>
+
+</html>
