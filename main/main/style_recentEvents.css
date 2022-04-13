@@ -7,6 +7,11 @@ body
     background-attachment: fixed;
 }
 
+.titleBox > h1{
+    color: black;
+    font-size: 2rem;
+}
+
 .secondBox
 {
     display: flex;
@@ -38,11 +43,11 @@ body
     flex-wrap: wrap;
 }
 
-.mainBox .boxes-wrapper{
+.mainBox .secondBox .boxes-wrapper{
     display: flex;
 }
 
-.mainBox .boxes-wrapper div {
+.mainBox .secondBox .boxes-wrapper div {
     display: flex;
     text-align: center;
     align-items: center;
@@ -57,9 +62,9 @@ body
     row-gap: 0.5vh;
 }
 
-.mainBox .boxes-wrapper div .titleBox
+.mainBox .secondBox .boxes-wrapper div .titleBox
 {
-    width: 20vw;
+    width: 80%;
     height: 8vh;
     border: 0.05vw solid;
     flex-direction: row;
@@ -67,18 +72,18 @@ body
     justify-content: center;
 }
 
-.mainBox .boxes-wrapper div .contentBox
-{
+.mainBox .secondBox .boxes-wrapper div .contentBox
+{   display: flex;
     padding: 0.05vw;
     border: 0.05vw solid;
-    width: 20vw;
-    height: 13vw;
+    width: 100%;
+    
     flex-direction: column;
     align-items:flex-start;
     justify-content: space-evenly;
 }
 
-.mainBox .boxes-wrapper div .settingsBox
+.mainBox .secondBox .boxes-wrapper div .settingsBox
 {
     padding: 0.05vw;
     border: 0.05vw solid;
@@ -89,7 +94,7 @@ body
     justify-content: space-evenly;
 }
 
-.mainBox .boxes-wrapper div .settingsBox div
+.mainBox .secondBox .boxes-wrapper div .settingsBox div
 {
     padding: 0.05vw;
     border: 0.05vw solid;
@@ -98,18 +103,15 @@ body
     justify-content: center;
 }
 
-.mainBox .boxes-wrapper div .settingsBox a
+.mainBox .secondBox .boxes-wrapper div .settingsBox a
 {
     text-decoration: none;
 }
 
-.mainBox div .contentBox div
+.mainBox .secondBox .boxes-wrapper div  .titleBox .contentBox div
 {
-    width: max-content;
-    height: max-content;
-    display: flex;
-    flex-direction: row;
-    border:none;
+    color: red;
+    width: 80%;
 }
 
 .icon
@@ -192,7 +194,7 @@ h2 span
 }
 
 @media (max-width: 1207px){
-    .mainBox .boxes-wrapper{
+    .mainBox .secondBox .boxes-wrapper{
         display: block;
     }
 }
