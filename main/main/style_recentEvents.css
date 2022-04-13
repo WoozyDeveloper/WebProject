@@ -7,6 +7,14 @@ body
     background-attachment: fixed;
 }
 
+.secondBox
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+}
+
 .close-button > img{
     cursor: pointer;
     width: 10%;
@@ -30,23 +38,26 @@ body
     flex-wrap: wrap;
 }
 
+.mainBox .boxes-wrapper{
+    display: flex;
+}
 
-.mainBox div {
-    width: 25vw;
-    height: 20vw;
+.mainBox .boxes-wrapper div {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    flex-direction: column;
+    width: 400px;
+    height: auto;
     border: 0.05vw solid;
     border-radius: 0.8vw;
     border-width: 0.2vw;
     border-color: black;
-    text-align: center;
-    display: flex;
-    align-items: center;
     background-color: white;
-    flex-direction: column;
     row-gap: 0.5vh;
-  }
+}
 
-.mainBox div .titleBox
+.mainBox .boxes-wrapper div .titleBox
 {
     width: 20vw;
     height: 8vh;
@@ -56,7 +67,7 @@ body
     justify-content: center;
 }
 
-.mainBox div .contentBox
+.mainBox .boxes-wrapper div .contentBox
 {
     padding: 0.05vw;
     border: 0.05vw solid;
@@ -67,18 +78,18 @@ body
     justify-content: space-evenly;
 }
 
-.mainBox div .settingsBox
+.mainBox .boxes-wrapper div .settingsBox
 {
     padding: 0.05vw;
     border: 0.05vw solid;
     width: 20vw;
     height: 13vw;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
 }
 
-.mainBox div .settingsBox div
+.mainBox .boxes-wrapper div .settingsBox div
 {
     padding: 0.05vw;
     border: 0.05vw solid;
@@ -87,7 +98,7 @@ body
     justify-content: center;
 }
 
-.mainBox div .settingsBox a
+.mainBox .boxes-wrapper div .settingsBox a
 {
     text-decoration: none;
 }
@@ -103,18 +114,25 @@ body
 
 .icon
 {
-    width: 4vw;
-    height: 7vh;
+    width: 5vw;
+    height: auto;
+}
+
+.boxes-wrapper
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .mainBox .searchBar
 {
-    margin-top: -20%;
+    display: flex;
+    margin-bottom: 50px;
     border: none;
     background-color: transparent;
-    width:20vw;
+    width: 20vw;
     height: 5vh;
-    flex-direction: row;
     align-items: center;
     justify-content: center;
 }
@@ -149,7 +167,6 @@ body
 {
     border: 1px solid;
     border-radius: 1vw;
-    border-color: red;
     background-color: white;
     width: 33.33vw;
     height: 75vh;
@@ -174,20 +191,8 @@ h2 span
     font-size: 0.8rem;
 }
 
-h1
-{
-    font-size: 1.5vw;
+@media (max-width: 1207px){
+    .mainBox .boxes-wrapper{
+        display: block;
+    }
 }
-
-h2
-{
-    font-size: 1.5vw;
-}
-
-h3
-{
-    font-size: 1.5vw;
-}
-
-
-
