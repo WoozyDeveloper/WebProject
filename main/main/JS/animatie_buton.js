@@ -7,8 +7,8 @@ var initial_width = navButton.style.width;
 function move() { movement==false?rightMove():leftMove(); movement=!movement;}
 
 document.addEventListener('mousemove', (event) => {
-	console.log(`Mouse X: ${event.clientX}, Mouse Y: ${event.clientY}`);
-  if(event.clientX < screen.width - 160)
+	console.log(window.innerWidth);
+  if(event.clientX < window.innerWidth  - 160)
   {
     leftMove();
   }
