@@ -1,20 +1,14 @@
-<!DOCTYPE html>
-<html>
+<html lang="en" >
 <head>
-	<title>Formular Web</title>
-	<link href="style.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="./style_login.css">
 </head>
-<body>
-
-<form action="login-controller.php" method="post" class="form">
-   <p><label for="username">Username:</label>
-   		<input type="text" name="username" id="username" size="20"
-   		placeholder="Username" required /></p>
-   <p><label for="password">Password:</label>
-      	<input type="password" name="password" id="password" size="20"
-   	    placeholder="Password" /></p>
-   <p><input type="submit" value="Trimite"
-        title="Login"/></p>
-</form>
-</body>
+  <body>
+    <form>
+      <input type="text" placeholder="Username" required/>
+      <input type="password" placeholder="Password" required/>
+      <button>LOGIN</button>
+    </form>
+  </body>
 </html>
