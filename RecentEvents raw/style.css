@@ -15,6 +15,7 @@ body
     height: 100vh;
     column-gap: 8vw;
     flex-wrap: wrap;
+    border: 5px solid red;
 }
 
 
@@ -91,8 +92,8 @@ body
 
 .icon
 {
-    width: 4vw;
-    height: 7vh;
+    width: 5vw;
+    height: auto;
 }
 
 .mainBox .searchBar
@@ -164,3 +165,59 @@ h2 span
 
 
 
+@media (max-width: 1207px){
+    .mainBox{
+        flex-direction: column;
+        width: 100vw;
+        height: 95vh;
+        border: 5px solid red;
+    }
+
+    .mainBox div
+    {
+        
+        width: 50%;
+        height: 30%;
+    }
+
+    h1
+    {
+        font-size: 0.7rem;
+    }
+
+    .mainBox div .settingsBox 
+    {
+        width: 80%;
+        flex-direction: row;
+        margin-bottom: 5%;
+    }
+
+    .mainBox div .contentBox 
+    {
+        width: 80%;
+        height: 50%;
+    }
+
+    .mainBox div .titleBox
+    {
+        width: 80%;
+    }
+
+    .mainBox div .contentBox div 
+    {
+        width: max-content;
+        border: 1px solid red;
+    }
+
+    .mainBox div .contentBox .icon
+    {
+        width: 3vh;
+        height: auto;
+    }
+
+    .mainBox .searchBar
+    {
+        margin-top: 0;
+    }
+
+}
