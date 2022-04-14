@@ -8,15 +8,17 @@ function rightMove() {
   for(var i=90;i>=0;i--)
   {
       o.style.transform = "rotate(" + i + "deg)";
+      o.style.width = i;
   }
   openNav();
 }
 
 function leftMove() {
   o.style.right = 20+"px";
-  for(var i=1;i<=90;i++)
+  for(var i=0;i<=90;i++)
   {
       o.style.transform = "rotate(" + i + "deg)";
+      o.style.width = i;
   }
   closeNav();
 }

@@ -1,13 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
 *{
-    padding: 0;
     margin: 0;
     box-sizing: border-box;
 }
 
 hr {
-    border: 2px solid white;
+    border-radius: 15%;
+    padding-bottom:50px;
+    background-color:rgba(255, 255, 255, 0.359);
 }
 
 .span  {
@@ -28,27 +29,28 @@ hr {
 }
    
 .navbar_icon{
-    height: 50px;
+    margin-top: 20%;
+    height: 30%;
     text-align: center;
 }
 
 .navbar_text{
-    text-align: left;
+    text-align: center;
 }
 
 .sidenav {
-  height: 400px;
-  width: 0;
-  position: fixed;
-  top: 0;
-  right: 0;
-  background-color: gray;
-  overflow-x: hidden;
-  transition: 0.5s;
-  padding-top: 0px;
+    height: 100%;
+    width: 0;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: rgba(192, 190, 190, 0.339);
+    transition: 0.5s;
+    padding-top: 0px;
 } 
 
 .sidenav a {
+    height: 14%;
     position:relative;
     text-align: center;
     text-decoration: none;
@@ -57,3 +59,37 @@ hr {
     display: block;
 }
 
+
+@media (max-width: 1207px){
+    .sidenav {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        top: 0;
+        right: 0;
+        background-color: rgb(192, 190, 190);
+        transition: 0.5s;
+        padding-top: 0px;
+    }
+
+    .sidenav a {
+        height: 10%;
+        position:relative;
+        text-align: center;
+        text-decoration: none;
+        font-size: 25px;
+        color: black;
+        display: block;
+    }
+
+    .navbar_icon{
+        margin-top: 8%;
+        height: 50%;
+        text-align: center;
+    }
+
+    .navbar_text{
+        text-align: center;
+        font-size: small;
+    }
+}
