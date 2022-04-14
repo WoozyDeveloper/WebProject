@@ -1,25 +1,42 @@
-var o = document.getElementById("nav_button");
-var movement = false;
+var navButton = document.getElementById("nav_button");
 
+//var arrowButton = document.getElementById("arrowNav");
+
+var movement = false;
+var initial_width = navButton.style.width;
 function move() { movement==false?rightMove():leftMove(); movement=!movement;}
 
-function rightMove() {
-  o.style.right = 150 + 'px';
-  for(var i=90;i>=0;i--)
+document.addEventListener('mousemove', (event) => {
+	console.log(`Mouse X: ${event.clientX}, Mouse Y: ${event.clientY}`);
+  if(event.clientX < screen.width - 160)
   {
-      o.style.transform = "rotate(" + i + "deg)";
-      o.style.width = i;
+    leftMove();
   }
+});
+
+function rightMove() {
+  navButton.style.right = 150 + 'px';
+  //arrowButton.style.right = navButton.style.right;
+  for(var i=180;i>=0;i--)
+  {
+    navButton.style.transform = "rotate(" + i + "deg)";
+  }
+  navButton.style.width = 0;
+  navButton.style.height = 0;
   openNav();
 }
 
 function leftMove() {
-  o.style.right = 20+"px";
+  navButton.style.right = 20+"px";
+  //arrowButton.style.right = navButton.style.right;
   for(var i=0;i<=90;i++)
   {
-      o.style.transform = "rotate(" + i + "deg)";
-      o.style.width = i;
+    navButton.style.transform = "rotate(" + i + "deg)";
   }
+ 
+
+  navButton.style.width = initial_width;
+  navButton.style.height = initial_width;
   closeNav();
 }
 
