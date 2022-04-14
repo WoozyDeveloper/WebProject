@@ -45,6 +45,7 @@ body
 
 .mainBox .secondBox .boxes-wrapper{
     display: flex;
+    column-gap: 3vw;
 }
 
 .mainBox .secondBox .boxes-wrapper .unique-box{
@@ -66,7 +67,7 @@ body
     row-gap: 0.5vh;
 }
 
-.mainBox .secondBox .boxes-wrapper div .titleBox
+.mainBox .secondBox .boxes-wrapper .unique-box .titleBox
 {
     width: 80%;
     height: 8vh;
@@ -76,51 +77,63 @@ body
     justify-content: center;
 }
 
-.mainBox .secondBox .boxes-wrapper div .contentBox
+.mainBox .secondBox .boxes-wrapper .unique-box .contentBox
 {   display: flex;
     padding: 0.05vw;
     border: 0.05vw solid;
-    height: 50%;
-    width: 100%;
-    justify-content: center
+    width: 80%;
+    margin-bottom: 5%;
+    justify-content: center;
+    padding: 0.5vw;
 }
 
-.mainBox .secondBox .boxes-wrapper div .settingsBox
+.mainBox .secondBox .boxes-wrapper .unique-box .settingsBox
 {
     padding: 0.05vw;
     border: 0.05vw solid;
-    width: 100%;
+    width: 80%;
+    margin-bottom: 5%;
     height: 13vw;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-.mainBox .secondBox .boxes-wrapper div .settingsBox div
+.mainBox .secondBox .boxes-wrapper .unique-box .settingsBox div
 {
     margin-right: 20px;
-    border: 0.5vw solid;
+    border: 0.08vw solid;
+    border-color: black;
     width: 95%;
     height: auto;
     justify-content: center;
 }
 
-.mainBox .secondBox .boxes-wrapper div .settingsBox a
+.mainBox .secondBox .boxes-wrapper .unique-box .settingsBox a
 {
     font-size: SMALL;
     text-align: center;
     text-decoration: none;
+    color: black;
 }
 
-.mainBox .secondBox .boxes-wrapper div  .titleBox .contentBox div
+.mainBox .secondBox .boxes-wrapper .unique-box .contentBox div
 {
-    color: red;
-    width: 20px
+    flex-direction: row;
+    width: max-content;
+    border-width: 0.08vw;
+}
+
+
+.mainBox .secondBox .boxes-wrapper .unique-box .contentBox img
+{
+    width: 3vw;
+    height: auto;
 }
 
 .icon
 {
-    width: 5vw;
+    width: 6vh;
     height: auto;
 }
 
@@ -201,14 +214,27 @@ h2 span
     .mainBox .secondBox .boxes-wrapper{
         display: block;
     }
-    .mainBox .secondBox .boxes-wrapper div .settingsBox
+
+    .mainBox .secondBox .boxes-wrapper .unique-box .settingsBox
     {
         padding: 0.05vw;
         border: 0.05vw solid;
-        width: 100%;
+        width: 80%;
         height: 13vw;
         flex-direction: row;
         align-items: center;
         justify-content: center;
     }
+
+    .mainBox .secondBox .boxes-wrapper .unique-box .settingsBox h1
+    {
+        font-size: 1.2rem;
+    }
+
+    .mainBox .secondBox .boxes-wrapper .unique-box .titleBox h1
+    {
+        font-size: 1.5rem;
+    }
+
+
 }
