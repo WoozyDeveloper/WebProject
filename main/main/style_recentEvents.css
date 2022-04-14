@@ -47,6 +47,10 @@ body
     display: flex;
 }
 
+.mainBox .secondBox .boxes-wrapper .unique-box{
+    margin-top: 5vh;
+}
+
 .mainBox .secondBox .boxes-wrapper div {
     display: flex;
     text-align: center;
@@ -58,7 +62,7 @@ body
     border-radius: 0.8vw;
     border-width: 0.2vw;
     border-color: black;
-    background-color: white;
+    background-color: rgb(169, 136, 252);
     row-gap: 0.5vh;
 }
 
