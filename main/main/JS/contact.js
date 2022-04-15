@@ -14,7 +14,7 @@ async function demo() {
         pic1.style.transform = "rotate(" + i + "deg)";
         pic2.style.transform = "rotate(" + -i + "deg)";
         pic3.style.transform = "rotate(" + i + "deg)";
-        i++;
+        i = (i+1) % 360;
         
     }
 }
