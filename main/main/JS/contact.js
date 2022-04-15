@@ -7,13 +7,15 @@ function sleep(ms) {
 }
 
 async function demo() {
-    for(var i=3600;i>=0;i--)
+    var i = 0;
+    while(true)
     {
-            console.log(i);
-            pic1.style.transform = "rotate(" + i + "deg)";
-            pic2.style.transform = "rotate(" + -i + "deg)";
-            pic3.style.transform = "rotate(" + i + "deg)";
-            await sleep(10);
+        await sleep(10);
+        pic1.style.transform = "rotate(" + i + "deg)";
+        pic2.style.transform = "rotate(" + -i + "deg)";
+        pic3.style.transform = "rotate(" + i + "deg)";
+        i++;
+        
     }
 }
 
