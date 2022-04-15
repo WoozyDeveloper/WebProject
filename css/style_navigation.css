@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+hr {
+  border-radius: 15%;
+  padding-bottom: 50px;
+  background-color: rgba(255, 255, 255, 0.359);
+}
+
+.span {
+  border: 2px solid black;
+  height: 62px;
+  width: 64px;
+  border-radius: 50%;
+  font-family: 'times';
+  cursor: pointer;
+  margin: 10px;
+  float: right;
+  top: 0;
+  position: fixed;
+  right: 20px;
+  background-image: url('../images/navigation_button.png');
+  transform: rotate(90deg);
+  transition: 0.5s;
+}
+
+.navbar_icon {
+  margin-top: 20%;
+  height: 30%;
+  text-align: center;
+}
+
+.navbar_text {
+  text-align: center;
+}
+
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: rgba(192, 190, 190, 0.339);
+  transition: 0.5s;
+  padding-top: 0px;
+}
+
+.sidenav a {
+  height: 14%;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  font-size: 25px;
+  color: black;
+  display: block;
+}
+
+@media (max-width: 1207px) {
+  .sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: rgb(192, 190, 190);
+    transition: 0.5s;
+    padding-top: 0px;
+  }
+
+  .sidenav a {
+    height: 10%;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    font-size: 25px;
+    color: black;
+    display: block;
+  }
+
+  .navbar_icon {
+    margin-top: 8%;
+    height: 50%;
+    text-align: center;
+  }
+
+  .navbar_text {
+    text-align: center;
+    font-size: small;
+  }
+}
