@@ -4,7 +4,7 @@ mapboxgl.accessToken =
 const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/light-v8',
-  zoom: 1.5,
+  zoom: 2,
   logoPosition: 'bottom-right',
   attributionControl: false,
 });
@@ -57,7 +57,10 @@ fetch(
       let time = moment(datetime).format('LT');
       let date = moment(datetime).format('DD/MM/YYYY');
       let mag = `M ${data.features[i].properties.mag.toFixed(1)}`;
-      console.log(coords, place, time, date, mag);
+      const marker = new mapboxgl.Marker()
+      .setLngLat([coords[0], coords[1]])
+      .addTo(map);
+
 
       // Add to Latest Events
       let latestEvents = document.getElementById('latest-events');
