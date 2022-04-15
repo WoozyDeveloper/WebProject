@@ -5,7 +5,9 @@ h1{
 }
 
 .nume_pers{
+    color: black;
     font-size: xx-large;
+    text-decoration:underline;
     text-align: center;
 }
 
@@ -16,9 +18,15 @@ h1{
 .poza{
     margin-top: 10px;
     border-radius: 50%;
+    border-style: dashed;
+    border-width: 20px;
     height: 20vh;
 }
 .pers{
     display: flex;
     justify-content: center;
+}
+
+body{
+    background: linear-gradient(to left, #5d006c, #d289ff);  
 }
