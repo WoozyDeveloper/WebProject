@@ -15,6 +15,12 @@ h1{
     margin:auto;
 }
 
+#contactInfo{
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
 .poza{
     margin-top: 10px;
     border-radius: 50%;
