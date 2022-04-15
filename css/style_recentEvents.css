@@ -32,11 +32,10 @@ body {
 
 .mainBox {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  column-gap: 8vw;
-  flex-wrap: wrap;
 }
 
 .mainBox .secondBox .boxes-wrapper {
