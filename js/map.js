@@ -23,18 +23,52 @@ map.addControl(
   'top-right'
 );
 
+const geocoder = new MapboxGeocoder({
+  accessToken: mapboxgl.accessToken,
+  mapboxgl: mapboxgl,
+  placeholder: 'Search Location',
+});
+
+geocoder.on('result', (e) => {
+  const searchLocation = e.result.place_name;
+  console.log(searchLocation);
+});
+
 // add geocoder(search bar) map control
-map.addControl(
-  new MapboxGeocoder({
-    accessToken: mapboxgl.accessToken,
-    mapboxgl: mapboxgl,
-    placeholder: 'Search Location',
-  }),
-  'top-left'
-);
+map.addControl(geocoder, 'top-left');
+
+// Extract the search location from the geocoder
 
 // Initialize mapbox popup
 const popup = new mapboxgl.Popup({
   closeButton: false,
   closeOnClick: false,
 });
+
+fetch(
+  'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson'
+)
+  .then((response) => response.json())
+  .then((data) => {
+    for (let i = 0; i < 3; i++) {
+      let coords = data.features[i].geometry.coordinates;
+      let place = data.features[i].properties.place;
+      let datetime = new Date(data.features[i].properties.time);
+      let time = moment(datetime).format('LT');
+      let date = moment(datetime).format('DD/MM/YYYY');
+      let mag = `M ${data.features[i].properties.mag.toFixed(1)}`;
+      console.log(coords, place, time, date, mag);
+
+      // Add to Latest Events
+      let latestEvents = document.getElementById('latest-events');
+      let event = document.createElement('div');
+      event.classList.add('event');
+      event.innerHTML = `
+        <p class="event-date">${date}</p>
+        <p class="event-time">${time}</p>
+        <p class="event-place">${place}</p>
+        <p class="event-mag">${mag}</p>
+      `;
+      latestEvents.appendChild(event);
+    }
+  });
