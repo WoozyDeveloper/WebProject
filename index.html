@@ -5,12 +5,31 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>CoSe</title>
-    <link rel="stylesheet" href="../css/style_navigation.css" />
-    <link rel="stylesheet" href="../css/style_recentEvents.css" />
+    <link rel="stylesheet" href="css/style_navigation.css" />
+    <link rel="stylesheet" href="css/style_recentEvents.css" />
+
+    <!-- MapBox -->
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js"></script>
+    <!-- Load the `mapbox-gl-geocoder` plugin. -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css"
+      type="text/css"
+    />
+
+    <link rel="stylesheet" href="css/map.css" />
+
+    <!-- <link rel="stylesheet" type="text/css" href="..css/style.css" /> -->
   </head>
 
   <body>
     <div class="mainBox">
+      <div id="map"></div>
       <div class="secondBox">
         <div class="boxes-wrapper">
           <div class="unique-box">
@@ -48,7 +67,7 @@
             </div>
             <div class="contentBox">Lorem ipsum</div>
           </div>
-          <div class="unique-box">
+          <!-- <div class="unique-box">
             <div class="titleBox">
               <img src="images/settingsIcon.png" alt="Settings" class="icon" />
               <h1>Settings</h1>
@@ -70,14 +89,14 @@
                 </div>
               </a>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
 
-      <div class="searchBar">
+      <!-- <div class="searchBar">
         <img src="images/searchIcon.png" alt="Settings" class="icon" />
         <input type="text" placeholder="Search.." class="searchField" />
-      </div>
+      </div> -->
     </div>
 
     <div class="settingsBackground" id="modalWindowLocation">
@@ -162,7 +181,9 @@
 
     <span class="span" id="nav_button" onClick="move()"></span>
 
-    <script src="JS/settings.js"></script>
-    <script src="JS/animatie_buton.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/animatie_buton.js"></script>
+
+    <script src="js/map.js"></script>
   </body>
 </html>
