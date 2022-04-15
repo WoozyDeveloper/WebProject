@@ -1,7 +1,8 @@
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8" />
     <title>Login</title>
+    <link rel="stylesheet" href="../css/style_navigation.css" />
     <link rel="stylesheet" href="../css/style_login.css" />
   </head>
   <body>
@@ -12,5 +13,49 @@
         <button>LOGIN</button>
       </form>
     </div>
+
+    <div id="mySidenav" class="sidenav">
+      <hr />
+      <a href="../index.html" onClick="menu_click()">
+        <img
+          alt="home icon"
+          src="../images/home_icon.png"
+          class="navbar_icon"
+        />
+        <p class="navbar_text">Home</p>
+      </a>
+      <hr />
+      <a href="../index.html" onClick="menu_click()">
+        <img
+          alt="latest news"
+          src="../images/latest_news.png"
+          class="navbar_icon"
+        />
+        <p class="navbar_text">Recent</p>
+      </a>
+      <hr />
+      <a href="../index.html" onClick="menu_click()">
+        <img
+          alt="my location"
+          src="../images/my_location.png"
+          class="navbar_icon"
+        />
+        <p class="navbar_text">My place</p>
+      </a>
+      <hr />
+      <a href="login.html" onClick="menu_click()">
+        <img alt="login" src="../images/loginIcon.png" class="navbar_icon" />
+        <p class="navbar_text">Login</p>
+      </a>
+      <hr />
+      <a href="contact.html" onClick="menu_click()">
+        <img alt="contact" src="../images/contact.png" class="navbar_icon" />
+        <p class="navbar_text">Contact</p>
+      </a>
+      <hr />
+      <a> </a>
+    </div>
+    <span class="span" id="nav_button" onClick="move()"></span>
+    <script src="../js/animatie_buton.js"></script>
   </body>
 </html>
