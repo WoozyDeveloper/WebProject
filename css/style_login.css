@@ -5,6 +5,10 @@
   align-items: center;
 }
 
+#register{
+  text-align: center;
+}
+
 form {
   border-radius: 10%;
   background: white;
