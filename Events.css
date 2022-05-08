@@ -1,0 +1,108 @@
+body {
+    background-image: url('./images/background-upscaled-blurred.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+  }
+
+.mainBox
+{
+    display: flex;
+    flex-direction: column;
+    border: 3px solid red;
+}
+
+
+.titleBox
+{
+    display: flex;
+    justify-content: center;
+    border: 3px solid blue;
+}
+
+.contentBox
+{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    border: 0.2vw solid purple;
+}
+
+.contentBox div
+{
+    height: auto;
+    border-radius: 0.5vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.contentBox div .boxContent
+{
+    align-items: flex-start;
+    border: 3px solid brown;
+}
+
+.contentBox div .boxContent .settingField
+{
+    flex-direction: row;
+    display: inline-block;
+    width: 15vw;
+    padding: 2vh;
+}
+
+.contentBox div .boxContent .settingField select
+{
+    flex-direction: row;
+    float: right;
+}
+
+.mainBox .contentBox div .boxTitle
+{
+    flex-direction: row;
+    border: 3px solid magenta;
+    width: max-content;
+    padding: 1vw;
+}
+
+.resultBox
+{
+    border: 3px solid green;
+}
+
+.resultBox .boxContent
+{
+    background-color: green;
+}
+
+.queryBox
+{
+    border: 3px solid yellow;
+}
+
+.whateverBox
+{
+    border: 3px solid lightblue;
+}
+
+h1,h2
+{
+    color: white;
+}
+
+.mainBox .contentBox div .goBox
+{
+    flex-direction: row;
+    border: 3px solid magenta;
+    width: max-content;
+    height: 2vh;
+    padding: 0.5vw;
+}
+
+p
+{
+    font-size: 1em;
+    color: white;
+}
