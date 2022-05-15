@@ -4,33 +4,29 @@ body {
     background-position: center;
     background-size: cover;
     background-attachment: fixed;
-  }
+}
 
-.mainBox
-{
+.mainBox {
     display: flex;
     flex-direction: column;
     border: 3px solid red;
 }
 
 
-.titleBox
-{
+.titleBox {
     display: flex;
     justify-content: center;
     border: 3px solid blue;
 }
 
-.contentBox
-{
+.contentBox {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     border: 0.2vw solid purple;
 }
 
-.contentBox div
-{
+.contentBox div {
     height: auto;
     border-radius: 0.5vw;
     display: flex;
@@ -39,61 +35,57 @@ body {
     flex-direction: column;
 }
 
-.contentBox div .boxContent
-{
+.contentBox div .boxContent {
     align-items: flex-start;
     border: 3px solid brown;
 }
 
-.contentBox div .boxContent .settingField
-{
+.contentBox div .boxContent .settingField {
     flex-direction: row;
     display: inline-block;
     width: 15vw;
     padding: 2vh;
 }
 
-.contentBox div .boxContent .settingField select
-{
+.contentBox div .boxContent .settingField select {
     flex-direction: row;
     float: right;
 }
 
-.mainBox .contentBox div .boxTitle
-{
+.contentBox div .boxContent .settingField input {
+    flex-direction: row;
+    float: right;
+}
+
+.mainBox .contentBox div .boxTitle {
     flex-direction: row;
     border: 3px solid magenta;
     width: max-content;
     padding: 1vw;
 }
 
-.resultBox
-{
+.resultBox {
     border: 3px solid green;
 }
 
-.resultBox .boxContent
-{
+.resultBox .boxContent {
     background-color: green;
 }
 
-.queryBox
-{
+.queryBox {
     border: 3px solid yellow;
 }
 
-.whateverBox
-{
+.whateverBox {
     border: 3px solid lightblue;
 }
 
-h1,h2
-{
+h1,
+h2 {
     color: white;
 }
 
-.mainBox .contentBox div .goBox
-{
+.mainBox .contentBox div .goBox {
     flex-direction: row;
     border: 3px solid magenta;
     width: max-content;
@@ -101,8 +93,82 @@ h1,h2
     padding: 0.5vw;
 }
 
-p
-{
+p {
     font-size: 1em;
     color: white;
+}
+
+
+#latitudeSetting {
+    display: none;
+}
+
+#longitudeSetting {
+    display: none;
+}
+
+/* The Modal (background) */
+.modal 
+{
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 66.66vw;
+    height: 66.66vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#map {
+    width: 400px;
+    height: 300px;
+  }
+
+#myBtn
+{
+    float: right;
+}
+
+#showLongLatSetting
+{
+    margin: auto;
 }

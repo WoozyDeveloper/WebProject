@@ -8,10 +8,39 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="Events.css">
+    <link rel="stylesheet" href="css/clocklet.min.css" />
+    <script src="js/clocklet.min.js"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css' rel='stylesheet' />
+    <script src="js/events.js" async defer></script>
 </head>
 
 <body>
     <div class="background"></div>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <div id='map'></div>
+            <span class="close">&times;</span>
+            <script>
+                mapboxgl.accessToken = 'pk.eyJ1Ijoib3YzcmNvbWUiLCJhIjoiY2wzN2wydG8zMDBvODNqbnowNmg0eWV4byJ9.puBbYqQVemIV38OSqGp-mA';
+                var map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/streets-v11'
+                });
+                map.on('style.load', function () {
+                    map.on('click', function (e) {
+                        var coordinates = e.lngLat;
+                        new mapboxgl.Popup()
+                            .setLngLat(coordinates)
+                            .setHTML('you clicked here: <br/>' + coordinates)
+                            .addTo(map);
+                            document.getElementById("coords").textContent = coordinates;
+                    });
+                });
+            </script>
+        </div>
+
+    </div>
     <div class="mainBox">
 
         <div class="titleBox">
@@ -37,79 +66,49 @@
                         </select>
                     </div>
 
+                    <!--USING CLOCKET https://www.cssscript.com/clock-time-picker-plugin-clocklet/-->
                     <div class="settingField">
                         <label for="startTime">Start time</label>
-                        <select name="startTime" id="startTime-select">
-                            <option value="">--Ceva widget cu ceas--</option>
-                            <option value="dog">Dog</option>
-                            <option value="cat">Cat</option>
-                            <option value="hamster">Hamster</option>
-                            <option value="parrot">Parrot</option>
-                            <option value="spider">Spider</option>
-                            <option value="goldfish">Goldfish</option>
-                        </select>
+                        <input data-clocklet maxlength="5" value="02:25" id="startTime-select">
                     </div>
 
                     <div class="settingField">
                         <label for="endTime">End time</label>
-                        <select name="endTime" id="endTime-select">
-                            <option value="">--Ceva widget cu ceas--</option>
-                            <option value="dog">Dog</option>
-                            <option value="cat">Cat</option>
-                            <option value="hamster">Hamster</option>
-                            <option value="parrot">Parrot</option>
-                            <option value="spider">Spider</option>
-                            <option value="goldfish">Goldfish</option>
-                        </select>
+                        <input data-clocklet maxlength="5" value="02:25" id="endTime-select">
                     </div>
 
-                    <div class="settingField">
+                    <div class="settingField" id="locationSetting">
                         <label for="location">Location</label>
-                        <select name="location" id="location-select">
-                            <option value="">--Harta de pe main page--</option>
-                            <option value="dog">Dog</option>
-                            <option value="cat">Cat</option>
-                            <option value="hamster">Hamster</option>
-                            <option value="parrot">Parrot</option>
-                            <option value="spider">Spider</option>
-                            <option value="goldfish">Goldfish</option>
-                        </select>
+                        <b id="coords"></b>
+                        <button id="myBtn">Open Map</button>
+                    </div>
+
+
+                    <button type="button" onclick="showLongLat()" id="showLongLatSetting">Click to input coordinates
+                        manually</button>
+
+
+
+                    <div class="settingField" id="latitudeSetting">
+                        <label for="latitude">Latitude</label>
+                        <input type="text" placeholder="Latitude value..." min="-90" max="90" id="latInput">
+                    </div>
+
+
+                    <div class="settingField" id="longitudeSetting">
+                        <label for="longitude">Longitude</label>
+                        <input type="text" placeholder="Longitude value..." min="-180" max="180" id="longInput">
                     </div>
 
                     <div class="settingField">
                         <label for="searchType">Search area</label>
                         <select name="searchArea" id="searchArea-select">
                             <option value="">--Please choose an option--</option>
-                            <option value="dog">Rectangle</option>
-                            <option value="cat">Circle</option>
+                            <option value="rectangle">Rectangle</option>
+                            <option value="circle">Circle</option>
                         </select>
                     </div>
 
-                    <div class="settingField">
-                        <label for="latitude">Latitude</label>
-                        <select name="latitude" id="latitude-select">
-                            <option value="">--Ceva slider?--</option>
-                            <option value="dog">Dog</option>
-                            <option value="cat">Cat</option>
-                            <option value="hamster">Hamster</option>
-                            <option value="parrot">Parrot</option>
-                            <option value="spider">Spider</option>
-                            <option value="goldfish">Goldfish</option>
-                        </select>
-                    </div>
-
-                    <div class="settingField">
-                        <label for="longitude">Longitude</label>
-                        <select name="longitude" id="longitude-select">
-                            <option value="">--Ceva slider?--</option>
-                            <option value="dog">Dog</option>
-                            <option value="cat">Cat</option>
-                            <option value="hamster">Hamster</option>
-                            <option value="parrot">Parrot</option>
-                            <option value="spider">Spider</option>
-                            <option value="goldfish">Goldfish</option>
-                        </select>
-                    </div>
                 </div>
 
                 <div class="goBox" onclick="showSearch()">
@@ -140,7 +139,7 @@
         </div>
     </div>
     </div>
-    <script src="events.js" async defer></script>
+    <script src="js/mapModal.js"></script>
 </body>
 
 </html>
