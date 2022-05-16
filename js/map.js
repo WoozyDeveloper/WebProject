@@ -42,6 +42,7 @@ let isFullyLoaded = false;
 let url =
   'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson';
 let label_text = 'Earthquakes of Past 30 days';
+let date1, date2, min, max;
 
 // Initialize mapbox popup
 const popup = new mapboxgl.Popup({
@@ -110,6 +111,42 @@ function addPopup(source, showTimeAgo) {
     map.getCanvas().style.cursor = '';
     popup.remove();
   });
+}
+
+function displayEvents(url) {
+  document.getElementById('events').innerHTML = '';
+  console.log(url);
+  // Recent five earthquakes
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      for (let i = 0; i < 15; i++) {
+        let coords = data.features[i].geometry.coordinates;
+        let place = data.features[i].properties.place;
+        let datetime = new Date(data.features[i].properties.time);
+        let time = moment(datetime).format('LT');
+        let date = moment(datetime).format('DD/MM/YYYY');
+        let mag = `M ${data.features[i].properties.mag.toFixed(1)}`;
+
+        let events = document.getElementById('events');
+
+        let event = document.createElement('div');
+
+        event.classList.add('slide');
+
+        event.innerHTML = `<div class="slide-details"><p>${time}</p><div class="slide-subheading"><p>${mag}</p><p>${date}</p></div><div class="slide-place"><svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 24 24" width="12px" fill="#fff"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>${place}</div></div>`;
+
+        events.appendChild(event);
+
+        const img = document.createElement('img');
+        img.src = `https://api.mapbox.com/v4/mapbox.satellite/${coords[0]},${coords[1]},7/360x200@2x.png?access_token=${TOKEN}`;
+        img.alt = place;
+
+        event.appendChild(img);
+
+        events.appendChild(event);
+      }
+    });
 }
 
 // Function to add earthquakes in map
@@ -191,6 +228,9 @@ function addEarthquakes(geojson, showTimeAgo) {
 
   // Add popup for earthquakes
   addPopup('earthquakes', showTimeAgo);
+
+  // Display latest earthquakes
+  displayEvents(geojson);
 }
 
 // Function to remove earthquakes in map
@@ -217,4 +257,54 @@ map.on('idle', () => {
     console.log('Map is Fully Loaded!');
     isFullyLoaded = true;
   }
+});
+
+// Get earthquakes in specific date and magnitude range in map idle state
+map.on('idle', () => {
+  // Submitted date and magnitude validation
+  document.querySelector('form').addEventListener('submit', (e) => {
+    const data = Object.fromEntries(new FormData(e.target).entries());
+    e.preventDefault();
+    const today = new Date();
+    date1 = moment(data.start, 'YYYY-MM-DD');
+    date2 = moment(data.end, 'YYYY-MM-DD');
+    const range1 = moment('1800-01-01', 'YYYY-MM-DD');
+    const range2 = moment(today);
+    const isDateValid =
+      (date1.isBetween(range1, range2) ||
+        date1.isSame(range1) ||
+        date1.isSame(range2)) &&
+      (date2.isBetween(range1, range2) ||
+        date2.isSame(range1) ||
+        date2.isSame(range2)) &&
+      date1.isBefore(date2) &&
+      date2.isAfter(date1);
+
+    console.log(data);
+
+    min = data.min;
+    max = data.max;
+
+    if (data.start && data.end && isDateValid) {
+      removeEarthquakes();
+      if (data.min && data.max) {
+        url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}&minmagnitude=${min}&maxmagnitude=${max}`;
+      } else {
+        if (data.min) {
+          url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}&minmagnitude=${min}`;
+        } else if (data.max) {
+          url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}&maxmagnitude=${max}`;
+        } else {
+          url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}`;
+        }
+      }
+      addEarthquakes(url, false);
+    } else {
+      console.log('Invalid Date');
+    }
+    document.getElementById('start-date').value = '';
+    document.getElementById('end-date').value = '';
+    document.getElementById('min-mag').value = '';
+    document.getElementById('max-mag').value = '';
+  });
 });
