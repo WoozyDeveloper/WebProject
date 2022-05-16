@@ -1,96 +1,15 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CoSe</title>
-  <link rel="stylesheet" href="css/style_navigation.css" />
-  <link rel="stylesheet" href="css/style_recentEvents.css" />
-
-  <!-- MapBox -->
-  <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css" rel="stylesheet" />
-  <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js"></script>
-  <!-- Load the `mapbox-gl-geocoder` plugin. -->
-  <script
-    src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
-  <link rel="stylesheet"
-    href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css"
-    type="text/css" />
-  <!-- Moment -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
-  <link rel="stylesheet" href="css/map.css" />
-
-  <!-- <link rel="stylesheet" type="text/css" href="..css/style.css" /> -->
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
 </head>
 
 <body>
-  <div class="mainBox">
-    <div id="map"></div>
-    <div class="secondBox">
-      <div class="boxes-wrapper">
-        <div class="unique-box">
-          <div class="titleBox">
-            <img src="images/socialMediaIcon.png" alt="Social media" class="icon" />
-            <h1>Social media updates</h1>
-          </div>
-          <div class="contentBox">
-            <div>
-              <a href="https://twitter.com/USGS">
-                <img src="images/USGSIcon.png" alt="USGS" class="icon" />
-              </a>
-              USGS
-            </div>
-            <div>
-              <a href="https://twitter.com/envagency">
-                <img src="images/environmentAgencyIcon.png" alt="Environment Agency" class="icon" />
-              </a>
-              Environment Agency
-            </div>
-          </div>
-        </div>
-        <div class="unique-box" id="latest-events">
-          <div class="titleBox">
-            <img src="images/newsIcon.png" alt="News" class="icon" />
-            <h1>Latest events</h1>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <div id="mySidenav" class="sidenav">
-    <hr />
-    <a href="" onClick="menu_click()">
-      <img alt="home icon" src="images/home_icon.png" class="navbar_icon" />
-      <p class="navbar_text">Home</p>
-    </a>
-    <hr />
-    <a href="pages/login.html" onClick="menu_click()">
-      <img alt="login" src="images/loginIcon.png" class="navbar_icon" />
-      <p class="navbar_text">Login</p>
-    </a>
-    <hr />
-    <a href="pages/contact.html" onClick="menu_click()">
-      <img alt="contact" src="images/contact.png" class="navbar_icon" />
-      <p class="navbar_text">Contact</p>
-    </a>
-    <hr />
-    <hr />
-    <a href="pages/map.html" onClick="menu_click()">
-      <img alt="home icon" src="images/home_icon.png" class="navbar_icon" />
-      <p class="navbar_text">Map</p>
-    </a>
-    <hr />
-    <a> </a>
-  </div>
-
-  <span class="span" id="nav_button" onClick="move()"></span>
-
-  <script src="js/animatie_buton.js"></script>
-
-  <script src="js/map.js"></script>
 </body>
 
 </html>
