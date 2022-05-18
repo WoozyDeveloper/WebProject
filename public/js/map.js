@@ -27,6 +27,21 @@ map.addControl(
   'top-right'
 );
 
+function addFloodMarkers() {
+  fetch('https://environment.data.gov.uk/flood-monitoring/id/floodAreas')
+    .then((response) => response.json())
+    .then((data) => {
+      for (let i = 0; i < 10; i++) {
+        let lat = data.items[i].lat
+        let long = data.items[i].long
+        const marker = new mapboxgl.Marker()
+          .setLngLat([long, lat])
+          .addTo(map);
+      }
+    }
+    );
+}
+
 // add geocoder(search bar) map control
 map.addControl(
   new MapboxGeocoder({
@@ -97,8 +112,8 @@ function addPopup(source, showTimeAgo) {
                             <br>
                             <strong>${moment(time).format('dddd LT')}</strong>
                             <strong>${moment(time).format(
-                              'DD/MM/YYYY'
-                            )}</strong>
+              'DD/MM/YYYY'
+            )}</strong>
                         </span>
                     </div>`
           )
@@ -244,7 +259,10 @@ function removeEarthquakes() {
 // Load tilesets(tectonic plates, Global Seismic Network, Orogens & Volcanoes) on map load
 map.on('load', () => {
   // Add earthquakes
-  addEarthquakes(url, true);
+  if(document.getElementById("flood").checked)
+    addFloodMarkers();
+  else if(document.getElementById("earthquake").checked)
+    addEarthquakes(url, true);
 });
 
 // Toggle tilesets on/off in map idle state
@@ -258,6 +276,9 @@ map.on('idle', () => {
     isFullyLoaded = true;
   }
 });
+
+
+
 
 // Get earthquakes in specific date and magnitude range in map idle state
 map.on('idle', () => {
@@ -286,19 +307,31 @@ map.on('idle', () => {
     max = data.max;
 
     if (data.start && data.end && isDateValid) {
-      removeEarthquakes();
-      if (data.min && data.max) {
-        url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}&minmagnitude=${min}&maxmagnitude=${max}`;
-      } else {
-        if (data.min) {
-          url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}&minmagnitude=${min}`;
-        } else if (data.max) {
-          url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}&maxmagnitude=${max}`;
+      if (document.getElementById("earthquake").checked && !document.getElementById("flood").checked && !document.getElementById("storm").checked) {
+        removeEarthquakes();
+        if (data.min && data.max) {
+          url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}&minmagnitude=${min}&maxmagnitude=${max}`;
         } else {
-          url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}`;
+          if (data.min) {
+            url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}&minmagnitude=${min}`;
+          } else if (data.max) {
+            url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}&maxmagnitude=${max}`;
+          } else {
+            url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}`;
+          }
         }
+        addEarthquakes(url, false);
       }
-      addEarthquakes(url, false);
+      else if (!document.getElementById("earthquake").checked && !document.getElementById("flood").checked && document.getElementById("storm").checked) {
+        console.log("just storm checked")
+      }
+      else if (!document.getElementById("earthquake").checked && document.getElementById("flood").checked && !document.getElementById("storm").checked) {
+        removeEarthquakes();
+        addFloodMarkers();
+      }
+      else {
+        console.log("nothing checked")
+      }
     } else {
       console.log('Invalid Date');
     }

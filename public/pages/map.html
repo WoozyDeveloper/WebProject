@@ -32,6 +32,14 @@
       <section>
       </section>
       <form>
+        <div class="type">
+          <input type="checkbox" id="earthquake" name="earthquake" value="earthquake">
+          <label for="earthquake">Show earthquakes</label><br>
+          <input type="checkbox" id="flood" name="flood" value="flood">
+          <label for="flood">Show floods</label><br>
+          <input type="checkbox" id="storm" name="storm" value="storm">
+          <label for="storm">Show bad weather</label><br>
+        </div>
         <div id="showing-label">
           <p></p>
         </div>
@@ -71,13 +79,13 @@
           <input id="min-mag" name="min" type="number" placeholder="min" step="any">
           to
           <input id="max-mag" name="max" type="number" placeholder="max" step="any">
-          <button id="submit" type="submit">
-            <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="#fff">
-              <path d="M0 0h24v24H0z" fill="none" />
-              <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
-            </svg>
-          </button>
         </div>
+        <button id="submit" type="submit">
+          <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="#fff">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
+          </svg>
+        </button>
       </form>
     </div>
     <div id="close" class="inactive">
