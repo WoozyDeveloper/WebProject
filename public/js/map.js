@@ -59,11 +59,44 @@ let url =
 let label_text = 'Earthquakes of Past 30 days';
 let date1, date2, min, max;
 
+function checkElement(type, checked) {
+  this.type = type
+  this.checked = checked
+}
+
+let checkArray = [new checkElement("earthquake", false), new checkElement("storm", false), new checkElement("flood", false)]
+
+var earthquakeCheckBox = document.querySelector("input[name=earthquake]")
+var stormCheckBox = document.querySelector("input[name=storm]")
+var floodCheckBox = document.querySelector("input[name=flood]")
+
+var checkBoxes = [earthquakeCheckBox, stormCheckBox, floodCheckBox]
+
+
+checkBoxes.forEach(function(checkbox)
+{
+  checkbox.addEventListener('change', function()
+  {
+    if(checkbox.name==="earthquake")
+      checkArray.find(obj => obj.type==="earthquake").checked = this.checked
+    else if(checkbox.name==="storm")
+      checkArray.find(obj => obj.type==="storm").checked = this.checked
+    else if(checkbox.name==="flood")
+    checkArray.find(obj => obj.type==="flood").checked = this.checked
+    console.log(checkArray)
+  })
+})
+
 // Initialize mapbox popup
 const popup = new mapboxgl.Popup({
   closeButton: false,
   closeOnClick: false,
 });
+
+function setErrorMessage(message) {
+  var errMsg = document.getElementById("errorMessage")
+  errMsg.textContent = message
+}
 
 // Function to add popup for earthquakes
 function addPopup(source, showTimeAgo) {
@@ -256,13 +289,18 @@ function removeEarthquakes() {
   }
 }
 
+function setCheckElement(type) {
+  document.getElementById(type).checked = true
+  var typeCheck = checkArray.find(obj => obj.type === type)
+  typeCheck.checked = true
+}
+
 // Load tilesets(tectonic plates, Global Seismic Network, Orogens & Volcanoes) on map load
 map.on('load', () => {
   // Add earthquakes
-  if(document.getElementById("flood").checked)
-    addFloodMarkers();
-  else if(document.getElementById("earthquake").checked)
-    addEarthquakes(url, true);
+  addEarthquakes(url, true);
+  removeEarthquakes()
+  setCheckElement("earthquake")
 });
 
 // Toggle tilesets on/off in map idle state
@@ -307,37 +345,51 @@ map.on('idle', () => {
     max = data.max;
 
     if (data.start && data.end && isDateValid) {
-      if (document.getElementById("earthquake").checked && !document.getElementById("flood").checked && !document.getElementById("storm").checked) {
-        removeEarthquakes();
-        if (data.min && data.max) {
-          url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}&minmagnitude=${min}&maxmagnitude=${max}`;
-        } else {
-          if (data.min) {
-            url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}&minmagnitude=${min}`;
-          } else if (data.max) {
-            url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}&maxmagnitude=${max}`;
-          } else {
-            url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}`;
+      var checkedSomething = false
+      setErrorMessage("")
+      document.getElementById("earthquakeSettings").style.display = "none"
+      removeEarthquakes()
+      console.log(checkArray.length)
+      for (let i = 0; i < checkArray.length; i++) {
+        console.log(checkArray)
+        var checkElement = checkArray[i]
+        if (checkElement.checked == true) {
+          if (checkElement.type === "earthquake") {
+            if (data.min && data.max) {
+              url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}&minmagnitude=${min}&maxmagnitude=${max}`;
+            } else {
+              if (data.min) {
+                url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}&minmagnitude=${min}`;
+              } else if (data.max) {
+                url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}&maxmagnitude=${max}`;
+              } else {
+                url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${data.start}&endtime=${data.end}`;
+              }
+            }
+            addEarthquakes(url, false)
+            checkedSomething = true
+            document.getElementById("earthquakeSettings").style.display = "block"
+          }
+          else if (checkElement.type == "flood") {
+            addFloodMarkers()
+            checkedSomething = true
+          }
+          else if (checkElement.type === "storm") {
+            console.log("storm check")
+            checkedSomething = true
           }
         }
-        addEarthquakes(url, false);
       }
-      else if (!document.getElementById("earthquake").checked && !document.getElementById("flood").checked && document.getElementById("storm").checked) {
-        console.log("just storm checked")
+      if (!checkedSomething) {
+        setErrorMessage("Please check something")
       }
-      else if (!document.getElementById("earthquake").checked && document.getElementById("flood").checked && !document.getElementById("storm").checked) {
-        removeEarthquakes();
-        addFloodMarkers();
-      }
-      else {
-        console.log("nothing checked")
-      }
-    } else {
-      console.log('Invalid Date');
     }
-    document.getElementById('start-date').value = '';
-    document.getElementById('end-date').value = '';
-    document.getElementById('min-mag').value = '';
-    document.getElementById('max-mag').value = '';
+    else {
+      setErrorMessage("Please select a valid date")
+      document.getElementById('start-date').value = '';
+      document.getElementById('end-date').value = '';
+      document.getElementById('min-mag').value = '';
+      document.getElementById('max-mag').value = '';
+    }
   });
 });
