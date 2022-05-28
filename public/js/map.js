@@ -27,20 +27,6 @@ map.addControl(
   'top-right'
 );
 
-function addFloodMarkers() {
-  fetch('https://environment.data.gov.uk/flood-monitoring/id/floodAreas')
-    .then((response) => response.json())
-    .then((data) => {
-      for (let i = 0; i < 10; i++) {
-        let lat = data.items[i].lat
-        let long = data.items[i].long
-        const marker = new mapboxgl.Marker()
-          .setLngLat([long, lat])
-          .addTo(map);
-      }
-    }
-    );
-}
 
 // add geocoder(search bar) map control
 map.addControl(
@@ -66,26 +52,114 @@ function checkElement(type, checked) {
 
 let checkArray = [new checkElement("earthquake", false), new checkElement("storm", false), new checkElement("flood", false)]
 
+function isLoaded(type, loaded) {
+  this.type = type
+  this.loaded = loaded
+}
+
 var earthquakeCheckBox = document.querySelector("input[name=earthquake]")
 var stormCheckBox = document.querySelector("input[name=storm]")
 var floodCheckBox = document.querySelector("input[name=flood]")
 
 var checkBoxes = [earthquakeCheckBox, stormCheckBox, floodCheckBox]
+var loaded = [new isLoaded("earthquake", false), new isLoaded("flood", false), new isLoaded("storm", false)]
+
+var floodMarkers = []
 
 
-checkBoxes.forEach(function(checkbox)
-{
-  checkbox.addEventListener('change', function()
-  {
-    if(checkbox.name==="earthquake")
-      checkArray.find(obj => obj.type==="earthquake").checked = this.checked
-    else if(checkbox.name==="storm")
-      checkArray.find(obj => obj.type==="storm").checked = this.checked
-    else if(checkbox.name==="flood")
-    checkArray.find(obj => obj.type==="flood").checked = this.checked
-    console.log(checkArray)
+checkBoxes.forEach(function (checkbox) {
+  checkbox.addEventListener('change', function () {
+    if (checkbox.name === "earthquake") {
+      checkArray.find(obj => obj.type === "earthquake").checked = this.checked
+      if (this.checked) {
+        document.querySelector("input[name=flood]").checked = false
+        checkArray.find(obj => obj.type === "flood").checked = false
+        document.getElementById("earthquakeSettings").style.display = "block"
+        document.getElementsByClassName("duration")[0].style.display = "block"
+        document.getElementById("showing-label").style.display = "block"
+        document.getElementById("selectLastFloods").style.display = "none"
+      }
+    }
+    else if (checkbox.name === "storm")
+      checkArray.find(obj => obj.type === "storm").checked = this.checked
+    else if (checkbox.name === "flood") {
+      checkArray.find(obj => obj.type === "flood").checked = this.checked
+      if (this.checked) {
+        document.querySelector("input[name=earthquake]").checked = false
+        checkArray.find(obj => obj.type === "earthquake").checked = false
+        document.getElementById("earthquakeSettings").style.display = "none"
+        document.getElementsByClassName("duration")[0].style.display = "none"
+        document.getElementById("showing-label").style.display = "none"
+        document.getElementById("selectLastFloods").style.display = "block"
+      }
+      else {
+        document.getElementById("earthquakeSettings").style.display = "block"
+        document.getElementsByClassName("duration")[0].style.display = "none"
+      }
+    }
+
   })
 })
+
+function addFloodMarkers() {
+  let nr = document.getElementById("quantity").value
+  fetch('https://environment.data.gov.uk/flood-monitoring/id/floodAreas')
+    .then((response) => response.json())
+    .then((data) => {
+      for (let i = 0; i < nr; i++) {
+        let lat = data.items[i].lat
+        let long = data.items[i].long
+        const marker = new mapboxgl.Marker()
+          .setLngLat([long, lat])
+          .addTo(map);
+        floodMarkers.push(marker)
+      }
+    }
+    );
+}
+
+function showFloodPictures() {
+
+  fetch('https://environment.data.gov.uk/flood-monitoring/id/floodAreas')
+    .then((response) => response.json())
+    .then((data) => {
+      const eventsNode = document.getElementById("events");
+      while (eventsNode.firstChild) {
+        eventsNode.removeChild(eventsNode.lastChild);
+      }
+      for (let i = 0; i < document.getElementById("quantity").value; i++) {
+
+        let place = data.items[i].eaAreaName;
+
+        let coords = [data.items[i].long, data.items[i].lat]
+
+        let events = document.getElementById('events');
+
+        let event = document.createElement('div');
+
+        event.classList.add('slide');
+
+        event.innerHTML = `<div class="slide-details"><div class="slide-subheading"></div><div class="slide-place"><svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 24 24" width="12px" fill="#fff"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>${place}</div></div>`;
+
+        events.appendChild(event);
+
+        const img = document.createElement('img');
+        img.src = `https://api.mapbox.com/v4/mapbox.satellite/${coords[0]},${coords[1]},7/360x200@2x.png?access_token=${TOKEN}`;
+        img.alt = place;
+
+        event.appendChild(img);
+
+        events.appendChild(event);
+      }
+    });
+}
+
+function removeFloodMarkers() {
+  for (let i = 0; i < floodMarkers.length; i++) {
+    floodMarkers[i].remove()
+  }
+}
+
 
 // Initialize mapbox popup
 const popup = new mapboxgl.Popup({
@@ -223,6 +297,13 @@ function addEarthquakes(geojson, showTimeAgo) {
   // Show label_text in the menu
   document.querySelector('#showing-label p').textContent = label_text;
 
+  if (map.getLayer("earthquakes")) {
+    map.removeLayer("earthquakes");
+  }
+
+  if (map.getSource("earthquakes")) {
+    map.removeSource("earthquakes");
+  }
   // Add earthquakes source
   map.addSource('earthquakes', {
     type: 'geojson',
@@ -299,8 +380,9 @@ function setCheckElement(type) {
 map.on('load', () => {
   // Add earthquakes
   addEarthquakes(url, true);
-  removeEarthquakes()
+  document.getElementById("selectLastFloods").style.display = "none"
   setCheckElement("earthquake")
+  loaded.find(obj => obj.type === "earthquake").loaded = true
 });
 
 // Toggle tilesets on/off in map idle state
@@ -344,14 +426,20 @@ map.on('idle', () => {
     min = data.min;
     max = data.max;
 
-    if (data.start && data.end && isDateValid) {
+    if ((data.start && data.end && isDateValid) || checkArray.find(obj => obj.type === "flood").checked) {
       var checkedSomething = false
       setErrorMessage("")
-      document.getElementById("earthquakeSettings").style.display = "none"
-      removeEarthquakes()
-      console.log(checkArray.length)
+      for (let i = 0; i < loaded.length; i++) {
+        if (loaded[i].type === "earthquake" && loaded[i].loaded) {
+          removeEarthquakes()
+          loaded.find(obj => obj.type === "earthquake").loaded = false
+        }
+        else if (loaded[i].type === "flood" && loaded[i].loaded) {
+          removeFloodMarkers()
+          loaded.find(obj => obj.type === "flood").loaded = true
+        }
+      }
       for (let i = 0; i < checkArray.length; i++) {
-        console.log(checkArray)
         var checkElement = checkArray[i]
         if (checkElement.checked == true) {
           if (checkElement.type === "earthquake") {
@@ -369,14 +457,18 @@ map.on('idle', () => {
             addEarthquakes(url, false)
             checkedSomething = true
             document.getElementById("earthquakeSettings").style.display = "block"
+            loaded.find(obj => obj.type === "earthquake").loaded = true
           }
           else if (checkElement.type == "flood") {
             addFloodMarkers()
+            showFloodPictures()
             checkedSomething = true
+            loaded.find(obj => obj.type === "flood").loaded = true
           }
           else if (checkElement.type === "storm") {
             console.log("storm check")
             checkedSomething = true
+            loaded.find(obj => obj.type === "storm").loaded = true
           }
         }
       }
