@@ -66,6 +66,20 @@ var loaded = [new isLoaded("earthquake", false), new isLoaded("flood", false), n
 
 var floodMarkers = []
 
+var clickable = false
+
+function changeClickable()
+{
+  if(clickable==false)
+  {
+    clickable=true
+    console.log("I'm now clickable")
+  }
+  else {
+    clickable=false
+    console.log("I'm now not clickable")
+  }
+}
 
 checkBoxes.forEach(function (checkbox) {
   checkbox.addEventListener('change', function () {
@@ -73,28 +87,48 @@ checkBoxes.forEach(function (checkbox) {
       checkArray.find(obj => obj.type === "earthquake").checked = this.checked
       if (this.checked) {
         document.querySelector("input[name=flood]").checked = false
+        document.querySelector("input[name=storm]").checked = false
         checkArray.find(obj => obj.type === "flood").checked = false
+        checkArray.find(obj => obj.type === "storm").checked = false
         document.getElementById("earthquakeSettings").style.display = "block"
         document.getElementsByClassName("duration")[0].style.display = "block"
         document.getElementById("showing-label").style.display = "block"
         document.getElementById("selectLastFloods").style.display = "none"
+        document.getElementById("weatherMenu").style.display = "none"
+        document.getElementById("submit").style.display = "block"
       }
     }
     else if (checkbox.name === "storm")
-      checkArray.find(obj => obj.type === "storm").checked = this.checked
+      {
+        checkArray.find(obj => obj.type === "storm").checked = this.checked
+        if(this.checked)
+        {
+          document.getElementById("selectLastFloods").style.display = "none"
+          checkArray.find(obj => obj.type === "earthquake").checked = false
+          checkArray.find(obj => obj.type === "flood").checked = false
+          document.querySelector("input[name=flood]").checked = false
+          document.querySelector("input[name=earthquake]").checked = false
+          document.getElementById("earthquakeSettings").style.display = "none"
+          document.getElementById("showing-label").style.display = "none"
+          document.getElementById("weatherMenu").style.display = "block"
+          document.getElementsByClassName("duration")[0].style.display = "none"
+          document.getElementById("submit").style.display = "none"
+          changeClickable()
+        }
+      }
     else if (checkbox.name === "flood") {
       checkArray.find(obj => obj.type === "flood").checked = this.checked
       if (this.checked) {
         document.querySelector("input[name=earthquake]").checked = false
+        document.querySelector("input[name=storm]").checked = false
         checkArray.find(obj => obj.type === "earthquake").checked = false
+        checkArray.find(obj => obj.type === "storm").checked = false
         document.getElementById("earthquakeSettings").style.display = "none"
         document.getElementsByClassName("duration")[0].style.display = "none"
         document.getElementById("showing-label").style.display = "none"
         document.getElementById("selectLastFloods").style.display = "block"
-      }
-      else {
-        document.getElementById("earthquakeSettings").style.display = "block"
-        document.getElementsByClassName("duration")[0].style.display = "none"
+        document.getElementById("weatherMenu").style.display = "none"
+        document.getElementById("submit").style.display = "block"
       }
     }
 
@@ -109,8 +143,18 @@ function addFloodMarkers() {
       for (let i = 0; i < nr; i++) {
         let lat = data.items[i].lat
         let long = data.items[i].long
+        let riverOrSea = data.items[i].riverOrSea
+        let county = data.items[i].county
+
+        const popup = new mapboxgl.Popup({ offset: 25 }).setText(
+          `River/sea: ${riverOrSea}
+          
+           County: ${county}`
+          );
+
         const marker = new mapboxgl.Marker()
           .setLngLat([long, lat])
+          .setPopup(popup)
           .addTo(map);
         floodMarkers.push(marker)
       }
@@ -160,6 +204,20 @@ function removeFloodMarkers() {
   }
 }
 
+map.on('style.load', function () {
+  map.on('click', function (e) {
+      if(clickable)
+      {
+        var coordinates = e.lngLat;
+
+        new mapboxgl.Popup()
+          .setLngLat(coordinates)
+          .setHTML('you clicked here: <br/>' + coordinates
+           )
+          .addTo(map);
+      }
+  });
+});
 
 // Initialize mapbox popup
 const popup = new mapboxgl.Popup({
@@ -381,6 +439,7 @@ map.on('load', () => {
   // Add earthquakes
   addEarthquakes(url, true);
   document.getElementById("selectLastFloods").style.display = "none"
+  document.getElementById("weatherMenu").style.display = "none"
   setCheckElement("earthquake")
   loaded.find(obj => obj.type === "earthquake").loaded = true
 });
@@ -466,9 +525,12 @@ map.on('idle', () => {
             loaded.find(obj => obj.type === "flood").loaded = true
           }
           else if (checkElement.type === "storm") {
-            console.log("storm check")
             checkedSomething = true
             loaded.find(obj => obj.type === "storm").loaded = true
+            if(date2.isBefore(range2))
+            {
+              setErrorMessage("Cannot show forcast in the past")
+            }
           }
         }
       }
@@ -484,4 +546,5 @@ map.on('idle', () => {
       document.getElementById('max-mag').value = '';
     }
   });
+
 });
