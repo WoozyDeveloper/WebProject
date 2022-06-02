@@ -105,13 +105,16 @@ checkBoxes.forEach(function (checkbox) {
         document.getElementById("earthquakeSettings").style.display = "none";
         document.getElementById("showing-label").style.display = "none";
         document.getElementById("weatherMenu").style.display = "block";
-        document.getElementsByClassName("duration")[0].style.display = "none";
-        document.getElementById("submit").style.display = "none";
-        clickable = true;
-        let parent = document.getElementById("weatherMenu");
-        let selectMessage = document.createElement("div");
-        selectMessage.innerHTML = `<p>Select a place on the map</p>`;
-        parent.appendChild(selectMessage);
+        document.getElementsByClassName("duration")[0].style.display = "block";
+        document.getElementById("submit").style.display = "block";
+        let weatherMenu = document.getElementById("weatherMenu")
+        while (weatherMenu.firstChild) {
+          weatherMenu.removeChild(weatherMenu.firstChild)
+        }
+        let message = document.createElement("p")
+        message.textContent = "Select a date"
+        weatherMenu.appendChild(message)
+
       }
     } else if (checkbox.name === "flood") {
       checkArray.find((obj) => obj.type === "flood").checked = this.checked;
@@ -198,33 +201,88 @@ function removeFloodMarkers() {
   }
 }
 
-var globalCoords;
-var put = false;
-map.on("style.load", function () {
-  map.on("click", function (e) {
-    if (clickable) {
-      var coordinates = e.lngLat;
-      globalCoords = coordinates;
-      let parent = document.getElementById("weatherMenu");
 
-      while (parent.firstChild) {
-        parent.removeChild(parent.firstChild);
+var cityMarkers = []
+function addCities(start, end) {
+  fetch(`https://graphical.weather.gov/xml/sample_products/browser_interface/ndfdXMLclient.php?listCitiesLevel=1`)
+    .then((response) => response.text())
+    .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+    .then((data) => {
+      let cityLatLong = data.getElementsByTagName("latLonList")[0]
+      let cityCoords = cityLatLong.textContent.split(" ")
+      let cityName = data.getElementsByTagName("cityNameList")[0]
+      let cityNames = cityName.textContent.split("|")
+
+      const eventsNode = document.getElementById("events");
+      while (eventsNode.firstChild) {
+        eventsNode.removeChild(eventsNode.lastChild);
       }
-      var coordoutput = document.createElement("div");
-      coordoutput.innerHTML = `<p>You selected the coordinates</p><p>Latitude: ${e.lngLat.lat}</p><p>Longitude: ${e.lngLat.lng}</p>`;
-      parent.appendChild(coordoutput);
-      let duration = document.getElementsByClassName("duration")[0];
-      duration.style.display = "block";
-      let submit = document.getElementById("submit");
-      submit.style.display = "block";
-      parent.appendChild(submit);
-      new mapboxgl.Popup()
-        .setLngLat(coordinates)
-        .setHTML("you clicked here: <br/>" + coordinates)
-        .addTo(map);
-    }
-  });
-});
+
+      for (let i = 0; i < cityCoords.length; i++) {
+
+        let lat = cityCoords[i].split(",")[0]
+        let long = cityCoords[i].split(",")[1]
+
+        let url = `https://graphical.weather.gov/xml/sample_products/browser_interface/ndfdXMLclient.php?gmlListLatLon=${lat},${long}&featureType=Forecast_Gml2Point&begin=${start}T00:00:00&end=${end}T00:00:00&compType=Between&propertyName=maxt,wx`
+        fetch(url)
+          .then((response) => response.text())
+          .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+          .then((data) => {
+
+            let temp = data.getElementsByTagName("gml:featureMember")[0].getElementsByTagName("app:Forecast_Gml2Point")[0].getElementsByTagName("app:maximumTemperature")[0]
+            let forecast = data.getElementsByTagName("gml:featureMember")[0].getElementsByTagName("app:Forecast_Gml2Point")[0].getElementsByTagName("app:weatherPhrase")[0]
+            let validTime = data.getElementsByTagName("gml:featureMember")[0].getElementsByTagName("app:Forecast_Gml2Point")[0].getElementsByTagName("app:validTime")[0]
+            let time = validTime.textContent.split("T")[1]
+            let date = validTime.textContent.split("T")[0]
+
+            if (forecast == undefined) {
+              forecast = document.createElement("p").innerHTML = "No forcast"
+            }
+
+            const popup = new mapboxgl.Popup({ offset: 25 }).setText(
+              `City: ${cityNames[i]}
+               Maximum temperature: ${((parseFloat(temp.textContent)-32)/1.8).toFixed(0).toString() + "C\u00B0"}
+               Forecast: ${forecast.textContent}
+               Time: ${time}
+               Date: ${date}`
+            );
+
+            const marker = new mapboxgl.Marker()
+              .setLngLat([long, lat])
+              .setPopup(popup)
+              .addTo(map);
+            cityMarkers.push(marker);
+
+            let events = document.getElementById("events");
+
+            let event = document.createElement("div");
+
+            event.classList.add("slide");
+
+            event.innerHTML = `<div class="slide-details"><p>${time}</p><div class="slide-subheading"><p style="font-size: 13px;">Maximum temperature: ${temp.textContent}</p><p style="font-size: 13px;">${date}</p></div><div class="slide-place"><svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 24 24" width="12px" fill="#fff"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>${cityNames[i]}</div></div>`;
+
+            events.appendChild(event);
+
+            const img = document.createElement("img");
+            img.src = `https://api.mapbox.com/v4/mapbox.satellite/${long},${lat},7/360x200@2x.png?access_token=${TOKEN}`;
+            img.alt = cityNames[i];
+
+            event.appendChild(img);
+
+            events.appendChild(event);
+          })
+      }
+    })
+}
+
+function removeCities() {
+  for (let i = 0; i < cityMarkers.length; i++) {
+    cityMarkers[i].remove();
+  }
+}
+
+
+
 
 // Initialize mapbox popup
 const popup = new mapboxgl.Popup({
@@ -284,8 +342,8 @@ function addPopup(source, showTimeAgo) {
                             <br>
                             <strong>${moment(time).format("dddd LT")}</strong>
                             <strong>${moment(time).format(
-                              "DD/MM/YYYY"
-                            )}</strong>
+              "DD/MM/YYYY"
+            )}</strong>
                         </span>
                     </div>`
           )
@@ -429,7 +487,7 @@ function addEarthquakes(geojson, showTimeAgo) {
 
 // Function to remove earthquakes in map
 function removeEarthquakes() {
-  if (map.isSourceLoaded("earthquakes") && map.getLayer("earthquakes")) {
+  if (map.getSource("earthquakes") && map.getLayer("earthquakes")) {
     map.removeLayer("earthquakes");
     map.removeSource("earthquakes");
   }
@@ -502,7 +560,12 @@ map.on("idle", () => {
           loaded.find((obj) => obj.type === "earthquake").loaded = false;
         } else if (loaded[i].type === "flood" && loaded[i].loaded) {
           removeFloodMarkers();
-          loaded.find((obj) => obj.type === "flood").loaded = true;
+          loaded.find((obj) => obj.type === "flood").loaded = false;
+        }
+        else if(loaded[i].type === "storm" && loaded[i].loaded)
+        {
+          removeCities();
+          loaded.find((obj) => obj.type === "storm").loaded = false;
         }
       }
       for (let i = 0; i < checkArray.length; i++) {
@@ -533,25 +596,12 @@ map.on("idle", () => {
           } else if (checkElement.type === "storm") {
             checkedSomething = true;
             loaded.find((obj) => obj.type === "storm").loaded = true;
+            console.log("storm selected")
             if (date2.isBefore(range2)) {
               setErrorMessage("Cannot show forcast in the past");
             }
-            console.log(data);
-            console.log(globalCoords);
-            console.log(`https://graphical.weather.gov/xml/sample_products/browser_interface/ndfdXMLclient.php?lat=${38.99}&lon=${-77.01}&product=time-series&begin=${data.start}T00:00:00&end=${data.end}T00:00:00&maxt=maxt&mint=mint`)
-            fetch(
-              `https://graphical.weather.gov/xml/sample_products/browser_interface/ndfdXMLclient.php?lat=${globalCoords.lat.toFixed(2)}&lon=${globalCoords.lng.toFixed(2)}&product=time-series&begin=${data.start}T00:00:00&end=${data.end}T00:00:00&maxt=maxt&mint=mint`
-            )
-              .then((response) => response.json())
-              .then((data) => {
-                const eventsNode = document.getElementById("events");
-                while (eventsNode.firstChild) {
-                  eventsNode.removeChild(eventsNode.lastChild);
-                }
-
-                let temps = data.data.parameters.temperature
-                console.log(temps)
-              });
+            else
+            addCities(data.start, data.end)
           }
         }
       }
