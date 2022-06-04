@@ -3,46 +3,63 @@ const http = require('http');
 const hostname = '127.0.0.1';
 const port = 4000;
 
-var pg = require('pg');
-//or native libpq bindings
-//var pg = require('pg').native
-
-var conString = "postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu" //Can be found in the Details page
-var client = new pg.Client(conString);
+//Can be found in the Details page
 
 var showInBrowser
-client.connect(function (err) {
-    if (err) {
-        return console.error('could not connect to postgres', err);
+const server = http.createServer(async (req, res) => {
+    const urlSearchParams = new URLSearchParams(req.url);
+    const params = Object.fromEntries(urlSearchParams.entries());
+    if (!req.url.includes("/favicon.ico")) {
+        console.log(req.url)
+        console.log(params)
     }
-    client.query('SELECT NOW() AS "theTime"', function (err, result) {
-        if (err) {
-            return console.error('error running query', err);
+    if (req.method == 'GET' && !req.url.includes("/favicon.ico")) {
+        if (params.getUsers === "true") {
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            getUsers(function (response) { res.end(`${JSON.stringify(response)}`) })
         }
-        showInBrowser = result.rows[0].theTime;
-        // >> output: 2018-08-23T14:02:57.117Z
-        client.end();
-    });
+        else if (params.mergeGeoJSON !== null) {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            var links = params.mergeGeoJSON.split(",")
+            console.log(links[0])
+            console.log(links[1])
+            mergeGeoJSON(links,function (response) {res.end(response)})
+        }
+    }
 });
 
-const server = http.createServer((req, res) => {
-    console.log(req.url)
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.end('' +
-     `<html>
-      <head></head>
-      <body>
-        Data render at browser page
-        <p>Rezultat query: ${showInBrowser}</p>
-        <script>
-          /********** Browser start ********/
-          /* This code is run in the browser */
-          console.log('${showInBrowser}');
-          /********** Browser end ********/
-        </script>
-      </body>
-    </html>`);
-});
+function getUsers(callback) {
+    const { Pool } = require('pg')
+    const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
+    const pool = new Pool({
+        connectionString,
+    })
+        ; (async () => {
+            const client = await pool.connect()
+            try {
+                const res = await client.query({
+                    rowMode: 'array',
+                    text: 'SELECT * FROM users',
+                })
+                console.log(res.rows)
+                return callback(res.rows)
+            } finally {
+                // Make sure to release the client before any error handling,
+                // just in case the error handling itself throws an error.
+                client.release()
+            }
+        })().catch(err => console.log(err.stack))
+}
+
+function mergeGEOJSON(links, callback) {
+
+    var geojsonMerge = require('@mapbox/geojson-merge');
+
+    var mergedGeoJSON = geojsonMerge.merge(links[0],links[1]);
+
+    return callback(mergedGeoJSON)
+}
+
 
 server.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);

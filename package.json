@@ -18,8 +18,10 @@
   },
   "homepage": "https://github.com/WoozyDeveloper/WebProject#readme",
   "dependencies": {
+    "@mapbox/geojson-merge": "^1.1.1",
     "dotenv": "^16.0.1",
     "nodemon": "^2.0.16",
-    "oracledb": "^5.3.0"
+    "oracledb": "^5.3.0",
+    "pg": "^8.7.3"
   }
 }

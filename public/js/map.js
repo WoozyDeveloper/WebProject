@@ -503,6 +503,7 @@ function setCheckElement(type) {
 map.on("load", () => {
   // Add earthquakes
   addEarthquakes(url, true);
+  testDatabase()
   document.getElementById("selectLastFloods").style.display = "none";
   document.getElementById("weatherMenu").style.display = "none";
   setCheckElement("earthquake");
@@ -617,3 +618,12 @@ map.on("idle", () => {
     }
   });
 });
+
+function testDatabase()
+{
+  fetch(`http://127.0.0.1:4000/&getUsers=true`)
+    .then((response) => response.text())
+    .then((data) => {
+      console.log(data)
+    })
+}
