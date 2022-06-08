@@ -9,9 +9,9 @@
   <body>
     <div class="box">
       <form action="http://127.0.0.1:4000/&postUser=true" method="POST">
-        <input type="text" placeholder="E-mail" required />
-        <input type="text" placeholder="Username" required />
-        <input type="password" placeholder="Password" required />
+        <input type="text" name="user[email]" placeholder="E-mail" required />
+        <input type="text" name="user[username]" placeholder="Username" required />
+        <input type="password" name="user[password]" placeholder="Password" required />
         <button>REGISTER</button>
       </form>
     </div>

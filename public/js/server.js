@@ -29,8 +29,7 @@ const server = http.createServer(async (req, res) => {
         console.log('POST')
         var body = ''
         req.on('data', function(data) {
-          body += data
-          console.log('Partial body: ' + body)
+            res.end(data)
         })
         req.on('end', function() {
           console.log('Body: ' + body)
@@ -40,6 +39,28 @@ const server = http.createServer(async (req, res) => {
     }
 });
 
+function postUser(callback){
+    const { Pool } = require('pg')
+    const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
+    const pool = new Pool({
+        connectionString,
+    })
+        ; (async () => {
+            const client = await pool.connect()
+            try {
+                const res = await client.query({
+                    rowMode: 'array',
+                    text: 'SELECT * FROM users where id=2',
+                })
+                console.log(res.rows)
+                return callback(res.rows)
+            } finally {
+                // Make sure to release the client before any error handling,
+                // just in case the error handling itself throws an error.
+                client.release()
+            }
+        })().catch(err => console.log(err.stack))
+}
 
 function getUsers(callback) {
     const { Pool } = require('pg')
