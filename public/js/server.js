@@ -2,7 +2,6 @@ const http = require('http');
 
 const hostname = '127.0.0.1';
 const port = 4000;
-
 //Can be found in the Details page
 
 var showInBrowser
@@ -16,17 +15,31 @@ const server = http.createServer(async (req, res) => {
     if (req.method == 'GET' && !req.url.includes("/favicon.ico")) {
         if (params.getUsers === "true") {
             res.writeHead(200, { 'Content-Type': 'text/html' });
-            getUsers(function (response) { res.end(`${JSON.stringify(response)}`) })
+            getUsers(function (response) { res.end(`${JSON.stringify(response)}`) })//vezi aici cv sincronizare callback
         }
         else if (params.mergeGeoJSON !== null) {
             res.writeHead(200, { 'Content-Type': 'application/json' });
-            var links = params.mergeGeoJSON.split(",")
-            console.log(links[0])
-            console.log(links[1])
-            mergeGeoJSON(links,function (response) {res.end(response)})
+            //var links = params.mergeGeoJSON.split(",")
+            //console.log(links[0])
+            //console.log(links[1])
+            //mergeGeoJSON(links,function (response) {res.end(response)})
         }
     }
+    else if (req.method == 'POST') {
+        console.log('POST')
+        var body = ''
+        req.on('data', function(data) {
+          body += data
+          console.log('Partial body: ' + body)
+        })
+        req.on('end', function() {
+          console.log('Body: ' + body)
+          res.writeHead(200, {'Content-Type': 'text/html'})
+          res.end('post received')
+        })
+    }
 });
+
 
 function getUsers(callback) {
     const { Pool } = require('pg')
@@ -39,7 +52,7 @@ function getUsers(callback) {
             try {
                 const res = await client.query({
                     rowMode: 'array',
-                    text: 'SELECT * FROM users',
+                    text: 'SELECT * FROM users where id=2',
                 })
                 console.log(res.rows)
                 return callback(res.rows)
