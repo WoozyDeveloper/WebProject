@@ -29,13 +29,25 @@ const server = http.createServer(async (req, res) => {
         console.log('POST')
         var body = ''
         req.on('data', function(data) {
-            res.end(data)
+            body+=data;
         })
         req.on('end', function() {
-          console.log('Body: ' + body)
-          res.writeHead(200, {'Content-Type': 'text/html'})
-          res.end('post received')
+            body+="&";
+            console.log('Body: ' + body)
+            res.writeHead(200, {'Content-Type': 'text/html'})
+            let extractedText = body.slice(
+                body.indexOf('=') + 1,
+                body.lastIndexOf('&'),);
+
+            res.end(extractedText)
         })
+
+        // const chunks = [];
+        // request.on('data', chunk => chunks.push(chunk));
+        // request.on('end', () => {
+        //     const data = Buffer.concat(chunks);
+        //     console.log('Data: ', data);
+        // })
     }
 });
 
