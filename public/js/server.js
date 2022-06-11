@@ -1,8 +1,13 @@
+const { parse } = require('querystring');
+
 const http = require('http');
 
 const hostname = '127.0.0.1';
 const port = 4000;
 //Can be found in the Details page
+
+
+
 
 var showInBrowser
 const server = http.createServer(async (req, res) => {
@@ -32,27 +37,12 @@ const server = http.createServer(async (req, res) => {
             body+=data;
         })
         req.on('end', function() {
-            body+="&";
-            console.log('Body: ' + body)
-            //res.writeHead(200, {'Content-Type': 'text'})
+            console.log(parse(body));
+            body = parse(body);
             
-            let lookForText = 'email%5D='
-            let extractedMail = body.slice(
-                 body.lastIndexOf('email%5D=') + lookForText.length,
-                 body.lastIndexOf('&user%5Busername'));
-            extractedMail = decodeURIComponent(extractedMail)
-
-            lookForText = 'username%5D='
-            let extractedUsername = body.slice(
-                body.lastIndexOf('username%5D=') + lookForText.length,
-                body.lastIndexOf('&user%5Bpassword'));
-            extractedUsername = decodeURIComponent(extractedUsername)
-
-            lookForText = 'password%5D='
-            let extractedPassword = body.slice(
-                body.lastIndexOf('password%5D=') + lookForText.length,
-                body.lastIndexOf('&'));
-            extractedPassword = decodeURIComponent(extractedPassword)
+            let extractedMail = body.email;
+            let extractedUsername = body.username;
+            let extractedPassword = body.password;
 
             res.end(extractedMail + extractedUsername + extractedPassword)
                 
