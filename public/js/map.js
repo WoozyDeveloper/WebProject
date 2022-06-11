@@ -159,6 +159,34 @@ function addFloodMarkers() {
         floodMarkers.push(marker);
       }
     });
+
+  fetch("http://localhost:4001/floods")
+    .then((response) => response.json())
+    .then((data) => {
+      for (let i = 0; i < nr; i++) {
+        let lat = data[i].latitude;
+        let long = data[i].longitude;
+        let eventname = data[i].eventname;
+        let eventplacename = data[i].eventplacename;
+        let startdate = data[i].startdate;
+        let enddate = data[i].enddate;
+        let details = data[i].details;
+
+        const popup = new mapboxgl.Popup({ offset: 25 }).setText(
+          `Event name: ${eventname} 
+           Event place name: ${eventplacename}
+           Start time: ${startdate}
+           End time: ${enddate}
+           Details: ${details}`
+        );
+
+        const marker = new mapboxgl.Marker({ "color": "red" })
+          .setLngLat([long, lat])
+          .setPopup(popup)
+          .addTo(map);
+        floodMarkers.push(marker);
+      }
+    })
 }
 
 function showFloodPictures() {
@@ -235,19 +263,26 @@ function addCities(start, end) {
             let time = validTime.textContent.split("T")[1]
             let date = validTime.textContent.split("T")[0]
 
-            if (forecast == undefined) {
-              forecast = document.createElement("p").innerHTML = "No forcast"
+            if (forecast === undefined) {
+              let forecastFix = document.createElement("p")
+              forecastFix.innerHTML = "No forecast"
+              forecast=forecastFix
             }
 
             const popup = new mapboxgl.Popup({ offset: 25 }).setText(
               `City: ${cityNames[i]}
-               Maximum temperature: ${((parseFloat(temp.textContent)-32)/1.8).toFixed(0).toString() + "C\u00B0"}
+               Maximum temperature: ${((parseFloat(temp.textContent) - 32) / 1.8).toFixed(0).toString() + "C\u00B0"}
                Forecast: ${forecast.textContent}
                Time: ${time}
                Date: ${date}`
             );
 
-            const marker = new mapboxgl.Marker()
+            let color = {}
+            if(forecast.textContent === "Thunderstorm")
+            {
+              color = {"color":"red"}
+            }
+            const marker = new mapboxgl.Marker(color)
               .setLngLat([long, lat])
               .setPopup(popup)
               .addTo(map);
@@ -259,7 +294,8 @@ function addCities(start, end) {
 
             event.classList.add("slide");
 
-            event.innerHTML = `<div class="slide-details"><p>${time}</p><div class="slide-subheading"><p style="font-size: 13px;">Maximum temperature: ${temp.textContent}</p><p style="font-size: 13px;">${date}</p></div><div class="slide-place"><svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 24 24" width="12px" fill="#fff"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>${cityNames[i]}</div></div>`;
+            event.innerHTML = `<div class="slide-details"><p>${time}</p><div class="slide-subheading"><p style="font-size: 13px;">Maximum temperature:
+             ${((parseFloat(temp.textContent) - 32) / 1.8).toFixed(0).toString() + "C\u00B0"}</p><p style="font-size: 13px;">${date}</p></div><div class="slide-place"><svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 24 24" width="12px" fill="#fff"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>${cityNames[i]}</div></div>`;
 
             events.appendChild(event);
 
@@ -273,6 +309,32 @@ function addCities(start, end) {
           })
       }
     })
+
+  fetch(`http://localhost:4001/weather/?starttime=${start}&endtime=${end}`)
+    .then((response) => response.json())
+    .then((data) => {
+      let lat = data[i].latitude;
+      let long = data[i].longitude;
+      let eventname = data[i].eventname;
+      let eventplacename = data[i].eventplacename;
+      let startdate = data[i].startdate;
+      let enddate = data[i].enddate;
+      let details = data[i].details;
+
+      const popup = new mapboxgl.Popup({ offset: 25 }).setText(
+        `Event name: ${eventname} 
+           Event place name: ${eventplacename}
+           Start time: ${startdate}
+           End time: ${enddate}
+           Details: ${details}`
+      );
+
+      const marker = new mapboxgl.Marker({ "color": "brown" })
+        .setLngLat([long, lat])
+        .setPopup(popup)
+        .addTo(map);
+      floodMarkers.push(marker);
+    })
 }
 
 function removeCities() {
@@ -282,7 +344,35 @@ function removeCities() {
 }
 
 
+function addUserEarthquakes(start, end) {
+  fetch(`http://localhost:4001/earthquakes?starttime=${start}&endtime=${end}`)
+    .then((response) => response.json())
+    .then((data) => {
+      for (let i = 0; i < data.length; i++) {
+        let lat = data[i].latitude;
+        let long = data[i].longitude;
+        let eventname = data[i].eventname;
+        let eventplacename = data[i].eventplacename;
+        let startdate = data[i].startdate;
+        let enddate = data[i].enddate;
+        let details = data[i].details;
 
+        const popup = new mapboxgl.Popup({ offset: 25 }).setText(
+          `Event name: ${eventname} 
+           Event place name: ${eventplacename}
+           Start time: ${startdate}
+           End time: ${enddate}
+           Details: ${details}`
+        );
+
+        const marker = new mapboxgl.Marker({ "color": "brown" })
+          .setLngLat([long, lat])
+          .setPopup(popup)
+          .addTo(map);
+        floodMarkers.push(marker);
+      }
+    })
+}
 
 // Initialize mapbox popup
 const popup = new mapboxgl.Popup({
@@ -499,11 +589,39 @@ function setCheckElement(type) {
   typeCheck.checked = true;
 }
 
+
+function getCurrentDay() {
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var yyyy = today.getFullYear();
+
+  today = dd + mm + yyyy;
+
+  return today
+}
+
+function getCurrentDayAMonthAgo() {
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var yyyy = today.getFullYear();
+  var mm = String(today.getMonth()).padStart(2, '0'); //January is 0!
+  if (mm === "00") {
+    mm = "12"
+    yyyy = yyyy - 1
+  }
+  today = dd + mm + yyyy;
+
+  return today
+}
+
+
+
 // Load tilesets(tectonic plates, Global Seismic Network, Orogens & Volcanoes) on map load
 map.on("load", () => {
   // Add earthquakes
   addEarthquakes(url, true);
-  testDatabase()
+  addUserEarthquakes(getCurrentDayAMonthAgo(), getCurrentDay())
   document.getElementById("selectLastFloods").style.display = "none";
   document.getElementById("weatherMenu").style.display = "none";
   setCheckElement("earthquake");
@@ -563,8 +681,7 @@ map.on("idle", () => {
           removeFloodMarkers();
           loaded.find((obj) => obj.type === "flood").loaded = false;
         }
-        else if(loaded[i].type === "storm" && loaded[i].loaded)
-        {
+        else if (loaded[i].type === "storm" && loaded[i].loaded) {
           removeCities();
           loaded.find((obj) => obj.type === "storm").loaded = false;
         }
@@ -585,6 +702,7 @@ map.on("idle", () => {
               }
             }
             addEarthquakes(url, false);
+            addUserEarthquakes(data.min, data.max)
             checkedSomething = true;
             document.getElementById("earthquakeSettings").style.display =
               "block";
@@ -602,7 +720,7 @@ map.on("idle", () => {
               setErrorMessage("Cannot show forcast in the past");
             }
             else
-            addCities(data.start, data.end)
+              addCities(data.start, data.end)
           }
         }
       }
@@ -618,12 +736,3 @@ map.on("idle", () => {
     }
   });
 });
-
-function testDatabase()
-{
-  fetch(`http://127.0.0.1:4000/&getUsers=true`)
-    .then((response) => response.text())
-    .then((data) => {
-      console.log(data)
-    })
-}

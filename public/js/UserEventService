@@ -1,0 +1,161 @@
+const http = require('http');
+
+const querystring = require('query-string')
+
+const hostname = '127.0.0.1';
+const port = 4001;
+
+const server = http.createServer((req, res) => {
+    res.statusCode = 200;
+    if (req.method == 'GET') {
+        const urlSearchParams = querystring.parseUrl(req.url);
+        const params = urlSearchParams.query;
+        console.log(params)
+        let queryparams = '{"type":"","starttime":"","endtime":""}'
+        queryparams = JSON.parse(queryparams)
+        if(params.starttime === undefined) // daca nu se specifica timpul atunci se baga o data pentru care vor aparea toate evenimentele
+        {
+            queryparams.starttime = "01011800"
+        }
+        else queryparams.starttime = params.starttime
+        if(params.endtime === undefined)
+        {
+            queryparams.endtime = "01012900"
+        }
+        else queryparams.endtime = params.endtime
+        if("/all" === urlSearchParams.url)
+        {
+            res.setHeader('Content-Type', 'text/plain');
+            getUserEvents(function (response) { res.end(`${JSON.stringify(response)}`) })//vezi aici cv sincronizare callback
+        }
+        if("/floods" === urlSearchParams.url)
+        {
+            queryparams.type="flood"
+            res.setHeader('Content-Type', 'text/plain');
+            getUserEventsByType(queryparams,function (response) { res.end(`${JSON.stringify(response)}`) })//vezi aici cv sincronizare callback
+        }
+        if("/earthquakes" === urlSearchParams.url)
+        {
+            queryparams.type="earthquake"
+            res.setHeader('Content-Type', 'text/plain');
+            getUserEventsByType(queryparams,function (response) { res.end(`${JSON.stringify(response)}`) })
+        }
+        if("/weather" === urlSearchParams.url)
+        {
+            queryparams.type="weather"
+            res.setHeader('Content-Type', 'text/plain');
+            getUserEventsByType(queryparams,function (response) { res.end(`${JSON.stringify(response)}`) })
+        }
+    }
+    else if (req.method == 'POST') {
+        console.log('POST')
+        var body = ''
+        req.on('data', function (data) {
+            body += data
+            console.log(data)
+            console.log('Partial body: ' + body)
+        })
+        req.on('end', function () {
+            console.log('Body: ' + body)
+            res.writeHead(200, { 'Content-Type': 'text/html' })
+            postUserEvents(getUrlVars(req.url), function (response) { res.end(JSON.stringify(response)) })
+        })
+    }
+});
+
+function getUrlVars(url) {
+    var hash;
+    var myJson = {};
+    var hashes = url.slice(url.indexOf('?') + 1).split('&');
+    for (var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        myJson[hash[0]] = hash[1];
+    }
+    return myJson;
+}
+
+function getUserEvents(callback) {
+    const { Pool } = require('pg')
+    const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
+    const pool = new Pool({
+        connectionString,
+    })
+        ; (async () => {
+            const client = await pool.connect()
+            try {
+                const res = await client.query({
+                    text: 'SELECT * FROM UserEvents',
+                })
+                console.log(res.rows)
+                return callback(res.rows)
+            } finally {
+                // Make sure to release the client before any error handling,
+                // just in case the error handling itself throws an error.
+                client.release()
+            }
+        })().catch(err => console.log(err.stack))
+}
+
+function getUserEventsByType(queryparams, callback) {
+    const { Pool } = require('pg')
+    const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
+    const pool = new Pool({
+        connectionString,
+    })
+        ; (async () => {
+            const client = await pool.connect()
+            try {
+                console.log(queryparams.starttime)
+                const res = await client.query({
+                    text: `SELECT * FROM UserEvents where type = $1 and startdate >= to_date($2,'DDMMYYYY') and enddate <= to_date($3,'DDMMYYYY')`,
+                    values: [queryparams.type,queryparams.starttime,queryparams.endtime]
+                })
+                console.log(res.rows)
+                return callback(res.rows)
+            } finally {
+                // Make sure to release the client before any error handling,
+                // just in case the error handling itself throws an error.
+                client.release()
+            }
+        })().catch(err => console.log(err.stack))
+}
+
+function postUserEvents(data, callback) {
+    const { Pool } = require('pg')
+    const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
+    const pool = new Pool({
+        connectionString,
+    })
+        ; (async () => {
+            const client = await pool.connect()
+            try {
+                console.log(data)
+                let userid = data.userid
+                let eventid = data.eventid
+                let type = data.type
+                let eventname = data.eventname
+                let eventplacename = data.eventplacename
+                let latitude = data.latitude
+                let longitude = data.longitude
+                let startdate = data.startdate
+                let enddate = data.enddate
+                let details = data.details
+                const res = await client.query({
+                    rowMode: 'array',
+                    text: `insert into UserEvents values($1,$2,$3,$4,$5,$6,$7,TO_DATE($8,'DDMMYYYY'),TO_DATE($9,'DDMMYYYY'),$10)`,
+                    values: [userid, eventid, type, eventname, eventplacename, latitude, longitude, startdate, enddate, details]
+                    //values: [1,1,'flood','a','b',1.1,1.2,'13091845','06011923','I saw this in Iasi!'] foloseste pt test 
+                })
+                console.log(res.rows)
+                return callback(data)
+            } finally {
+                // Make sure to release the client before any error handling,
+                // just in case the error handling itself throws an error.
+                client.release()
+            }
+        })().catch(err => console.log(err.stack))
+}
+
+server.listen(port, hostname, () => {
+    console.log(`Server running at http://${hostname}:${port}/`);
+});
