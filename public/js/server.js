@@ -34,23 +34,26 @@ const server = http.createServer(async (req, res) => {
         req.on('end', function() {
             body+="&";
             console.log('Body: ' + body)
-            res.writeHead(200, {'Content-Type': 'text/html'})
+            //res.writeHead(200, {'Content-Type': 'text'})
             
             let lookForText = 'email%5D='
             let extractedMail = body.slice(
                  body.lastIndexOf('email%5D=') + lookForText.length,
                  body.lastIndexOf('&user%5Busername'));
+            extractedMail = decodeURIComponent(extractedMail)
 
             lookForText = 'username%5D='
             let extractedUsername = body.slice(
                 body.lastIndexOf('username%5D=') + lookForText.length,
                 body.lastIndexOf('&user%5Bpassword'));
+            extractedUsername = decodeURIComponent(extractedUsername)
 
             lookForText = 'password%5D='
             let extractedPassword = body.slice(
                 body.lastIndexOf('password%5D=') + lookForText.length,
                 body.lastIndexOf('&'));
-            
+            extractedPassword = decodeURIComponent(extractedPassword)
+
             res.end(extractedMail + extractedUsername + extractedPassword)
                 
             const { Pool } = require('pg')
@@ -61,11 +64,27 @@ const server = http.createServer(async (req, res) => {
                 ; (async () => {
                     const client = await pool.connect()
                     try {
-                        const res = await client.query({
+                        const check = await client.query({
                             rowMode: 'array',
-                            text: 'INSERT INTO USERS VALUES(' + 4 + ',\'' + extractedMail + '\',\'' + extractedUsername + '\',\'' + extractedPassword + '\')',
+                            text: 'SELECT * FROM USERS WHERE EMAIL=\'' + extractedMail + '\'',
                         })
-                        console.log(res.rows)
+                        
+                        if(check.rowCount == 0){
+                            const dim = await client.query({
+                                rowMode: 'array',
+                                text: 'SELECT * FROM USERS',
+                            })
+                            
+                            const res = await client.query({
+                                rowMode: 'array',
+                                text: 'INSERT INTO USERS VALUES(' + (dim.rowCount + 1) + ',\'' + extractedMail + '\',\'' + extractedUsername + '\',\'' + extractedPassword + '\')',
+                            })
+                            console.log(res.rows)
+                        }
+                        else{
+                            console.log('email already exists:' + extractedMail);
+
+                        }
                     } finally {
                         // Make sure to release the client before any error handling,
                         // just in case the error handling itself throws an error.
@@ -74,14 +93,6 @@ const server = http.createServer(async (req, res) => {
                 })().catch(err => console.log(err.stack))
         
         })
-
-
-        // const chunks = [];
-        // request.on('data', chunk => chunks.push(chunk));
-        // request.on('end', () => {
-        //     const data = Buffer.concat(chunks);
-        //     console.log('Data: ', data);
-        // })
     }
 });
 
