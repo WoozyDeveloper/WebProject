@@ -52,7 +52,29 @@ const server = http.createServer(async (req, res) => {
                 body.lastIndexOf('&'));
             
             res.end(extractedMail + extractedUsername + extractedPassword)
+                
+            const { Pool } = require('pg')
+            const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
+            const pool = new Pool({
+                connectionString,
+            })
+                ; (async () => {
+                    const client = await pool.connect()
+                    try {
+                        const res = await client.query({
+                            rowMode: 'array',
+                            text: 'INSERT INTO USERS VALUES(' + 4 + ',\'' + extractedMail + '\',\'' + extractedUsername + '\',\'' + extractedPassword + '\')',
+                        })
+                        console.log(res.rows)
+                    } finally {
+                        // Make sure to release the client before any error handling,
+                        // just in case the error handling itself throws an error.
+                        client.release()
+                    }
+                })().catch(err => console.log(err.stack))
+        
         })
+
 
         // const chunks = [];
         // request.on('data', chunk => chunks.push(chunk));
