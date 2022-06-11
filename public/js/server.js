@@ -35,11 +35,23 @@ const server = http.createServer(async (req, res) => {
             body+="&";
             console.log('Body: ' + body)
             res.writeHead(200, {'Content-Type': 'text/html'})
-            let extractedText = body.slice(
-                body.indexOf('=') + 1,
-                body.lastIndexOf('&'),);
+            
+            let lookForText = 'email%5D='
+            let extractedMail = body.slice(
+                 body.lastIndexOf('email%5D=') + lookForText.length,
+                 body.lastIndexOf('&user%5Busername'));
 
-            res.end(extractedText)
+            lookForText = 'username%5D='
+            let extractedUsername = body.slice(
+                body.lastIndexOf('username%5D=') + lookForText.length,
+                body.lastIndexOf('&user%5Bpassword'));
+
+            lookForText = 'password%5D='
+            let extractedPassword = body.slice(
+                body.lastIndexOf('password%5D=') + lookForText.length,
+                body.lastIndexOf('&'));
+            
+            res.end(extractedMail + extractedUsername + extractedPassword)
         })
 
         // const chunks = [];
