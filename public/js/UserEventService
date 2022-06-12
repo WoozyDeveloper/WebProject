@@ -11,7 +11,7 @@ const server = http.createServer((req, res) => {
     const params = urlSearchParams.query;
     if (req.method == 'GET') {
         console.log(params)
-        let queryparams = '{"type":"","starttime":"","endtime":""}'
+        let queryparams = '{"type":"","starttime":"","endtime":"","table":""}'
         queryparams = JSON.parse(queryparams)
         if (params.starttime === undefined) // daca nu se specifica timpul atunci se baga o data pentru care vor aparea toate evenimentele
         {
@@ -22,25 +22,10 @@ const server = http.createServer((req, res) => {
             queryparams.endtime = "01012900"
         }
         else queryparams.endtime = params.endtime
-        if ("/all" === urlSearchParams.url) {
-            res.setHeader('Content-Type', 'text/plain');
-            getUserEvents(function (response) { res.end(`${JSON.stringify(response)}`) })//vezi aici cv sincronizare callback
-        }
-        if ("/floods" === urlSearchParams.url) {
-            queryparams.type = "flood"
-            res.setHeader('Content-Type', 'text/plain');
-            getUserEventsByType(queryparams, function (response) { res.end(`${JSON.stringify(response)}`) })//vezi aici cv sincronizare callback
-        }
-        if ("/earthquakes" === urlSearchParams.url) {
-            queryparams.type = "earthquake"
-            res.setHeader('Content-Type', 'text/plain');
-            getUserEventsByType(queryparams, function (response) { res.end(`${JSON.stringify(response)}`) })
-        }
-        if ("/weather" === urlSearchParams.url) {
-            queryparams.type = "weather"
-            res.setHeader('Content-Type', 'text/plain');
-            getUserEventsByType(queryparams, function (response) { res.end(`${JSON.stringify(response)}`) })
-        }
+        queryparams.table = params.table
+        res.setHeader('Content-Type', 'application/json');
+        getUserEvents(queryparams, function (response) { res.end(`${JSON.stringify(response)}`) })
+
     }
     else if (req.method == 'POST') {
         console.log('POST')
@@ -50,66 +35,44 @@ const server = http.createServer((req, res) => {
             console.log(data)
             console.log('Partial body: ' + body)
         })
-        if ("/all" === urlSearchParams.url) {
-            req.on('end', function () {
-                console.log('Body: ' + body)
-                res.writeHead(200, { 'Content-Type': 'text/html' })
-                postUserEvents(params, function (response) { res.end(JSON.stringify(response)) })
-            })
-        }
-        else if ("/floods" === urlSearchParams.url || "/earthquakes" === urlSearchParams.url || "/weather" === urlSearchParams.url) {
-            req.on('end', function () {
-                res.writeHead(200, { 'Content-Type': 'text/html' })
-                postUserEventsByType(params, function (response) { res.end(JSON.stringify(response)) })
-            })
-        }
+        req.on('end', function () {
+            console.log('Body: ' + body)
+            res.writeHead(200, { 'Content-Type': 'application/json' })
+            postUserEvents(JSON.parse(body), function (response) { res.end(JSON.stringify(response)) })
+        })
     }
     else if (req.method == 'DELETE') {
         console.log('DELETE')
-        res.writeHead(200, { 'Content-Type': 'text/html' })
-        if ("/all" === urlSearchParams.url) {
-            deleteUserEvents(params, function (response) { res.end(JSON.stringify(response)) })
-        }
-        else if ("/floods" === urlSearchParams.url || "/earthquakes" === urlSearchParams.url || "/weather" === urlSearchParams.url) {
-            deleteUserEventsByType(params, function (response) { res.end(JSON.stringify(response)) })
-        }
+        var body = ''
+        req.on('data', function (data) {
+            body += data
+            console.log(data)
+            console.log('Partial body: ' + body)
+        })
+        req.on('end', function () {
+            console.log('Body: ' + body)
+            res.writeHead(200, { 'Content-Type': 'application/json' })
+            deleteUserEvents(JSON.parse(body), function (response) { res.end(JSON.stringify(response)) })
+        })
     }
     else if (req.method == 'PUT') {
         console.log('PUT')
-        res.writeHead(200, { 'Content-Type': 'text/html' })
-        if ("/all" === urlSearchParams.url) {
-            putUserEvents(params, function (response) { res.end(JSON.stringify(response)) })
-        }
-        else if ("/floods" === urlSearchParams.url || "/earthquakes" === urlSearchParams.url || "/weather" === urlSearchParams.url)
-        {
-            putUserEventsByType(params, function (response) { res.end(JSON.stringify(response)) })
-        }
+        var body = ''
+        req.on('data', function (data) {
+            body += data
+            console.log(data)
+            console.log('Partial body: ' + body)
+        })
+        req.on('end', function () {
+            console.log('Body: ' + body)
+            res.writeHead(200, { 'Content-Type': 'application/json' })
+            putUserEvents(JSON.parse(body), function (response) { res.end(JSON.stringify(response)) })
+        })
     }
 });
 
-function getUserEvents(callback) {
-    const { Pool } = require('pg')
-    const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
-    const pool = new Pool({
-        connectionString,
-    })
-        ; (async () => {
-            const client = await pool.connect()
-            try {
-                const res = await client.query({
-                    text: 'SELECT * FROM UserEvents',
-                })
-                console.log(res.rows)
-                return callback(res.rows)
-            } finally {
-                // Make sure to release the client before any error handling,
-                // just in case the error handling itself throws an error.
-                client.release()
-            }
-        })().catch(err => console.log(err.stack))
-}
 
-function getUserEventsByType(queryparams, callback) {
+function getUserEvents(queryparams, callback) {
     const { Pool } = require('pg')
     const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
     const pool = new Pool({
@@ -118,11 +81,25 @@ function getUserEventsByType(queryparams, callback) {
         ; (async () => {
             const client = await pool.connect()
             try {
-                console.log(queryparams.starttime)
-                const res = await client.query({
-                    text: `SELECT * FROM UserEvents where type = $1 and startdate >= to_date($2,'DDMMYYYY') and enddate <= to_date($3,'DDMMYYYY')`,
-                    values: [queryparams.type, queryparams.starttime, queryparams.endtime]
-                })
+                console.log(queryparams)
+                let table = queryparams.table
+                let startdate = queryparams.starttime
+                let enddate = queryparams.endtime
+                let type = queryparams.type
+                let res
+                if (table === "UserEvents") {
+                    res = await client.query({
+                        text: `SELECT * FROM UserEvents where type = $1 and startdate >= to_date($2,'DDMMYYYY') and enddate <= to_date($3,'DDMMYYYY')`,
+                        values: [type, startdate, enddate]
+                    })
+                }
+                else
+                {
+                    res = await client.query({
+                        text: `SELECT * FROM ${table} where startdate >= to_date($1,'DDMMYYYY') and enddate <= to_date($2,'DDMMYYYY')`,
+                        values: [startdate, enddate]
+                    })
+                }
                 console.log(res.rows)
                 return callback(res.rows)
             } finally {
@@ -143,42 +120,6 @@ function postUserEvents(data, callback) {
             const client = await pool.connect()
             try {
                 console.log(data)
-                let userid = data.userid
-                let eventid = data.eventid
-                let type = data.type
-                let eventname = data.eventname
-                let eventplacename = data.eventplacename
-                let latitude = data.latitude
-                let longitude = data.longitude
-                let startdate = data.startdate
-                let enddate = data.enddate
-                let details = data.details
-                const res = await client.query({
-                    rowMode: 'array',
-                    text: `insert into UserEvents values($1,$2,$3,$4,$5,$6,$7,TO_DATE($8,'DDMMYYYY'),TO_DATE($9,'DDMMYYYY'),$10)`,
-                    values: [userid, eventid, type, eventname, eventplacename, latitude, longitude, startdate, enddate, details]
-                    //values: [1,1,'flood','a','b',1.1,1.2,'13091845','06011923','I saw this in Iasi!'] foloseste pt test 
-                })
-                console.log(res.rows)
-                return callback(data)
-            } finally {
-                // Make sure to release the client before any error handling,
-                // just in case the error handling itself throws an error.
-                client.release()
-            }
-        })().catch(err => console.log(err.stack))
-}
-
-function postUserEventsByType(data, callback) {
-    const { Pool } = require('pg')
-    const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
-    const pool = new Pool({
-        connectionString,
-    })
-        ; (async () => {
-            const client = await pool.connect()
-            try {
-                console.log(data)
                 let eventid = data.eventid
                 let location = data.location
                 let latitude = data.latitude
@@ -186,31 +127,43 @@ function postUserEventsByType(data, callback) {
                 let description = data.description
                 let details = data.details
                 let type = data.type
+                let table = data.table
+                let startdate = data.startdate
+                let enddate = data.enddate
                 let res
-                if (type === "flood") {
-                    let waterbodyname = data.waterbodyname
+                if (table === "UserEvents") {
+                    let userid = data.userid
+                    let eventname = data.eventname
+                    let eventplacename = data.eventnameplace
+
                     res = await client.query({
                         rowMode: 'array',
-                        text: `insert into Floods values($1,$2,$3,$4,$5,$6,$7)`,
-                        values: [location, waterbodyname, latitude, longitude, description, details, eventid]
+                        text: `insert into UserEvents values($1,$2,$3,$4,$5,$6,$7,TO_DATE($8,'DDMMYYYY'),TO_DATE($9,'DDMMYYYY'),$10)`,
+                        values: [userid, eventid, type, eventname, eventplacename, latitude, longitude, startdate, enddate, details]
                         //values: [1,1,'flood','a','b',1.1,1.2,'13091845','06011923','I saw this in Iasi!'] foloseste pt test 
                     })
                 }
-                else if (type === "earthquake") {
-                    let eventdate = data.eventdate
+                if (table === "Floods") {
+                    let waterbodyname = data.waterbodyname
+                    res = await client.query({
+                        rowMode: 'array',
+                        text: `insert into Floods values($1,$2,$3,$4,$5,$6,$7,TO_DATE($8,'DDMMYYYY'),TO_DATE($9,'DDMMYYYY'))`,
+                        values: [location, waterbodyname, latitude, longitude, description, details, eventid, startdate, enddate]
+                        //values: [1,1,'flood','a','b',1.1,1.2,'13091845','06011923','I saw this in Iasi!'] foloseste pt test 
+                    })
+                }
+                else if (table === "Earthquakes") {
                     let magnitude = data.magnitude
                     let time = data.time
                     res = await client.query({
                         rowMode: 'array',
-                        text: `insert into Earthquakes values($1,$2,to_date($3, 'DDMMYYYY'),$4,$5,$6,$7,$8,$9)`,
-                        values: [eventid, location, eventdate, magnitude, latitude, longitude, time, description, details]
+                        text: `insert into Earthquakes values($1,$2,to_date($3, 'DDMMYYYY'),$4,$5,$6,$7,$8,$9,to_date($10, 'DDMMYYYY'))`,
+                        values: [eventid, location, enddate, magnitude, latitude, longitude, time, description, details, startdate]
                         //values: [1,1,'flood','a','b',1.1,1.2,'13091845','06011923','I saw this in Iasi!'] foloseste pt test 
                     })
                 }
-                else if (type === "weather") {
+                else if (table === "Weather") {
                     let event = data.event
-                    let startdate = data.startdate
-                    let enddate = data.enddate
                     res = await client.query({
                         rowMode: 'array',
                         text: `insert into Weather values($1,$2,$3,$4,$5,$6,$7,to_date($8,'DDMMYYYY'),to_date($9,'DDMMYYYY'))`,
@@ -237,10 +190,34 @@ function deleteUserEvents(queryparams, callback) {
         ; (async () => {
             const client = await pool.connect()
             try {
-                const res = await client.query({
-                    text: `delete from UserEvents where eventid = $1`,
-                    values: [queryparams.eventid] //folosim doar prima cheie ca parametru pt delete
-                })
+                console.log(queryparams)
+                let eventid = queryparams.eventid
+                let table = queryparams.table
+                let res
+                if (table === "UserEvents") {
+                    res = await client.query({
+                        text: `delete from UserEvents where eventid = $1`,
+                        values: [eventid] //folosim doar prima cheie ca parametru pt delete
+                    })
+                }
+                if (table === "Floods") {
+                    res = await client.query({
+                        text: `delete from Floods where eventid = $1`,
+                        values: [eventid] //folosim doar prima cheie ca parametru pt delete
+                    })
+                }
+                else if (table === "Earthquakes") {
+                    res = await client.query({
+                        text: `delete from Earthquakes where eventid = $1`,
+                        values: [eventid] //folosim doar prima cheie ca parametru pt delete
+                    })
+                }
+                else if (table === "Weather") {
+                    res = await client.query({
+                        text: `delete from Weather where eventid = $1`,
+                        values: [eventid] //folosim doar prima cheie ca parametru pt delete
+                    })
+                }
                 console.log(res.rows)
                 return callback(res.rows)
             } finally {
@@ -251,44 +228,6 @@ function deleteUserEvents(queryparams, callback) {
         })().catch(err => console.log(err.stack))
 }
 
-function deleteUserEventsByType(queryparams, callback) {
-    const { Pool } = require('pg')
-    const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
-    const pool = new Pool({
-        connectionString,
-    })
-        ; (async () => {
-            const client = await pool.connect()
-            try {
-                console.log(queryparams)
-                let res
-                if (queryparams.type === "flood") {
-                    res = await client.query({
-                        text: `delete from Floods where eventid = $1`,
-                        values: [queryparams.eventid] //folosim doar prima cheie ca parametru pt delete
-                    })
-                }
-                else if (queryparams.type === "earthquake") {
-                    res = await client.query({
-                        text: `delete from Earthquakes where eventid = $1`,
-                        values: [queryparams.eventid] //folosim doar prima cheie ca parametru pt delete
-                    })
-                }
-                else if (queryparams.type === "weather") {
-                    res = await client.query({
-                        text: `delete from Weather where eventid = $1`,
-                        values: [queryparams.eventid] //folosim doar prima cheie ca parametru pt delete
-                    })
-                }
-                console.log(res.rows)
-                return callback(res.rows)
-            } finally {
-                // Make sure to release the client before any error handling,
-                // just in case the error handling itself throws an error.
-                client.release()
-            }
-        })().catch(err => console.log(err.stack))
-}
 
 function putUserEvents(queryparams, callback) {
     const { Pool } = require('pg')
@@ -299,70 +238,17 @@ function putUserEvents(queryparams, callback) {
         ; (async () => {
             const client = await pool.connect()
             try {
-                let event_id = queryparams.event_id
-                let keys = Object.keys(queryparams)
-                let res
-                for (let i = 0; i < keys.length; i++) {
-                    if (keys[i] !== "event_id") {
-                        res = await client.query({
-                            text: `update UserEvents set ${keys[i]} = ${queryparams[keys[i]]} where eventid=$1`,
-                            values: [event_id]
-                        })
-                    }
-                }
-                console.log(res.rows)
-                return callback(res.rows)
-            } finally {
-                // Make sure to release the client before any error handling,
-                // just in case the error handling itself throws an error.
-                client.release()
-            }
-        })().catch(err => console.log(err.stack))
-}
-
-function putUserEventsByType(queryparams, callback) {
-    const { Pool } = require('pg')
-    const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
-    const pool = new Pool({
-        connectionString,
-    })
-        ; (async () => {
-            const client = await pool.connect()
-            try {
                 let event_id = queryparams.event_id //MANDATORY!!!!
                 let keys = Object.keys(queryparams)
+                let table = queryparams.table //MANDATORY
+                console.log(table)
                 let res
-                let type_ = queryparams.type_ //MANDATORY !!!!!
-                if (type_ === "earthquake") {
-                    for (let i = 0; i < keys.length; i++) {
-                        if (keys[i] !== "event_id" && keys[i]!== "type_") {
-                            res = await client.query({
-                                text: `update Earthquakes set ${keys[i]} = ${queryparams[keys[i]]} where eventid=$1`,
-                                values: [event_id]
-                            })
-                        }
-                    }
-                }
-                else if(type_ === "flood")
-                {
-                    for (let i = 0; i < keys.length; i++) {
-                        if (keys[i] !== "event_id" && keys[i]!== "type_") {
-                            res = await client.query({
-                                text: `update Floods set ${keys[i]} = ${queryparams[keys[i]]} where eventid=$1`,
-                                values: [event_id]
-                            })
-                        }
-                    }
-                }
-                else if(type_ === "weather")
-                {
-                    for (let i = 0; i < keys.length; i++) {
-                        if (keys[i] !== "event_id" && keys[i]!== "type_") {
-                            res = await client.query({
-                                text: `update Weather set ${keys[i]} = ${queryparams[keys[i]]} where eventid=$1`,
-                                values: [event_id]
-                            })
-                        }
+                for (let i = 0; i < keys.length; i++) {
+                    if (keys[i] !== "event_id" && keys[i] !== "table") {
+                        res = await client.query({
+                            text: `update ${table} set ${keys[i]} = '${queryparams[keys[i]]}' where eventid=$1`,
+                            values: [event_id]
+                        })
                     }
                 }
                 console.log(res.rows)
