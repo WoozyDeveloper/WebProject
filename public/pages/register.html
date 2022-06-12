@@ -8,7 +8,7 @@
   </head>
   <body>
     <div class="box">
-      <form action="http://127.0.0.1:4000/" method="POST">
+      <form>
         <input type="email" name="email" placeholder="E-mail" required />
         <input type="text" name="username" placeholder="Username" required />
         <input type="password" name="password" placeholder="Password" required />
@@ -36,6 +36,42 @@
       <a> </a>
     </div>
     <span class="span" id="nav_button" onClick="move()"></span>
+    
+    <script>
+      document.forms[0].onsubmit = async(e) => {
+        e.preventDefault();
+        console.log("TESTTT");
+      const data = {
+                      email:"23fgv3bhtgerf4grfe@gmail.com",
+                      username:"adi",
+                      password:"hopa"
+                    }
+
+      const settings = {
+          method: 'POST',
+          headers: {'Content-Type':'application/x-www-form-urlencoded'},
+
+          body: JSON.stringify(data)
+      };
+      try {
+          const fetchResponse = await fetch('http://localhost:4000', settings);
+          const response = await fetchResponse.json();
+          console.log(response);
+
+          if(response.status === 'new user'){
+            window.location.replace("http://stackoverflow.com/%22");
+          }
+          else{
+
+          }
+          
+      } catch (err) {
+          console.log(err);
+    }    
+
+}
+    </script>
     <script src="../js/animatie_buton.js"></script>
+    
   </body>
 </html>

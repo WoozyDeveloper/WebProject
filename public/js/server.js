@@ -11,6 +11,8 @@ const port = 4000;
 
 var showInBrowser
 const server = http.createServer(async (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+
     const urlSearchParams = new URLSearchParams(req.url);
     const params = Object.fromEntries(urlSearchParams.entries());
     if (!req.url.includes("/favicon.ico")) {
@@ -37,10 +39,10 @@ const server = http.createServer(async (req, res) => {
             body+=data;
         })
         req.on('end', function() {
-            console.log(parse(body));
+            console.log(body);
             body = JSON.parse(body);
             
-            postUser(body,function (response) { res.end(`${JSON.stringify(response)}`) })
+            postUser(body,function (response) { res.writeHead(200, { 'Content-Type': 'application/json' });res.end(`${JSON.stringify(response)}`) })
             
         })
     }
@@ -78,14 +80,17 @@ function postUser(body, callback){
                             console.log(res.rows);
 
                             //res.writeHead(200, {'Content-Type': 'text/plain'});
-                            response = "raspuns";
+                            response = {
+                                status : "new user"
+                            }
 
                         }
                         else{
                             console.log('email already exists:' + extractedMail);
 
-                            //res.writeHead(200, {'Content-Type': 'text/plain'});
-                            response = "email existent";
+                            response = {
+                                status : "user found"
+                            } 
                         }
                         return callback(response);
 
