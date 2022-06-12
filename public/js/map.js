@@ -160,10 +160,10 @@ function addFloodMarkers() {
       }
     });
 
-  fetch("http://localhost:4001/floods")
+  fetch("http://localhost:4001?table=Floods")
     .then((response) => response.json())
     .then((data) => {
-      for (let i = 0; i < nr; i++) {
+      for (let i = 0; i < data.length; i++) {
         let lat = data[i].latitude;
         let long = data[i].longitude;
         let eventname = data[i].eventname;
@@ -180,7 +180,7 @@ function addFloodMarkers() {
            Details: ${details}`
         );
 
-        const marker = new mapboxgl.Marker({ "color": "red" })
+        const marker = new mapboxgl.Marker({ "color": "green" })
           .setLngLat([long, lat])
           .setPopup(popup)
           .addTo(map);
@@ -266,7 +266,7 @@ function addCities(start, end) {
             if (forecast === undefined) {
               let forecastFix = document.createElement("p")
               forecastFix.innerHTML = "No forecast"
-              forecast=forecastFix
+              forecast = forecastFix
             }
 
             const popup = new mapboxgl.Popup({ offset: 25 }).setText(
@@ -278,9 +278,8 @@ function addCities(start, end) {
             );
 
             let color = {}
-            if(forecast.textContent === "Thunderstorm")
-            {
-              color = {"color":"red"}
+            if (forecast.textContent === "Thunderstorm") {
+              color = { "color": "red" }
             }
             const marker = new mapboxgl.Marker(color)
               .setLngLat([long, lat])
@@ -310,30 +309,36 @@ function addCities(start, end) {
       }
     })
 
-  fetch(`http://localhost:4001/weather/?starttime=${start}&endtime=${end}`)
+  let startSplit = String(start).split("-")
+  let endSplit = String(end).split("-")
+  start = startSplit[2] + startSplit[1] + startSplit[0]
+  end = endSplit[2] + endSplit[1] + endSplit[0]
+  fetch(`http://localhost:4001/?table=Weather&starttime=${start}&endtime=${end}`)
     .then((response) => response.json())
     .then((data) => {
-      let lat = data[i].latitude;
-      let long = data[i].longitude;
-      let eventname = data[i].eventname;
-      let eventplacename = data[i].eventplacename;
-      let startdate = data[i].startdate;
-      let enddate = data[i].enddate;
-      let details = data[i].details;
+      for (let i = 0; i < data.length; i++) {
+        let lat = data[i].latitude;
+        let long = data[i].longitude;
+        let eventname = data[i].eventname;
+        let eventplacename = data[i].eventplacename;
+        let startdate = data[i].startdate;
+        let enddate = data[i].enddate;
+        let details = data[i].details;
 
-      const popup = new mapboxgl.Popup({ offset: 25 }).setText(
-        `Event name: ${eventname} 
+        const popup = new mapboxgl.Popup({ offset: 25 }).setText(
+          `Event name: ${eventname} 
            Event place name: ${eventplacename}
            Start time: ${startdate}
            End time: ${enddate}
            Details: ${details}`
-      );
+        );
 
-      const marker = new mapboxgl.Marker({ "color": "brown" })
-        .setLngLat([long, lat])
-        .setPopup(popup)
-        .addTo(map);
-      floodMarkers.push(marker);
+        const marker = new mapboxgl.Marker({ "color": "blue" })
+          .setLngLat([long, lat])
+          .setPopup(popup)
+          .addTo(map);
+        cityMarkers.push(marker);
+      }
     })
 }
 
@@ -343,9 +348,9 @@ function removeCities() {
   }
 }
 
-
+var earthquakeMarkers = []
 function addUserEarthquakes(start, end) {
-  fetch(`http://localhost:4001/earthquakes?starttime=${start}&endtime=${end}`)
+  fetch(`http://localhost:4001?table=Earthquakes&starttime=${start}&endtime=${end}`)
     .then((response) => response.json())
     .then((data) => {
       for (let i = 0; i < data.length; i++) {
@@ -369,7 +374,7 @@ function addUserEarthquakes(start, end) {
           .setLngLat([long, lat])
           .setPopup(popup)
           .addTo(map);
-        floodMarkers.push(marker);
+        earthquakeMarkers.push(marker);
       }
     })
 }
@@ -581,6 +586,11 @@ function removeEarthquakes() {
     map.removeLayer("earthquakes");
     map.removeSource("earthquakes");
   }
+
+  console.log(earthquakeMarkers)
+  for (let i = 0; i < earthquakeMarkers.length; i++) {
+    earthquakeMarkers[i].remove()
+  }
 }
 
 function setCheckElement(type) {
@@ -702,7 +712,11 @@ map.on("idle", () => {
               }
             }
             addEarthquakes(url, false);
-            addUserEarthquakes(data.min, data.max)
+            let startSplit = String(data.start).split("-")
+            let endSplit = String(data.end).split("-")
+            let start = startSplit[2] + startSplit[1] + startSplit[0]
+            let end = endSplit[2] + endSplit[1] + endSplit[0]
+            addUserEarthquakes(start, end)
             checkedSomething = true;
             document.getElementById("earthquakeSettings").style.display =
               "block";

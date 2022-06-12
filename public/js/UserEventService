@@ -74,9 +74,13 @@ const server = http.createServer((req, res) => {
 
 function getUserEvents(queryparams, callback) {
     const { Pool } = require('pg')
-    const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
+    //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
     const pool = new Pool({
-        connectionString,
+        //connectionString,
+        user: 'postgres',
+        host: '164.92.194.239',
+        database: 'postgres',
+        port: 5432,
     })
         ; (async () => {
             const client = await pool.connect()
@@ -112,9 +116,13 @@ function getUserEvents(queryparams, callback) {
 
 function postUserEvents(data, callback) {
     const { Pool } = require('pg')
-    const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
+    //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
     const pool = new Pool({
-        connectionString,
+        //connectionString,
+        user: 'postgres',
+        host: '164.92.194.239',
+        database: 'postgres',
+        port: 5432,
     })
         ; (async () => {
             const client = await pool.connect()
@@ -138,7 +146,8 @@ function postUserEvents(data, callback) {
 
                     res = await client.query({
                         rowMode: 'array',
-                        text: `insert into UserEvents values($1,$2,$3,$4,$5,$6,$7,TO_DATE($8,'DDMMYYYY'),TO_DATE($9,'DDMMYYYY'),$10)`,
+                        text: `insert into UserEvents(userid, eventid, type, eventname, eventplacename, latitude, longitude, startdate, enddate, details)
+                         values($1,$2,$3,$4,$5,$6,$7,TO_DATE($8,'DDMMYYYY'),TO_DATE($9,'DDMMYYYY'),$10)`,
                         values: [userid, eventid, type, eventname, eventplacename, latitude, longitude, startdate, enddate, details]
                         //values: [1,1,'flood','a','b',1.1,1.2,'13091845','06011923','I saw this in Iasi!'] foloseste pt test 
                     })
@@ -147,7 +156,8 @@ function postUserEvents(data, callback) {
                     let waterbodyname = data.waterbodyname
                     res = await client.query({
                         rowMode: 'array',
-                        text: `insert into Floods values($1,$2,$3,$4,$5,$6,$7,TO_DATE($8,'DDMMYYYY'),TO_DATE($9,'DDMMYYYY'))`,
+                        text: `insert into Floods(location, waterbodyname, latitude, longitude, description, details, eventid, startdate, enddate) 
+                        values($1,$2,$3,$4,$5,$6,$7,TO_DATE($8,'DDMMYYYY'),TO_DATE($9,'DDMMYYYY'))`,
                         values: [location, waterbodyname, latitude, longitude, description, details, eventid, startdate, enddate]
                         //values: [1,1,'flood','a','b',1.1,1.2,'13091845','06011923','I saw this in Iasi!'] foloseste pt test 
                     })
@@ -157,7 +167,8 @@ function postUserEvents(data, callback) {
                     let time = data.time
                     res = await client.query({
                         rowMode: 'array',
-                        text: `insert into Earthquakes values($1,$2,to_date($3, 'DDMMYYYY'),$4,$5,$6,$7,$8,$9,to_date($10, 'DDMMYYYY'))`,
+                        text: `insert into Earthquakes(eventid,location,enddate,magnitude,latitude,longitude,time,description,details,startdate) 
+                        values($1,$2,to_date($3, 'DDMMYYYY'),$4,$5,$6,$7,$8,$9,to_date($10, 'DDMMYYYY'))`,
                         values: [eventid, location, enddate, magnitude, latitude, longitude, time, description, details, startdate]
                         //values: [1,1,'flood','a','b',1.1,1.2,'13091845','06011923','I saw this in Iasi!'] foloseste pt test 
                     })
@@ -166,7 +177,8 @@ function postUserEvents(data, callback) {
                     let event = data.event
                     res = await client.query({
                         rowMode: 'array',
-                        text: `insert into Weather values($1,$2,$3,$4,$5,$6,$7,to_date($8,'DDMMYYYY'),to_date($9,'DDMMYYYY'))`,
+                        text: `insert into Weather(eventid, location, event, latitude, longitude, description, details, startdate, enddate)
+                         values($1,$2,$3,$4,$5,$6,$7,to_date($8,'DDMMYYYY'),to_date($9,'DDMMYYYY'))`,
                         values: [eventid, location, event, latitude, longitude, description, details, startdate, enddate]
                         //values: [1,1,'flood','a','b',1.1,1.2,'13091845','06011923','I saw this in Iasi!'] foloseste pt test 
                     })
@@ -183,9 +195,13 @@ function postUserEvents(data, callback) {
 
 function deleteUserEvents(queryparams, callback) {
     const { Pool } = require('pg')
-    const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
+    //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
     const pool = new Pool({
-        connectionString,
+        //connectionString,
+        user: 'postgres',
+        host: '164.92.194.239',
+        database: 'postgres',
+        port: 5432,
     })
         ; (async () => {
             const client = await pool.connect()
@@ -231,9 +247,13 @@ function deleteUserEvents(queryparams, callback) {
 
 function putUserEvents(queryparams, callback) {
     const { Pool } = require('pg')
-    const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
+    //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
     const pool = new Pool({
-        connectionString,
+        //connectionString,
+        user: 'postgres',
+        host: '164.92.194.239',
+        database: 'postgres',
+        port: 5432,
     })
         ; (async () => {
             const client = await pool.connect()
