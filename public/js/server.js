@@ -38,13 +38,19 @@ const server = http.createServer(async (req, res) => {
         })
         req.on('end', function() {
             console.log(parse(body));
-            body = parse(body);
+            body = JSON.parse(body);
             
-            let extractedMail = body.email;
+            postUser(body,function (response) { res.end(`${JSON.stringify(response)}`) })
+            
+        })
+    }
+});
+
+function postUser(body, callback){
+    let extractedMail = body.email;
             let extractedUsername = body.username;
             let extractedPassword = body.password;
-
-            res.end(extractedMail + extractedUsername + extractedPassword)
+            let response = '';
                 
             const { Pool } = require('pg')
             const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
@@ -69,44 +75,27 @@ const server = http.createServer(async (req, res) => {
                                 rowMode: 'array',
                                 text: 'INSERT INTO USERS VALUES(' + (dim.rowCount + 1) + ',\'' + extractedMail + '\',\'' + extractedUsername + '\',\'' + extractedPassword + '\')',
                             })
-                            console.log(res.rows)
+                            console.log(res.rows);
+
+                            //res.writeHead(200, {'Content-Type': 'text/plain'});
+                            response = "raspuns";
+
                         }
                         else{
                             console.log('email already exists:' + extractedMail);
 
+                            //res.writeHead(200, {'Content-Type': 'text/plain'});
+                            response = "email existent";
                         }
+                        return callback(response);
+
                     } finally {
                         // Make sure to release the client before any error handling,
                         // just in case the error handling itself throws an error.
+
                         client.release()
                     }
                 })().catch(err => console.log(err.stack))
-        
-        })
-    }
-});
-
-function postUser(callback){
-    const { Pool } = require('pg')
-    const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
-    const pool = new Pool({
-        connectionString,
-    })
-        ; (async () => {
-            const client = await pool.connect()
-            try {
-                const res = await client.query({
-                    rowMode: 'array',
-                    text: 'SELECT * FROM users where id=2',
-                })
-                console.log(res.rows)
-                return callback(res.rows)
-            } finally {
-                // Make sure to release the client before any error handling,
-                // just in case the error handling itself throws an error.
-                client.release()
-            }
-        })().catch(err => console.log(err.stack))
 }
 
 function getUsers(callback) {
