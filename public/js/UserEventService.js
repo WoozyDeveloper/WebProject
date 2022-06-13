@@ -100,7 +100,7 @@ function getUserEvents(queryparams, callback) {
                 else
                 {
                     res = await client.query({
-                        text: `SELECT * FROM ${table} where startdate >= to_date($1,'DDMMYYYY') and enddate <= to_date($2,'DDMMYYYY')`,
+                        text: `SELECT * FROM ${table} where startdate >= to_date($1,'DDMMYYYY') and enddate <= to_date($2,'DDMMYYYY') order by startdate desc`,
                         values: [startdate, enddate]
                     })
                 }
@@ -138,9 +138,9 @@ function postUserEvents(data, callback) {
                 let table = data.table
                 let startdate = data.startdate
                 let enddate = data.enddate
+                let userid = data.userid
                 let res
                 if (table === "UserEvents") {
-                    let userid = data.userid
                     let eventname = data.eventname
                     let eventplacename = data.eventnameplace
 
@@ -156,9 +156,9 @@ function postUserEvents(data, callback) {
                     let waterbodyname = data.waterbodyname
                     res = await client.query({
                         rowMode: 'array',
-                        text: `insert into Floods(location, waterbodyname, latitude, longitude, description, details, eventid, startdate, enddate) 
-                        values($1,$2,$3,$4,$5,$6,$7,TO_DATE($8,'DDMMYYYY'),TO_DATE($9,'DDMMYYYY'))`,
-                        values: [location, waterbodyname, latitude, longitude, description, details, eventid, startdate, enddate]
+                        text: `insert into Floods(location, waterbodyname, latitude, longitude, description, details, eventid, startdate, enddate,userid, severity) 
+                        values($1,$2,$3,$4,$5,$6,$7,TO_DATE($8,'DDMMYYYY'),TO_DATE($9,'DDMMYYYY'),$10,$11)`,
+                        values: [location, waterbodyname, latitude, longitude, description, details, eventid, startdate, enddate, userid, severity]
                         //values: [1,1,'flood','a','b',1.1,1.2,'13091845','06011923','I saw this in Iasi!'] foloseste pt test 
                     })
                 }
@@ -167,9 +167,9 @@ function postUserEvents(data, callback) {
                     let time = data.time
                     res = await client.query({
                         rowMode: 'array',
-                        text: `insert into Earthquakes(eventid,location,enddate,magnitude,latitude,longitude,time,description,details,startdate) 
-                        values($1,$2,to_date($3, 'DDMMYYYY'),$4,$5,$6,$7,$8,$9,to_date($10, 'DDMMYYYY'))`,
-                        values: [eventid, location, enddate, magnitude, latitude, longitude, time, description, details, startdate]
+                        text: `insert into Earthquakes(eventid,location,enddate,magnitude,latitude,longitude,time,description,details,startdate,userid) 
+                        values($1,$2,to_date($3, 'DDMMYYYY'),$4,$5,$6,$7,$8,$9,to_date($10, 'DDMMYYYY'),$11)`,
+                        values: [eventid, location, enddate, magnitude, latitude, longitude, time, description, details, startdate, userid]
                         //values: [1,1,'flood','a','b',1.1,1.2,'13091845','06011923','I saw this in Iasi!'] foloseste pt test 
                     })
                 }
@@ -177,9 +177,9 @@ function postUserEvents(data, callback) {
                     let event = data.event
                     res = await client.query({
                         rowMode: 'array',
-                        text: `insert into Weather(eventid, location, event, latitude, longitude, description, details, startdate, enddate)
-                         values($1,$2,$3,$4,$5,$6,$7,to_date($8,'DDMMYYYY'),to_date($9,'DDMMYYYY'))`,
-                        values: [eventid, location, event, latitude, longitude, description, details, startdate, enddate]
+                        text: `insert into Weather(eventid, location, event, latitude, longitude, description, details, startdate, enddate,userid)
+                         values($1,$2,$3,$4,$5,$6,$7,to_date($8,'DDMMYYYY'),to_date($9,'DDMMYYYY'),$10)`,
+                        values: [eventid, location, event, latitude, longitude, description, details, startdate, enddate, userid]
                         //values: [1,1,'flood','a','b',1.1,1.2,'13091845','06011923','I saw this in Iasi!'] foloseste pt test 
                     })
                 }
@@ -192,6 +192,7 @@ function postUserEvents(data, callback) {
             }
         })().catch(err => console.log(err.stack))
 }
+
 
 function deleteUserEvents(queryparams, callback) {
     const { Pool } = require('pg')

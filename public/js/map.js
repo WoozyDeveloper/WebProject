@@ -146,13 +146,12 @@ function addFloodMarkers() {
         let riverOrSea = data.items[i].riverOrSea;
         let county = data.items[i].county;
 
-        const popup = new mapboxgl.Popup({ offset: 25 }).setText(
-          `River/sea: ${riverOrSea}
-          
-           County: ${county}`
+        const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
+          `<p>River/sea: ${riverOrSea}</p>
+           <p>County: ${county}</p>`
         );
 
-        const marker = new mapboxgl.Marker()
+        const marker = new mapboxgl.Marker({ "scale": "0.75" })
           .setLngLat([long, lat])
           .setPopup(popup)
           .addTo(map);
@@ -166,21 +165,27 @@ function addFloodMarkers() {
       for (let i = 0; i < data.length; i++) {
         let lat = data[i].latitude;
         let long = data[i].longitude;
-        let eventname = data[i].eventname;
-        let eventplacename = data[i].eventplacename;
+        let location = data[i].location;
+        let waterbodyname = data[i].waterbodyname;
         let startdate = data[i].startdate;
         let enddate = data[i].enddate;
         let details = data[i].details;
+        let description = data[i].description
+        let userid = data[i].userid
+        let severity = data[i].severity
 
-        const popup = new mapboxgl.Popup({ offset: 25 }).setText(
-          `Event name: ${eventname} 
-           Event place name: ${eventplacename}
-           Start time: ${startdate}
-           End time: ${enddate}
-           Details: ${details}`
+        const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
+          `<p>Location: ${location}</p> 
+           <p>Waterbody name: ${waterbodyname}</p>
+           <p>Severity: ${severity}</p>
+           <p>Start time: ${startdate}</p>
+           <p>End time: ${enddate}</p>
+           <p>Details: ${details}</p>
+           <p>Description: ${description}</p>
+           <p>Posted by: ${userid}</p>`
         );
 
-        const marker = new mapboxgl.Marker({ "color": "green" })
+        const marker = new mapboxgl.Marker({ "color": "green", "scale": "0.75" })
           .setLngLat([long, lat])
           .setPopup(popup)
           .addTo(map);
@@ -190,25 +195,72 @@ function addFloodMarkers() {
 }
 
 function showFloodPictures() {
+  const eventsNode = document.getElementById("events");
+  while (eventsNode.firstChild) {
+    eventsNode.removeChild(eventsNode.lastChild);
+  }
+
+  fetch("http://localhost:4001?table=Floods")
+    .then((response) => response.json())
+    .then((data) => {
+      for (let i = 0; i < data.length; i++) {
+        let lat = data[i].latitude;
+        let long = data[i].longitude;
+        let location = data[i].location;
+        let waterbodyname = data[i].waterbodyname;
+        let startdate = data[i].startdate;
+        let enddate = data[i].enddate;
+        let details = data[i].details;
+        let description = data[i].description
+        let userid = data[i].userid
+        let severity = data[i].severity
+
+        let events = document.getElementById("events");
+
+        let event = document.createElement("div");
+        event.classList.add("slide");
+
+        event.innerHTML =
+          `<div class="slide-details">
+          <p>${waterbodyname}</p>
+          <div class="slide-subheading">
+            <p style="font-size: 11px">Severity: ${severity}</p>
+          </div>
+          <div class="slide-place">
+            <svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 24 24" width="12px" fill="#fff"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+            ${location}
+          </div>
+          <p style="font-size: 13px">${startdate.substring(0, 10)}</p>
+          <p style="font-size: 13px">${enddate.substring(0, 10)}</p>
+        </div>`;
+
+        events.appendChild(event);
+
+        const img = document.createElement("img");
+        img.src = `https://api.mapbox.com/v4/mapbox.satellite/${long},${lat},7/360x200@2x.png?access_token=${TOKEN}`;
+        img.alt = location;
+
+        event.appendChild(img);
+
+        events.appendChild(event);
+      }
+    })
+
   fetch("https://environment.data.gov.uk/flood-monitoring/id/floodAreas")
     .then((response) => response.json())
     .then((data) => {
-      const eventsNode = document.getElementById("events");
-      while (eventsNode.firstChild) {
-        eventsNode.removeChild(eventsNode.lastChild);
-      }
       for (let i = 0; i < document.getElementById("quantity").value; i++) {
         let place = data.items[i].eaAreaName;
 
         let coords = [data.items[i].long, data.items[i].lat];
 
-        let events = document.getElementById("events");
-
         let event = document.createElement("div");
-
         event.classList.add("slide");
 
         event.innerHTML = `<div class="slide-details"><div class="slide-subheading"></div><div class="slide-place"><svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 24 24" width="12px" fill="#fff"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>${place}</div></div>`;
+
+        let events = document.getElementById("events");
 
         events.appendChild(event);
 
@@ -221,6 +273,7 @@ function showFloodPictures() {
         events.appendChild(event);
       }
     });
+
 }
 
 function removeFloodMarkers() {
@@ -269,19 +322,21 @@ function addCities(start, end) {
               forecast = forecastFix
             }
 
-            const popup = new mapboxgl.Popup({ offset: 25 }).setText(
-              `City: ${cityNames[i]}
-               Maximum temperature: ${((parseFloat(temp.textContent) - 32) / 1.8).toFixed(0).toString() + "C\u00B0"}
-               Forecast: ${forecast.textContent}
-               Time: ${time}
-               Date: ${date}`
+            const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
+              `<p>City: ${cityNames[i]}</p>
+               <p>Maximum temperature: ${((parseFloat(temp.textContent) - 32) / 1.8).toFixed(0).toString() + "C\u00B0"}</p>
+               <p>Forecast: ${forecast.textContent}</p>
+               <p>Time: ${time}</p>
+               <p>Date: ${date}</p>`
             );
 
-            let color = {}
+            let settings = '{"color":"","scale":""}'
+            settings = JSON.parse(settings)
             if (forecast.textContent === "Thunderstorm") {
-              color = { "color": "red" }
+              settings.color = "red"
             }
-            const marker = new mapboxgl.Marker(color)
+            settings.scale = "0.75"
+            const marker = new mapboxgl.Marker(settings)
               .setLngLat([long, lat])
               .setPopup(popup)
               .addTo(map);
@@ -319,25 +374,59 @@ function addCities(start, end) {
       for (let i = 0; i < data.length; i++) {
         let lat = data[i].latitude;
         let long = data[i].longitude;
-        let eventname = data[i].eventname;
-        let eventplacename = data[i].eventplacename;
+        let weatherevent = data[i].event;
+        let location = data[i].location;
         let startdate = data[i].startdate;
         let enddate = data[i].enddate;
         let details = data[i].details;
+        let description = data[i].description
+        let userid = data[i].userid
 
-        const popup = new mapboxgl.Popup({ offset: 25 }).setText(
-          `Event name: ${eventname} 
-           Event place name: ${eventplacename}
-           Start time: ${startdate}
-           End time: ${enddate}
-           Details: ${details}`
+        const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
+          `<p>Event: ${weatherevent}</p> 
+           <p>Location: ${location}</p>
+           <p>Start time: ${startdate}</p>
+           <p>End time: ${enddate}</p>
+           <p>Details: ${details}</p>
+           <p>Description: ${description}</p>
+           <p>User ID: ${userid}</p>`
         );
 
-        const marker = new mapboxgl.Marker({ "color": "blue" })
+        const marker = new mapboxgl.Marker({ "color": "blue", "scale": "0.75" })
           .setLngLat([long, lat])
           .setPopup(popup)
           .addTo(map);
         cityMarkers.push(marker);
+
+        let events = document.getElementById("events");
+
+        let event = document.createElement("div");
+
+        event.classList.add("slide");
+
+        event.innerHTML = 
+        `<div class="slide-details">
+        <p>${weatherevent}</p>
+        <div class="slide-subheading">
+        <p style="font-size: 13px;">${description}</p>
+        </div>
+        <div class="slide-place">
+        <svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 24 24" width="12px" fill="#fff"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        ${location}
+        </div>
+        <p style="font-size: 13px">${startdate.substring(0,10)}</p>
+        <p style="font-size: 13px">${enddate.substring(0,10)}</p>
+        </div>`;
+
+        events.appendChild(event);
+
+        const img = document.createElement("img");
+        img.src = `https://api.mapbox.com/v4/mapbox.satellite/${long},${lat},7/360x200@2x.png?access_token=${TOKEN}`;
+        img.alt = location;
+
+        event.appendChild(img);
+
+        events.appendChild(event);
       }
     })
 }
@@ -356,25 +445,60 @@ function addUserEarthquakes(start, end) {
       for (let i = 0; i < data.length; i++) {
         let lat = data[i].latitude;
         let long = data[i].longitude;
-        let eventname = data[i].eventname;
-        let eventplacename = data[i].eventplacename;
+        let location = data[i].location;
+        let magnitude = data[i].magnitude;
         let startdate = data[i].startdate;
         let enddate = data[i].enddate;
         let details = data[i].details;
+        let userid = data[i].userid
+        let time = data[i].time
+        let description = data[i].description
 
-        const popup = new mapboxgl.Popup({ offset: 25 }).setText(
-          `Event name: ${eventname} 
-           Event place name: ${eventplacename}
-           Start time: ${startdate}
-           End time: ${enddate}
-           Details: ${details}`
+        const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
+          `<p>Location: ${location}</p> 
+           <p>Magnitude: ${magnitude}</p>
+           <p>Start time: ${startdate}</p>
+           <p>End time: ${enddate}</p>
+           <p>Time: ${time}</p>
+           <p>Description: ${description}</p>
+           <p>User: ${userid}</p>`
         );
 
-        const marker = new mapboxgl.Marker({ "color": "brown" })
+        const marker = new mapboxgl.Marker({ "color": "brown", "scale":"0.75" })
           .setLngLat([long, lat])
           .setPopup(popup)
           .addTo(map);
         earthquakeMarkers.push(marker);
+
+        let events = document.getElementById("events");
+
+        let event = document.createElement("div");
+
+        event.classList.add("slide");
+
+        event.innerHTML = 
+        `<div class="slide-details">
+        <p>M ${magnitude}</p>
+        <div class="slide-subheading">
+        <p style="font-size: 13px;">${description}</p>
+        </div>
+        <div class="slide-place">
+        <svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 24 24" width="12px" fill="#fff"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        ${location}
+        </div>
+        <p style="font-size: 13px">${startdate.substring(0,10)}</p>
+        <p style="font-size: 13px">${enddate.substring(0,10)}</p>
+        </div>`;
+
+        events.appendChild(event);
+
+        const img = document.createElement("img");
+        img.src = `https://api.mapbox.com/v4/mapbox.satellite/${long},${lat},7/360x200@2x.png?access_token=${TOKEN}`;
+        img.alt = location;
+
+        event.appendChild(img);
+
+        events.appendChild(event);
       }
     })
 }
@@ -587,7 +711,6 @@ function removeEarthquakes() {
     map.removeSource("earthquakes");
   }
 
-  console.log(earthquakeMarkers)
   for (let i = 0; i < earthquakeMarkers.length; i++) {
     earthquakeMarkers[i].remove()
   }
