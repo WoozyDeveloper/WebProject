@@ -44,6 +44,7 @@ function accountInfo() {
             succesMessage.style = "color: green;"
             succesMessage.innerHTML = "Changed with success"
             changeDiv.appendChild(succesMessage)
+            userAndPic.removeChild(changeUsername)
         }
         changeDiv.appendChild(changeField)
         changeDiv.appendChild(changeFieldSend)
@@ -65,9 +66,6 @@ function accountInfo() {
     mailAndPic.appendChild(mailPic)
     mailAndPic.appendChild(mailInfo)
     let changeMail = document.createElement("button")
-    let changeMailClicked = document.createAttribute("clicked")
-    changeMailClicked.value = "false"
-    changeMail.setAttribute(changeMailClicked)
     changeMail.innerHTML = "Change"
     changeMail.onclick = function (event) {
         let changeDiv = document.createElement("div")
@@ -85,6 +83,7 @@ function accountInfo() {
             succesMessage.style = "color: green;"
             succesMessage.innerHTML = "Changed with success"
             changeDiv.appendChild(succesMessage)
+            mailAndPic.removeChild(changeMail)
         }
         changeDiv.appendChild(changeField)
         changeDiv.appendChild(changeFieldSend)
@@ -133,6 +132,7 @@ function accountInfo() {
             succesMessage.style = "color: green;"
             succesMessage.innerHTML = "Changed with success"
             password.appendChild(succesMessage)
+            changePasswordDiv.removeChild(changePassword)
         }
 
     }
