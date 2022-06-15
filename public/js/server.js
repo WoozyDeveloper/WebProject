@@ -1,10 +1,29 @@
 const { parse } = require("querystring");
 
+const crypto = require("crypto");
+const key = Buffer.from(
+  "xNRxA48aNYd33PXaODSutRNFyCu4cAe/InKT/Rx+bw0=",
+  "base64"
+);
+const iv = Buffer.from("81dFxOpX7BPG1UpZQPcS6w==", "base64");
+
 const http = require("http");
+const { appendFile } = require("fs");
 
 const hostname = "127.0.0.1";
 const port = 4000;
-//Can be found in the Details page
+
+function encrypt_token(data) {
+  const cipher = crypto.createCipheriv("aes-256-gcm", key, iv);
+  const encryptedData = cipher.update(data, "utf8", "base64");
+  return encryptedData;
+}
+
+function decrypt_token(data) {
+  const decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
+  const decripted = decipher.update(data, "base64", "utf8");
+  return decripted;
+}
 
 var showInBrowser;
 const server = http.createServer(async (req, res) => {
@@ -35,10 +54,12 @@ const server = http.createServer(async (req, res) => {
         body += data;
       });
 
+      let myBody = decrypt_token(body);
       req.on("end", function () {
-        body = JSON.parse(body);
-        console.log(body);
-        checkUser(body, function (response) {
+        console.log("BODY= " + myBody);
+        myBody = JSON.parse(myBody);
+        console.log(myBody);
+        checkUser(myBody, function (response) {
           res.writeHead(200, { "Content-Type": "application/json" });
           res.end(`${JSON.stringify(response)}`);
         });
