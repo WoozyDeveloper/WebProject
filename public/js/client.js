@@ -7,7 +7,7 @@ document.forms[0].onsubmit = async(e) => {
                   password : document.getElementById('password').value
                 }
     var sharedInfo = data.username;
-    sessionStorage.setItem('sharedInformation', sharedInfo);
+    localStorage.setItem("sharedusername", sharedInfo);
 
     console.log(data)
     const settings = {
@@ -23,7 +23,8 @@ document.forms[0].onsubmit = async(e) => {
 
         if(response.status === 'new user'){
             console.log(sharedInfo);
-            window.location.replace("http://localhost:3000/pages/user.html");
+            //window.location.replace("http://localhost:3000/pages/user.html");
+            window.location.href = 'http://localhost:3000/pages/user.html';
         }
         else{
 
