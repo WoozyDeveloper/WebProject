@@ -12,28 +12,10 @@ const server = http.createServer(async (req, res) => {
 
   const urlSearchParams = new URLSearchParams(req.url);
   const params = Object.fromEntries(urlSearchParams.entries());
-  if (!req.url.includes("/favicon.ico")) {
-    console.log(req.url);
-    console.log(params);
-  }
+
   if (req.method == "GET") {
-    // if (!req.url.includes("/favicon.ico")) {
-    //     if (params.getUsers === "true") {
-    //         res.writeHead(200, { 'Content-Type': 'text/html' });
-    //         getUsers(function (response) { res.end(`${JSON.stringify(response)}`) })//vezi aici cv sincronizare callback
-    //     }
-    //     else if (params.mergeGeoJSON !== null) {
-    //         res.writeHead(200, { 'Content-Type': 'application/json' });
-    //         //var links = params.mergeGeoJSON.split(",")
-    //         //console.log(links[0])
-    //         //console.log(links[1])
-    //         //mergeGeoJSON(links,function (response) {res.end(response)})
-    //     }
-    // }
   } else if (req.method == "POST") {
-    console.log("POST" + req.url);
     if (req.url.includes("register")) {
-      console.log("INTRU");
       var body = "";
       req.on("data", function (data) {
         body += data;
@@ -48,7 +30,6 @@ const server = http.createServer(async (req, res) => {
         });
       });
     } else if (req.url.includes("login")) {
-      console.log("LOGIN INTRAT");
       var body = "";
       req.on("data", function (data) {
         body += data;
@@ -73,10 +54,13 @@ function checkUser(body, callback) {
   let response = "";
 
   const { Pool } = require("pg");
-  const connectionString =
-    "postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu";
+  //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
   const pool = new Pool({
-    connectionString,
+    //connectionString,
+    user: "postgres",
+    host: "164.92.194.239",
+    database: "postgres",
+    port: 5432,
   });
   (async () => {
     const client = await pool.connect();
@@ -86,7 +70,7 @@ function checkUser(body, callback) {
         text:
           "SELECT * FROM USERS WHERE EMAIL='" +
           extractedMail +
-          "AND PASSWORD=" +
+          "' AND PASSWORD='" +
           extractedPassword +
           "'",
       });
@@ -94,12 +78,13 @@ function checkUser(body, callback) {
       if (check.rowCount > 0) {
         console.log(check.rows);
 
-        //res.writeHead(200, {'Content-Type': 'text/plain'});
         response = {
-          status: "user existent",
+          status: "existent user",
         };
       } else {
-        console.log("user doesn't exist:" + extractedMail);
+        console.log(
+          "user doesn't exist:" + extractedMail + " " + extractedPassword
+        );
 
         response = {
           status: "no user found",
@@ -122,10 +107,13 @@ function postUser(body, callback) {
   let response = "";
 
   const { Pool } = require("pg");
-  const connectionString =
-    "postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu";
+  //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
   const pool = new Pool({
-    connectionString,
+    //connectionString,
+    user: "postgres",
+    host: "164.92.194.239",
+    database: "postgres",
+    port: 5432,
   });
   (async () => {
     const client = await pool.connect();
@@ -179,10 +167,13 @@ function postUser(body, callback) {
 
 function getUsers(callback) {
   const { Pool } = require("pg");
-  const connectionString =
-    "postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu";
+  //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
   const pool = new Pool({
-    connectionString,
+    //connectionString,
+    user: "postgres",
+    host: "164.92.194.239",
+    database: "postgres",
+    port: 5432,
   });
   (async () => {
     const client = await pool.connect();
