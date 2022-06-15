@@ -1,4 +1,53 @@
-h1{
-    text-align: center;
-    text-decoration: underline;
+body {
+    background-image: url('../images/background-upscaled-blurred.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+#main-box
+{
+    border: 3px solid red;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#title-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid;
+    border-radius: 3px;
+    width: max-content;
+}
+
+#user-box
+{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: row;
+    border: 3px solid green;
+    width: 66vw;
+}
+
+#settings-box
+{
+    border: 3px solid yellow;
+    border-radius: 10px;
+}
+
+#feed-box
+{
+    border: 3px solid purple;
+    border-radius: 10px;
+}
+
+.setting
+{
+    border: 3px solid black;
+    border-radius: 10px;
 }
