@@ -8,9 +8,9 @@
   </head>
   <body>
     <div class="box">
-      <form action="http://127.0.0.1:4000/&getUsers=true" method="GET">
-        <input type="text" placeholder="E-mail" required />
-        <input type="password" placeholder="Password" required />
+      <form>
+        <input id="email" type="email" placeholder="E-mail" required />
+        <input id="password" type="password" placeholder="Password" required />
         <button>LOGIN</button>
       </form>
     </div>
@@ -38,6 +38,8 @@
       <p id="register">Don't have an account? Register <a href="../pages/register.html">here!</a></p>
     
     <span class="span" id="nav_button" onClick="move()"></span>
+
+    <script src="../js/clientLogin.js"></script>
     <script src="../js/animatie_buton.js"></script>
   </body>
 </html>

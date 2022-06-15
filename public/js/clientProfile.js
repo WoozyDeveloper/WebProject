@@ -3,7 +3,7 @@ let sharedInfo = localStorage.getItem("sharedusername");
 
 console.log("am iesit");
 console.log(sharedInfo);
-title.innerHTML = title.innerHTML + " " + sharedInfo;
+title.innerHTML = title.innerHTML + ' ' + sharedInfo;
 
 var feedBox = document.getElementById("feed-box")
 
