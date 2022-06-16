@@ -1,35 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Login</title>
-    <link rel="stylesheet" href="../css/style_user.css" />
-    <link rel="stylesheet" href="../css/style_navigation.css" />
-  </head>
-  <body>
-    
-    <h1 id="welcome_message">WELCOME</h1>
-    <div id="mySidenav" class="sidenav">
-      <hr />
-      <a href="../index.html" onClick="menu_click()">
-        <img alt="home icon" src="../images/home_icon.png" class="navbar_icon" />
-        <p class="navbar_text">Home</p>
-      </a>
-      <hr />
-      <a href="../pages/login.html" onClick="menu_click()">
-        <img alt="login" src="../images/loginIcon.png" class="navbar_icon" />
-        <p class="navbar_text">Login</p>
-      </a>
-      <hr />
-      <a href="../pages/contact.html" onClick="menu_click()">
-        <img alt="contact" src="../images/contact.png" class="navbar_icon" />
-        <p class="navbar_text">Contact</p>
-      </a>
-      <hr />
-      <a> </a>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+  <link rel="stylesheet" href="../css/style_user.css" />
+  <link rel="stylesheet" href="../css/style_navigation.css" />
+</head>
+
+<body>
+  <div id="mySidenav" class="sidenav">
+    <hr />
+    <a href="../index.html" onClick="menu_click()">
+      <img alt="home icon" src="../images/home_icon.png" class="navbar_icon" />
+      <p class="navbar_text">Home</p>
+    </a>
+    <hr />
+    <a href="../pages/login.html" onClick="menu_click()">
+      <img alt="login" src="../images/loginIcon.png" class="navbar_icon" />
+      <p class="navbar_text">Login</p>
+    </a>
+    <hr />
+    <a href="../pages/contact.html" onClick="menu_click()">
+      <img alt="contact" src="../images/contact.png" class="navbar_icon" />
+      <p class="navbar_text">Contact</p>
+    </a>
+    <hr />
+    <a> </a>
+  </div>
+  <div id="main-box">
+    <div id="title-box">
+      <h1 id="welcome_message">WELCOME</h1>
     </div>
-    <span class="span" id="nav_button" onClick="move()"></span>
-    <script src="../js/clientProfile.js"></script>
-    <script src="../js/animatie_buton.js"></script>
-  </body>
+    <div id="user-box">
+      <div id="settings-box">
+        <div class="setting" onclick="accountInfo()">
+          <a href="#">
+            <h1>Account info</h1>
+          </a>
+        </div>
+        <div class="setting" onclick="addedEvents()">
+          <a href="#">
+            <h1>Added events</h1>
+          </a>
+        </div>
+        <div class="setting" onclick="preferences()">
+          <a href="#">
+            <h1>Preferences</h1>
+          </a>
+        </div>
+      </div>
+      <div id="feed-box">
+        <h1>User feed</h1>
+      </div>
+    </div>
+
+  </div>
+  <span class="span" id="nav_button" onClick="move()"></span>
+  <script src="../js/clientProfile.js"></script>
+  <script src="../js/animatie_buton.js"></script>
+</body>
+
 </html>
