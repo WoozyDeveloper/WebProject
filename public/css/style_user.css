@@ -46,6 +46,12 @@ body {
     border-radius: 10px;
 }
 
+#add-box
+{
+    border: 3px solid violet;
+    border-radius: 10px;
+}
+
 .setting
 {
     border: 3px solid black;
