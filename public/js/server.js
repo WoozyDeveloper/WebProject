@@ -18,6 +18,7 @@ const server = http.createServer(async (req, res) => {
       req.on("data", function (data) {
         body += data;
       });
+
       req.on("end", function () {
         console.log(body);
         body = JSON.parse(body);
@@ -32,9 +33,10 @@ const server = http.createServer(async (req, res) => {
       req.on("data", function (data) {
         body += data;
       });
+
       req.on("end", function () {
         body = JSON.parse(body);
-        console.log(body);
+
         checkUser(body, function (response) {
           res.writeHead(200, { "Content-Type": "application/json" });
           res.end(`${JSON.stringify(response)}`);
@@ -47,7 +49,7 @@ const server = http.createServer(async (req, res) => {
 function checkUser(body, callback) {
   let extractedMail = body.email;
   let username = ""; //username-ul il extrag in DB
-  let extractedPassword = body.password;
+  let extractedPassword = CryptoJS.MD5(body.password);
   let response = "";
 
   const { Pool } = require("pg");
@@ -136,7 +138,7 @@ function postUser(body, callback) {
             "','" +
             extractedUsername +
             "','" +
-            extractedPassword +
+            CryptoJS.MD5(extractedPassword) +
             "')",
         });
         console.log(res.rows);
