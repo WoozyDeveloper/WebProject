@@ -1,22 +1,3 @@
-const crypto = require("crypto");
-const key = Buffer.from(
-  "xNRxA48aNYd33PXaODSutRNFyCu4cAe/InKT/Rx+bw0=",
-  "base64"
-);
-const iv = Buffer.from("81dFxOpX7BPG1UpZQPcS6w==", "base64");
-
-function encrypt_token(data) {
-  const cipher = crypto.createCipheriv("aes-256-gcm", key, iv);
-  const encryptedData = cipher.update(data, "utf8", "base64");
-  return encryptedData;
-}
-
-function decrypt_token(data) {
-  const decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
-  const decripted = decipher.update(data, "base64", "utf8");
-  return decripted;
-}
-
 document.forms[0].onsubmit = async (e) => {
   e.preventDefault();
   console.log("TESTTT");
