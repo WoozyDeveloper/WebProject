@@ -7,18 +7,34 @@ mmap.style =
 
 console.log("am iesit");
 console.log(usernameStored);
-title.innerHTML = title.innerHTML + " " + usernameStored;
+title.innerText = title.innerText + " " + usernameStored;
 
 var feedBox = document.getElementById("feed-box");
 var userid;
 var usermail;
 var coords;
 
-fetch(`http://localhost:4002/?table=users&username=${usernameStored}`)
+function escapeHtml(text) {
+  var map = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
+  };
+
+  return text.replace(/[&<>"']/g, function (m) {
+    return map[m];
+  });
+}
+
+fetch(
+  `http://localhost:4002/?table=users&username=${escapeHtml(usernameStored)}`
+)
   .then((response) => response.json())
   .then((data) => {
-    userid = data[0].id;
-    usermail = data[0].email;
+    userid = escapeHtml(data[0].id);
+    usermail = escapeHtml(data[0].email);
   });
 
 function accountInfo() {
@@ -38,14 +54,14 @@ function accountInfo() {
   usernamePic.alt = "user icon stock";
   usernamePic.style = "width: 20px; height: auto;";
   let usernameInfo = document.createElement("p");
-  usernameInfo.innerHTML = `Username: ${usernameStored}`;
+  usernameInfo.innerText = `Username: ${escapeHtml(usernameStored)}`;
   let userAndPic = document.createElement("div");
   userAndPic.style =
     "display: flex; flex-direction: row; align-items: center; justify-content: center;";
   userAndPic.appendChild(usernamePic);
   userAndPic.appendChild(usernameInfo);
   let changeUsername = document.createElement("button");
-  changeUsername.innerHTML = "Change";
+  changeUsername.innerText = "Change";
   changeUsername.onclick = function (event) {
     changeUsername.style.display = "none";
     let changeDiv = document.createElement("div");
@@ -54,14 +70,14 @@ function accountInfo() {
     changeField.placeholder = "Type new username...";
     changeField.id = "new-username";
     let changeFieldSend = document.createElement("button");
-    changeFieldSend.innerHTML = "Confirm";
+    changeFieldSend.innerText = "Confirm";
     changeFieldSend.onclick = function (event) {
       console.log(document.getElementById("new-username").value);
       changeDiv.removeChild(changeDiv.firstChild);
       changeDiv.removeChild(changeDiv.firstChild);
       let succesMessage = document.createElement("p");
       succesMessage.style = "color: green;";
-      succesMessage.innerHTML = "Changed with success";
+      succesMessage.innerText = "Changed with success";
       changeDiv.appendChild(succesMessage);
       userAndPic.removeChild(changeUsername);
     };
@@ -83,11 +99,11 @@ function accountInfo() {
   mailPic.alt = "mail icon stock";
   mailPic.style = "width: 20px; height: auto;";
   let mailInfo = document.createElement("p");
-  mailInfo.innerHTML = `Mail: ${usermail}`;
+  mailInfo.innerText = `Mail: ${escapeHtml(usermail)}`;
   mailAndPic.appendChild(mailPic);
   mailAndPic.appendChild(mailInfo);
   let changeMail = document.createElement("button");
-  changeMail.innerHTML = "Change";
+  changeMail.innerText = "Change";
   changeMail.onclick = function (event) {
     changeMail.style.display = "none";
     let changeDiv = document.createElement("div");
@@ -96,14 +112,14 @@ function accountInfo() {
     changeField.placeholder = "Type new mail...";
     changeField.id = "new-mail";
     let changeFieldSend = document.createElement("button");
-    changeFieldSend.innerHTML = "Confirm";
+    changeFieldSend.innerText = "Confirm";
     changeFieldSend.onclick = function (event) {
       console.log(document.getElementById("new-mail").value);
       changeDiv.removeChild(changeDiv.firstChild);
       changeDiv.removeChild(changeDiv.firstChild);
       let succesMessage = document.createElement("p");
       succesMessage.style = "color: green;";
-      succesMessage.innerHTML = "Changed with success";
+      succesMessage.innerText = "Changed with success";
       changeDiv.appendChild(succesMessage);
     };
     changeDiv.appendChild(changeField);
@@ -120,9 +136,9 @@ function accountInfo() {
   changePasswordDiv.style =
     "display: flex; flex-direction: row; align-items: center; justify-content: flex-start;";
   let passwordText = document.createElement("p");
-  passwordText.innerHTML = "Password:";
+  passwordText.innerText = "Password:";
   let changePassword = document.createElement("button");
-  changePassword.innerHTML = "Change password";
+  changePassword.innerText = "Change password";
   changePassword.onclick = function (event) {
     changePassword.style.display = "none";
     let oldPassword = document.createElement("input");
@@ -138,7 +154,7 @@ function accountInfo() {
     newPasswordConfirm.type = "text";
     newPasswordConfirm.id = "new-password-confirm";
     let changePasswordConfirm = document.createElement("button");
-    changePasswordConfirm.innerHTML = "Confirm changes";
+    changePasswordConfirm.innerText = "Confirm changes";
     password.appendChild(oldPassword);
     password.appendChild(newPassword);
     password.appendChild(newPasswordConfirm);
@@ -153,7 +169,7 @@ function accountInfo() {
       password.removeChild(password.lastChild);
       let succesMessage = document.createElement("p");
       succesMessage.style = "color: green;";
-      succesMessage.innerHTML = "Changed with success";
+      succesMessage.innerText = "Changed with success";
       password.appendChild(succesMessage);
     };
   };
@@ -164,7 +180,7 @@ function accountInfo() {
   let useridText = document.createElement("p");
   useridText.style =
     "display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start;";
-  useridText.innerHTML = `User id: ${userid}`;
+  useridText.innerText = `User id: ${escapeHtml(userid)}`;
 
   accountDetails.appendChild(username);
   accountDetails.appendChild(mail);
@@ -184,7 +200,7 @@ function addedEvents() {
   let response = document.createElement("div");
 
   let line1 = document.createElement("p");
-  line1.innerHTML = `These are my added events!`;
+  line1.innerText = `These are my added events!`;
 
   response.appendChild(line1);
 
@@ -206,36 +222,40 @@ function preferences() {
     "display: flex; flex-direction: column; align-items: flex-start; justify-content: center;";
 
   removalPromise.then(
-    fetch(`http://localhost:4002/?table=UserPreferences&userid=${userid}`)
+    fetch(
+      `http://localhost:4002/?table=UserPreferences&userid=${escapeHtml(
+        userid
+      )}`
+    )
       .then((response) => response.json())
       .then((data) => {
         for (let i = 0; i < data.length; i++) {
-          let preferenceid = data[i].preferenceid;
-          let location = data[i].location;
-          let eventtype = data[i].eventtype;
-          let latitude = data[i].latitude;
-          let longitude = data[i].longitude;
-          let notificationmethod = data[i].notificationmethod;
-          let eventid = data[i].eventid;
+          let preferenceid = escapeHtml(data[i].preferenceid);
+          let location = escapeHtml(data[i].location);
+          let eventtype = escapeHtml(data[i].eventtype);
+          let latitude = escapeHtml(data[i].latitude);
+          let longitude = escapeHtml(data[i].longitude);
+          let notificationmethod = escapeHtml(data[i].notificationmethod);
+          let eventid = escapeHtml(data[i].eventid);
 
           let locationDiv = document.createElement("div");
           locationDiv.style =
             "display: flex; flex-direction: column; align-items: flex-start; justify-content: center;";
 
           let locationNr = document.createElement("h1");
-          locationNr.innerHTML = `Location number: ${i + 1}`;
+          locationNr.innerText = `Location number: ${i + 1}`;
           let locationNode = document.createElement("p");
-          locationNode.innerHTML = `Location: ${location}`;
+          locationNode.innerText = `Location: ${location}`;
           let eventtypeNode = document.createElement("p");
-          eventtypeNode.innerHTML = `Event type: ${eventtype}`;
+          eventtypeNode.innerText = `Event type: ${eventtype}`;
           let latNode = document.createElement("p");
-          latNode.innerHTML = `Latitude: ${latitude}`;
+          latNode.innerText = `Latitude: ${latitude}`;
           let longNode = document.createElement("p");
-          longNode.innerHTML = `Longitude: ${longitude}`;
+          longNode.innerText = `Longitude: ${longitude}`;
           let notificationmethodNode = document.createElement("p");
-          notificationmethodNode.innerHTML = `Notification method: ${notificationmethod}`;
+          notificationmethodNode.innerText = `Notification method: ${notificationmethod}`;
           let modifyButton = document.createElement("button");
-          modifyButton.innerHTML = "Modify";
+          modifyButton.innerText = "Modify";
           modifyButton.onclick = function (response) {
             let currentIndex = Array.from(locations.children).indexOf(
               locationDiv
@@ -254,7 +274,7 @@ function preferences() {
             locationInput.id = "location-input";
             locationInput.value = location;
             let locationInputText = document.createElement("p");
-            locationInputText.innerHTML = "Location: ";
+            locationInputText.innerText = "Location: ";
 
             locationInputDiv.appendChild(locationInputText);
             locationInputDiv.appendChild(locationInput);
@@ -266,17 +286,17 @@ function preferences() {
             let eventtypeInput = document.createElement("select");
             eventtypeInput.id = "eventtype-input";
             let eventtypeInputText = document.createElement("p");
-            eventtypeInputText.innerHTML = "Event type: ";
+            eventtypeInputText.innerText = "Event type: ";
 
             let earthquakeOption = document.createElement("option");
             earthquakeOption.value = "earthquake";
-            earthquakeOption.innerHTML = "Earthquakes";
+            earthquakeOption.innerText = "Earthquakes";
             let floodOption = document.createElement("option");
             floodOption.value = "flood";
-            floodOption.innerHTML = "Floods";
+            floodOption.innerText = "Floods";
             let weatherOption = document.createElement("option");
             weatherOption.value = "weather";
-            weatherOption.innerHTML = "Weather";
+            weatherOption.innerText = "Weather";
 
             if (eventtype === "earthquake") {
               earthquakeOption.selected = true;
@@ -297,9 +317,9 @@ function preferences() {
             coordDiv.style =
               "display: flex; flex-direction: row; align-items: center; justify-content: center;";
             let coordButton = document.createElement("button");
-            coordButton.innerHTML = "Click to pick coordinates";
+            coordButton.innerText = "Click to pick coordinates";
             let coordText = document.createElement("p");
-            coordText.innerHTML = "Location: ";
+            coordText.innerText = "Location: ";
             coordButton.onclick = function (response) {
               mmap.style.display = "block";
               coordButton.style.display = "none";
@@ -308,7 +328,7 @@ function preferences() {
               latDisplayDiv.style =
                 "display: flex; flex-direction: row; align-items: center; justify-content: center;";
               let latDisplay = document.createElement("p");
-              latDisplay.innerHTML = "Latitude: ";
+              latDisplay.innerText = "Latitude: ";
               let latDisplayVal = document.createElement("input");
               latDisplayVal.name = "lat-display-val";
               latDisplayVal.id = "lat-display-val";
@@ -322,7 +342,7 @@ function preferences() {
               longDisplayDiv.style =
                 "display: flex; flex-direction: row; align-items: center; justify-content: center;";
               let longDisplay = document.createElement("p");
-              longDisplay.innerHTML = "Longitude: ";
+              longDisplay.innerText = "Longitude: ";
               let longDisplayVal = document.createElement("input");
               longDisplayVal.name = "long-display-val";
               longDisplayVal.id = "long-display-val";
@@ -345,17 +365,17 @@ function preferences() {
             notifDiv.style =
               "display: flex; flex-direction: row; align-items: center; justify-content: center;";
             let notifLabel = document.createElement("p");
-            notifLabel.innerHTML = "Notification method:";
+            notifLabel.innerText = "Notification method:";
             let notifSelect = document.createElement("select");
             notifSelect.value = notificationmethod;
             notifSelect.id = "notif-select";
 
             let emailOption = document.createElement("option");
             emailOption.value = "email";
-            emailOption.innerHTML = "E-mail";
+            emailOption.innerText = "E-mail";
             let smsOption = document.createElement("option");
             smsOption.value = "sms";
-            smsOption.innerHTML = "SMS";
+            smsOption.innerText = "SMS";
 
             if (notificationmethod === "sms") {
               smsOption.selected = true;
@@ -372,7 +392,7 @@ function preferences() {
             form.append(notifDiv);
 
             let submit = document.createElement("button");
-            submit.innerHTML = "Submit";
+            submit.innerText = "Submit";
             form.appendChild(submit);
 
             locations.insertBefore(
@@ -433,10 +453,10 @@ function preferences() {
                 form.removeChild(form.lastChild); //remove submit
                 let message = document.createElement("p");
                 if (response.executed === "yes") {
-                  message.innerHTML = "Changes applied successfully";
+                  message.innerText = "Changes applied successfully";
                   message.style = "color: green;";
                 } else {
-                  message.innerHTML = "You fucked up"; //??????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+                  message.innerText = "You fucked up"; //??????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
                   message.style = "color: red;";
                 }
                 form.appendChild(message);
@@ -473,7 +493,7 @@ function addStyle(what) {
   }
   if (what === "preference") {
     let addButton = document.createElement("button");
-    addButton.innerHTML = "Add preference";
+    addButton.innerText = "Add preference";
 
     addButton.onclick = function (event) {
       addBox.removeChild(addButton);
@@ -489,7 +509,7 @@ function addStyle(what) {
       locationInput.type = "text";
       locationInput.id = "location-input";
       let locationInputText = document.createElement("p");
-      locationInputText.innerHTML = "Location: ";
+      locationInputText.innerText = "Location: ";
 
       locationInputDiv.appendChild(locationInputText);
       locationInputDiv.appendChild(locationInput);
@@ -501,17 +521,17 @@ function addStyle(what) {
       let eventtypeInput = document.createElement("select");
       eventtypeInput.id = "eventtype-input";
       let eventtypeInputText = document.createElement("p");
-      eventtypeInputText.innerHTML = "Event type: ";
+      eventtypeInputText.innerText = "Event type: ";
 
       let earthquakeOption = document.createElement("option");
       earthquakeOption.value = "earthquake";
-      earthquakeOption.innerHTML = "Earthquakes";
+      earthquakeOption.innerText = "Earthquakes";
       let floodOption = document.createElement("option");
       floodOption.value = "flood";
-      floodOption.innerHTML = "Floods";
+      floodOption.innerText = "Floods";
       let weatherOption = document.createElement("option");
       weatherOption.value = "weather";
-      weatherOption.innerHTML = "Weather";
+      weatherOption.innerText = "Weather";
       eventtypeInput.appendChild(earthquakeOption);
       eventtypeInput.appendChild(floodOption);
       eventtypeInput.appendChild(weatherOption);
@@ -524,9 +544,9 @@ function addStyle(what) {
       coordDiv.style =
         "display: flex; flex-direction: row; align-items: center; justify-content: center;";
       let coordButton = document.createElement("button");
-      coordButton.innerHTML = "Click to pick coordinates";
+      coordButton.innerText = "Click to pick coordinates";
       let coordText = document.createElement("p");
-      coordText.innerHTML = "Location: ";
+      coordText.innerText = "Location: ";
       coordButton.onclick = function (response) {
         mmap.style.display = "block";
         coordButton.style.display = "none";
@@ -535,7 +555,7 @@ function addStyle(what) {
         latDisplayDiv.style =
           "display: flex; flex-direction: row; align-items: center; justify-content: center;";
         let latDisplay = document.createElement("p");
-        latDisplay.innerHTML = "Latitude: ";
+        latDisplay.innerText = "Latitude: ";
         let latDisplayVal = document.createElement("input");
         latDisplayVal.name = "lat-display-val";
         latDisplayVal.id = "lat-display-val";
@@ -548,7 +568,7 @@ function addStyle(what) {
         longDisplayDiv.style =
           "display: flex; flex-direction: row; align-items: center; justify-content: center;";
         let longDisplay = document.createElement("p");
-        longDisplay.innerHTML = "Longitude: ";
+        longDisplay.innerText = "Longitude: ";
         let longDisplayVal = document.createElement("input");
         longDisplayVal.name = "long-display-val";
         longDisplayVal.id = "long-display-val";
@@ -570,16 +590,16 @@ function addStyle(what) {
       notifDiv.style =
         "display: flex; flex-direction: row; align-items: center; justify-content: center;";
       let notifLabel = document.createElement("p");
-      notifLabel.innerHTML = "Notification method:";
+      notifLabel.innerText = "Notification method:";
       let notifSelect = document.createElement("select");
       notifSelect.id = "notif-select";
 
       let emailOption = document.createElement("option");
       emailOption.value = "email";
-      emailOption.innerHTML = "E-mail";
+      emailOption.innerText = "E-mail";
       let smsOption = document.createElement("option");
       smsOption.value = "sms";
-      smsOption.innerHTML = "SMS";
+      smsOption.innerText = "SMS";
 
       notifSelect.appendChild(emailOption);
       notifSelect.appendChild(smsOption);
@@ -590,7 +610,7 @@ function addStyle(what) {
       form.append(notifDiv);
 
       let submit = document.createElement("button");
-      submit.innerHTML = "Submit";
+      submit.innerText = "Submit";
       form.appendChild(submit);
 
       addBox.append(form);
@@ -640,10 +660,10 @@ function addStyle(what) {
           form.removeChild(form.lastChild); //remove submit
           let message = document.createElement("p");
           if (response.executed === "yes") {
-            message.innerHTML = "Successfully added";
+            message.innerText = "Successfully added";
             message.style = "color: green;";
           } else {
-            message.innerHTML = "You fucked up";
+            message.innerText = "You fucked up";
             message.style = "color: red;";
           }
           form.appendChild(message);
@@ -656,7 +676,7 @@ function addStyle(what) {
     addBox.appendChild(addButton);
   } else if (what === "event") {
     let addButton = document.createElement("button");
-    addButton.innerHTML = "Add event";
+    addButton.innerText = "Add event";
 
     addBox.appendChild(addButton);
   } else if (what === "accountinfo") {
