@@ -29,6 +29,15 @@ hr {
   transition: 0.5s;
 }
 
+#logOutID {
+  background-color: rgb(245, 74, 74);
+  width: 100%;
+  height: 5%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
 .navbar_icon {
   margin-top: 20%;
   height: 30%;

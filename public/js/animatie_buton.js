@@ -9,6 +9,21 @@ function move() {
   movement = !movement;
 }
 
+if (localStorage.getItem("sharedemail")) {
+  const logOutButton = document.createElement("button");
+  logOutButton.id = "logOutID";
+  const node = document.createTextNode("Log out");
+  logOutButton.appendChild(node);
+  const element = document.getElementById("mySidenav");
+  console.log("element= " + element);
+  element.appendChild(logOutButton);
+
+  logOutButton.onclick = function logOutFunction() {
+    localStorage.setItem("sharedemail", "");
+    window.location.href = "/index.html";
+  };
+}
+
 document.addEventListener("mousemove", (event) => {
   if (event.clientX < window.innerWidth - 160) {
     leftMove();
