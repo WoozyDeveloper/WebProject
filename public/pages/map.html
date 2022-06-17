@@ -13,7 +13,11 @@
     src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
   <link rel="stylesheet"
     href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+
   <link rel="stylesheet" href="../css/map.css">
+  <link rel="stylesheet" href="../css/nav.css">
+
+
 </head>
 
 <body>
@@ -21,14 +25,40 @@
     <img src="https://cdn.dribbble.com/users/107759/screenshots/4231691/radar.gif" alt="Loading...">
   </div>
 
-  <nav>
-    <div class="nav-wrapper">
-      <a href="../index.html" class="brand-logo">Cose</a>
-      <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="../index.html">Dashboard</a></li>
-        <li><a href="../pages/about.html">Account</a></li>
-        <li><a href="../pages/contact.html">Contact</a></li>
-      </ul>
+  <nav class="navbar map">
+    <a href="../pages/map.html" class="nav-logo">
+      <p><span>Cri</span>cose</p>
+    </a>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a href="../pages/dashboard.html" class="nav-link">Dashboard</a>
+      </li>
+      <!-- <li class="nav-item">
+        <a href="#" class="nav-link">Blog</a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">About</a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">Contact</a>
+      </li> -->
+      <li class="nav-item">
+        <button class="btn register nav-link">Register</button>
+      </li>
+
+      <!-- <li class="nav-item">
+        <button class="btn register nav-link">Report Event</button>
+      </li> -->
+
+      <li class="nav-item">
+        <button class="btn login nav-link">Log In</button>
+      </li>
+
+    </ul>
+    <div class="hamburger">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
     </div>
   </nav>
 
@@ -131,6 +161,9 @@
 
   <script src="../js/map.js" type="module"></script>
   <script src="../js/map_overlay.js" type="module"></script>
+  <script src="https://kit.fontawesome.com/924d13388b.js" crossorigin="anonymous"></script>
+  <script src="../js/nav.js" type="module"></script>
+
 </body>
 
 </html>

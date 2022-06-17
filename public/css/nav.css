@@ -1,0 +1,190 @@
+/* GOOGLE FONTS */
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,400i,700');
+
+/* CSS RESET */
+
+/* Create a variable for accent color */
+:root {
+  --accent-color: #48b1bd;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* remove bullets from nav links */
+li {
+  display: block;
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+}
+
+body,
+html {
+  font-family: 'Montserrat', serif;
+  margin: 0;
+}
+
+button,
+.btn {
+  font-family: inherit;
+}
+
+ul {
+  padding: 0;
+}
+/* CSS RESET ENDS */
+
+/* NAVIGATION BAR */
+nav span {
+  color: var(--accent-color);
+}
+
+nav p {
+  font-size: 3rem;
+  font-weight: 600;
+  cursor: default;
+}
+
+.navbar {
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+}
+
+.navbar.map {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 8vh;
+}
+
+.hamburger {
+  display: none;
+}
+
+.bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  margin: 5px auto;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  background-color: #101010;
+}
+
+.nav-menu {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.nav-item {
+  margin-left: 5rem;
+}
+
+.nav-link {
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: #475569;
+}
+
+nav a {
+  text-decoration: none;
+  color: #676767;
+  transition: 0.1s ease-in-out;
+  font-size: 20px;
+}
+nav a:hover {
+  color: #121212;
+}
+
+nav .btn {
+  padding: 0.5rem 1rem;
+  margin: 0 0 0 0.5rem;
+  border: 1px solid var(--accent-color);
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+  font-size: 20px;
+}
+
+.register {
+  background-color: var(--accent-color);
+  color: white;
+  border: 1px solid var(--accent-color);
+  border-radius: 5px;
+}
+
+.register:hover {
+  background-color: var(--accent-color);
+}
+
+.login {
+  background-color: white;
+  color: var(--accent-color);
+}
+
+.login:hover {
+  background-color: var(--accent-color);
+  color: white;
+  border: 1px solid var(--accent-color);
+  border-radius: 5px;
+}
+
+/* NAVIGATION BAR ENDS */
+
+/* MEDIA QUERIES - RESPONSIVE LAYOUT */
+
+/* DESKTOP - LAPTOP - TABLET */
+
+/* MEDIA QUERIES ENDS*/
+
+/* Create navbar for phone on small screens */
+
+@media only screen and (max-width: 768px) {
+  .nav-menu {
+    position: fixed;
+    left: -100%;
+    top: 6vh;
+    flex-direction: column;
+    background-color: #fff;
+    width: 100%;
+    border-radius: 10px;
+    text-align: center;
+    transition: 0.3s;
+    box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+  }
+
+  .nav-menu.active {
+    left: 0;
+  }
+
+  .nav-item {
+    margin: 1.75rem 0;
+  }
+
+  .hamburger {
+    display: block;
+    cursor: pointer;
+  }
+
+  .hamburger.active .bar:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger.active .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+
+  .hamburger.active .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+}
