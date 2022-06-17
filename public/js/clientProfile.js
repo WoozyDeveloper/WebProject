@@ -1,18 +1,18 @@
 let title = document.getElementById("welcome_message");
-localStorage.setItem("sharedusername", "aa");
-let usernameStored = localStorage.getItem("sharedusername");
+let emailStored = localStorage.getItem("sharedemail");
 let mmap = document.getElementById("map");
 mmap.style =
   "width: 400px; height: 400px; display: none; position: relative; margin-top: -10%; margin-bottom: 20%;";
 
 console.log("am iesit");
-console.log(usernameStored);
-title.innerText = title.innerText + " " + usernameStored;
+console.log(emailStored);
+title.innerText = title.innerText + " " + emailStored;
 
 var feedBox = document.getElementById("feed-box");
 var userid;
 var usermail;
 var coords;
+var usr;
 
 function escapeHtml(text) {
   var map = {
@@ -23,18 +23,19 @@ function escapeHtml(text) {
     "'": "&#039;",
   };
 
-  return text.replace(/[&<>"']/g, function (m) {
+  return String(text).replace(/[&<>"']/g, function (m) {
     return map[m];
   });
 }
 
 fetch(
-  `http://localhost:4002/?table=users&username=${escapeHtml(usernameStored)}`
+  `http://localhost:4002/?table=users&email=${escapeHtml(emailStored)}`
 )
   .then((response) => response.json())
   .then((data) => {
     userid = escapeHtml(data[0].id);
     usermail = escapeHtml(data[0].email);
+    usr = escapeHtml(data[0].username)
   });
 
 function accountInfo() {
@@ -54,7 +55,7 @@ function accountInfo() {
   usernamePic.alt = "user icon stock";
   usernamePic.style = "width: 20px; height: auto;";
   let usernameInfo = document.createElement("p");
-  usernameInfo.innerText = `Username: ${escapeHtml(usernameStored)}`;
+  usernameInfo.innerText = `Username: ${escapeHtml(usr)}`;
   let userAndPic = document.createElement("div");
   userAndPic.style =
     "display: flex; flex-direction: row; align-items: center; justify-content: center;";
@@ -430,6 +431,7 @@ function preferences() {
                 eventtype: eventtype,
                 latitude: latitude,
                 longitude: longitude,
+                preferenceid: preferenceid,
                 notificationmethod: notificationmethod,
               };
 

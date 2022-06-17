@@ -18,7 +18,7 @@ document.forms[0].onsubmit = async (e) => {
 
     if (response.status === "existent user") {
       //if the user exists(email and password match with those in the db)
-      console.log(sharedInfo);
+      localStorage.setItem("sharedemail", data.email);
       window.location.href = "http://localhost:3000/pages/user.html";
     } else {
     }

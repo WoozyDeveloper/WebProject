@@ -52,7 +52,7 @@ function getInfo(queryparams, callback) {
                 let res
                 for (let i = 0; i < keys.length; i++) {
                     if (queryparams[keys[i]] != null && keys[i] !== "table") {
-                        console.log(`select * from ${table} where ${keys[i]}=${queryparams[keys[i]]}`)
+                        console.log(`select * from ${table} where ${keys[i]}='${queryparams[keys[i]]}'`)
                         res = await client.query({
                             text: `select * from ${table} where ${keys[i]}=$1`,
                             values: [queryparams[keys[i]]]
@@ -92,7 +92,7 @@ function postInfo(queryparams, callback) {
                     let keys = Object.keys(queryparams)
                     let table = queryparams.table
                     for (let i = 0; i < keys.length; i++) {
-                        if (queryparams[keys[i]] != null && keys[i] !== "table" && keys[i] !== "preferenceid") {
+                        if (queryparams[keys[i]] != null && keys[i] !== "table" && keys[i] !== "preferenceid" && keys[i] !=="operation") {
                             console.log(`update ${table} set ${keys[i]}='${queryparams[keys[i]]}' where preferenceid=${preferenceid}`)
                             res = await client.query({
                                 text: `update ${table} set ${keys[i]} = '${queryparams[keys[i]]}' where preferenceid=$1`,
