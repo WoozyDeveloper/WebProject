@@ -95,6 +95,8 @@ function checkUser(body, callback) {
   })().catch((err) => console.log(err.stack));
 }
 
+function checkInput(input) {}
+
 function postUser(body, callback) {
   let extractedMail = body.email;
   let extractedUsername = body.username;

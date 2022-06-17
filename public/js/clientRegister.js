@@ -7,7 +7,7 @@ document.forms[0].onsubmit = async (e) => {
     password: document.getElementById("password").value,
   }; //data from the form
   var sharedInfo = data.username;
-  localStorage.setItem("sharedusername", sharedInfo); //save username to local storage
+  localStorage.setItem("sharedemail", sharedInfo); //save username to local storage
 
   console.log(data);
   const settings = {
@@ -30,6 +30,15 @@ document.forms[0].onsubmit = async (e) => {
       window.location.href = "http://localhost:3000/pages/user.html";
     } else {
       //user with that email already exists
+      const para = document.createElement("p");
+      const node = document.createTextNode(
+        "An account with that email already exists"
+      );
+      para.appendChild(node);
+
+      const element = document.getElementById("box");
+      console.log("element= " + element);
+      element.appendChild(para);
     }
   } catch (err) {
     console.log(err);

@@ -1,3 +1,9 @@
+window.onload = function LoadWindow(event) {
+  if (localStorage.getItem("sharedemail")) {
+    window.location.href = "http://localhost:3000/pages/user.html";
+  }
+};
+
 document.forms[0].onsubmit = async (e) => {
   e.preventDefault();
   const data = {
@@ -21,6 +27,16 @@ document.forms[0].onsubmit = async (e) => {
       localStorage.setItem("sharedemail", data.email);
       window.location.href = "http://localhost:3000/pages/user.html";
     } else {
+      //the user doesn't exist
+      const para = document.createElement("p");
+      const node = document.createTextNode(
+        "Sorry the credentials you are using are invalid"
+      );
+      para.appendChild(node);
+
+      const element = document.getElementById("box");
+      console.log("element= " + element);
+      element.appendChild(para);
     }
   } catch (err) {
     console.log(err);
