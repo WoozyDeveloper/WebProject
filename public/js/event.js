@@ -120,10 +120,10 @@ form.addEventListener('submit', (e) => {
   var datetime = 
   String(currentdate.getFullYear()) + "-"
    + String(currentdate.getMonth() + 1).padStart(2,'0') + "-"
-   + String(currentdate.getDate()) + " "
+   + String(currentdate.getDate()) + "T"
    + String(currentdate.getHours()) + ":"
-   + String(currentdate.getMinutes()) + ":"
-   + String(currentdate.getSeconds())
+   + String(currentdate.getMinutes()).padStart(2,'0') + ":"
+   + String(currentdate.getSeconds()) + "+00:00"
   console.log(datetime)
   sent.innerHTML = datetime;
   root.appendChild(sent);
@@ -180,7 +180,7 @@ form.addEventListener('submit', (e) => {
   // // Create expires element
   const expires = xmlDoc.createElement('cap:expires');
   let string = String(json.expires).split("-")
-  json.expires = string[0] + "-" + string[1] + "-" + string[2] + " " + "00:00:00"
+  json.expires = string[0] + "-" + string[1] + "-" + string[2] + "T" + "00:00:00+00:00"
   expires.innerHTML = json.expires;
   info.appendChild(expires);
 

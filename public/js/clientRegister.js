@@ -6,7 +6,7 @@ document.forms[0].onsubmit = async (e) => {
     username: document.getElementById("username").value,
     password: document.getElementById("password").value,
   }; //data from the form
-  var sharedInfo = data.username;
+  var sharedInfo = data.email;
   localStorage.setItem("sharedemail", sharedInfo); //save username to local storage
 
   console.log(data);
