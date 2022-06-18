@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cose</title>
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="../css/event.css">
+  <link rel="stylesheet" href="../css/nav.css">
+
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.css'>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.css'>
+
+
+<body>
+
+
+  <nav class="navbar">
+    <a href="../pages/map.html" class="nav-logo">
+      <p><span>Cri</span>cose</p>
+    </a>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a href="../pages/dashboard.html" class="nav-link">Dashboard</a>
+      </li>
+
+
+      <li class="nav-item">
+
+        <button class="btn register nav-link">Add Event</button>
+      </li>
+
+
+
+    </ul>
+    <div class="hamburger">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </div>
+  </nav>
+
+  <div class="main">
+    <main>
+      <div class="wrapper">
+        <form>
+          <fieldset>
+            <legend>Event Information</legend>
+            <!-- Category -->
+            <div>
+              <label for="category">
+                <span>Category</span>
+              </label>
+              <select id="category" required name="category">
+                <option value="Geo">Geo</option>
+                <option value="Met">Met</option>
+                <option value="Safety">Safety</option>
+                <option value="Security">Security</option>
+                <option value="Rescue">Rescue</option>
+                <option value="Fire">Fire</option>
+                <option value="Health">Health</option>
+                <option value="Env">Env</option>
+                <option value="Transport">Transport</option>
+                <option value="Infra">Infra</option>
+                <option value="CBRNE">CBRNE</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <!-- Category -->
+
+            <!-- Even Type -->
+            <div>
+              <label for="event">
+                <span>Event Type</span>
+              </label>
+              <input type="text" id="event" required placeholder="Flood" name="event">
+            </div>
+            <!-- Even Type -->
+
+            <!-- Urgency -->
+            <div>
+              <label for="urgency">
+                <span>Urgency</span>
+              </label>
+              <select id="urgency" required name="urgency">
+                <option value="Immediate">Immediate</option>
+                <option value="Expected">Expected</option>
+                <option value="Future">Future</option>
+                <option value="Past">Past</option>
+                <option value="Unknown">Unknown</option>
+              </select>
+            </div>
+            <!-- Urgency -->
+
+            <!-- Severity -->
+            <div>
+              <label for="severity">
+                <span>Severity</span>
+              </label>
+              <select id="severity" required name="severity">
+                <option value="Extreme">Extreme</option>
+                <option value="Severe">Severe</option>
+                <option value="Moderate">Moderate</option>
+                <option value="Minor">Minor</option>
+                <option value="Unknown">Unknown</option>
+              </select>
+            </div>
+            <!-- Severity -->
+
+            <!-- Certainty  -->
+            <div>
+              <label for="certainty">
+                <span>Certainty</span>
+              </label>
+              <select id="certainty" required name="certainty">
+                <option value="Observed">Observed</option>
+                <option value="Likely">Likely</option>
+                <option value="Possible">Possible</option>
+                <option value="Unlikely">Unlikely</option>
+                <option value="Unknown">Unknown</option>
+              </select>
+            </div>
+            <!-- Certainty  -->
+
+            <!-- Description -->
+            <div>
+              <label for="description">Description</label>
+              <textarea id="description" rows="5" cols="50" required name="description"></textarea>
+            </div>
+            <!-- Description -->
+
+            <!-- Area Description -->
+            <div>
+              <label for="areaDesc">Area Description</label>
+              <textarea id="areaDesc" rows="5" cols="50" required name="areaDesc"></textarea>
+            </div>
+            <!-- Area Description -->
+
+            <div>
+              <label for="circle">
+                <span>Circle</span>
+              </label>
+              <input type="text" id="circle" placeholder="Format: lat,long<space>radius	" name="circle">
+            </div>
+
+            <div>
+              <label for="geocode">
+                <span>Geocode</span>
+              </label>
+              <input type="text" id="geocode" placeholder="Format: 'type' = 'value'" name="geocode">
+            </div>
+
+            <div>
+              <label for="polygon">
+                <span>Polygon</span>
+              </label>
+              <input type="text" id="polygon" placeholder="Format: SW SE NE NW SW (lat,lon points)" name="polygon">
+            </div>
+          </fieldset>
+
+          <div id="map"></div>
+
+          <button type="submit">Add Event</button>
+        </form>
+      </div><!-- end .wrapper -->
+    </main>
+
+
+  </div>
+
+
+
+
+
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw-src.js'></script>
+  <script src='  https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js'></script>
+
+  <script src="https://kit.fontawesome.com/924d13388b.js" crossorigin="anonymous"></script>
+  <script src="../js/event.js" type="module"></script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="https:cap-sources.s3.amazonaws.com/ro-igsu-en/alert-style.xsl"?>
+<cap:alert xmlns:cap="urn:oasis:names:tc:emergency:cap:1.2">
+  <cap:identifier>urn:oid:2.49.0.1.642.2.2022.6.17.23.31.10</cap:identifier>
+  <cap:sender>meteo.rwanda@gmail.com</cap:sender>
+  <cap:sent>2022-06-18T02:31:10+03:00</cap:sent>
+  <cap:status>Test</cap:status>
+  <cap:msgType>Alert</cap:msgType>
+  <cap:scope>Public</cap:scope>
+  <cap:info>
+    <cap:language>en</cap:language>
+    <cap:category>Met</cap:category>
+    <cap:event>flood</cap:event>
+    <cap:urgency>Expected</cap:urgency>
+    <cap:severity>Minor</cap:severity>
+    <cap:certainty>Possible</cap:certainty>
+    <cap:expires>2022-06-20T02:31:10+03:00</cap:expires>
+    <cap:senderName>Meteo Rwanda</cap:senderName>
+    <cap:headline>Flood warning for Musanze Northern Province, Rwanda</cap:headline>
+    <cap:description>Heavy rains in Musanze Northern Province of Rwanda will lead to flooding, with likely extensive damage to houses and property in an area of 1,000 square kilometers. Rwanda Red Cross estimates that 1,000 households may be affected.</cap:description>
+    <cap:instruction>If you are in the warning area, avoid low-lying areas or move to higher ground immediately.  Residents living along streams and creeks should take immediate precautions to protect life and property. Do not attempt to cross swiftly flowing waters or waters of unknown depth. Continue listening to local media as updates will be provided as conditions change. For emergency assistance, call 112.</cap:instruction>
+    <cap:web>http:www.meteorwanda.gov.rw</cap:web>
+    <cap:contact>meteo.rwanda@gmail.com</cap:contact>
+    <cap:area>
+      <cap:areaDesc>Musanze Northern Province of Rwanda</cap:areaDesc>
+      <cap:polygon>-1.63,29.41 -1.63,29.74 -1.38,29.74 -1.38,29.41 -1.63,29.41</cap:polygon>
+    </cap:area>
+  </cap:info>
+</cap:alert>
