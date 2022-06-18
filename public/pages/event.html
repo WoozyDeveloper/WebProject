@@ -56,6 +56,61 @@
         <form>
           <fieldset>
             <legend>Event Information</legend>
+
+            <div>
+              <label for="identifier">
+                <span>Identifier</span>
+              </label>
+              <input type="text" id="identifier" required placeholder="ID" name="identifier">
+            </div>
+
+            <div>
+              <label for="sender">
+                <span>Sender</span>
+              </label>
+              <input type="text" id="sender" required placeholder="E-mail" name="sender">
+            </div>
+
+            <div>
+              <label for="status">
+                <span>Status</span>
+              </label>
+              <select id="status" required name="status">
+                <option value="Test">Test</option>
+                <option value="Active">Active</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="msgType">
+                <span>Message type</span>
+              </label>
+              <select id="msgType" required name="msgType">
+                <option value="Alert">Alert</option>
+                <option value="Warning">Warning</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="scope">
+                <span>Scope</span>
+              </label>
+              <select id="scope" required name="scope">
+                <option value="Public">Public</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="language">
+                <span>Language</span>
+              </label>
+              <select id="language" required name="language">
+                <option value="English">English</option>
+                <option value="Romanian">Romanian</option>
+              </select>
+            </div>
+
+
             <!-- Category -->
             <div>
               <label for="category">
@@ -81,7 +136,7 @@
             <!-- Even Type -->
             <div>
               <label for="event">
-                <span>Event Type</span>
+                <span>Event</span>
               </label>
               <input type="text" id="event" required placeholder="Flood" name="event">
             </div>
@@ -130,12 +185,34 @@
                 <option value="Unknown">Unknown</option>
               </select>
             </div>
-            <!-- Certainty  -->
+
+            <div>
+              <label for="expires">
+                <span>Expires</span>
+              </label>
+              <input id="expires" name="expires" type="date">
+            </div>
+
+
+            <div>
+              <label for="headline">Head line</label>
+              <textarea id="headline" rows="2" cols="50" required name="headline"></textarea>
+            </div>
 
             <!-- Description -->
             <div>
               <label for="description">Description</label>
               <textarea id="description" rows="5" cols="50" required name="description"></textarea>
+            </div>
+
+            <div>
+              <label for="web">Website</label>
+              <input id="web" name="web" type="text">
+            </div>
+
+            <div>
+              <label for="contact">Contact</label>
+              <input id="contact" name="contact" type="text">
             </div>
             <!-- Description -->
 

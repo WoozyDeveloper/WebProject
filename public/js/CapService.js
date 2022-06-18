@@ -33,13 +33,102 @@ const server = http.createServer((req, res) => {
         const parser = new XMLParser();
         let jObj = parser.parse(body);
 
+        let json = JSON.parse(JSON.stringify(jObj))
+        console.log(json['cap:alert']['cap:info']['cap:area'])
+
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(jObj));
+        //res.end(JSON.stringify(jObj));
+        addEvent(JSON.parse(JSON.stringify(jObj)), function (response) { res.end(JSON.stringify(response)); })
       });
+  }
+  else if (req.method == 'GET') {
+    const urlSearchParams = querystring.parseUrl(req.url);
+    const params = urlSearchParams.query;
+    console.log(params)
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    getEvent(params, function (response) { res.end(JSON.stringify(response)); })
   }
 });
 
-//
+function addEvent(queryparams, callback) {
+  const { Pool } = require('pg')
+  //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
+  const pool = new Pool({
+    //connectionString,
+    user: 'postgres',
+    host: '164.92.194.239',
+    database: 'postgres',
+    port: 5432,
+  })
+    ; (async () => {
+      const client = await pool.connect()
+      try {
+        let res
+        let identifier = queryparams["cap:alert"]["cap:identifier"]
+        let sender = queryparams["cap:alert"]["cap:sender"]
+        let sent = queryparams["cap:alert"]["cap:sent"]
+        let status = queryparams["cap:alert"]["cap:status"]
+        let msgType = queryparams["cap:alert"]["cap:msgType"]
+        let scope = queryparams["cap:alert"]["cap:scope"]
+        let category = queryparams["cap:alert"]["cap:info"]["cap:category"]
+        let eventtype = queryparams["cap:alert"]["cap:info"]["cap:event"]
+        let urgency = queryparams["cap:alert"]["cap:info"]["cap:urgency"]
+        let severity = queryparams["cap:alert"]["cap:info"]["cap:severity"]
+        let certainty = queryparams["cap:alert"]["cap:info"]["cap:certainty"]
+        let expires = queryparams["cap:alert"]["cap:info"]["cap:expires"]
+        let description = queryparams["cap:alert"]["cap:info"]["cap:description"]
+        let areaDescription = queryparams['cap:alert']['cap:info']['cap:area']['cap:areaDesc']
+        let polygon = queryparams['cap:alert']['cap:info']['cap:area']['cap:polygon']
+        res = await client.query({
+          text: `insert into Events(category, eventtype, urgency, severity, certainty, description, areadescription,
+                      polygon,identifier,sender,sent,status,msgType,scope,expires) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,
+                      $12,$13,$14,$15)`,
+          values: [category, eventtype, urgency, severity, certainty, 
+            description, areaDescription, polygon, identifier, sender, sent, status, msgType, scope, expires]
+        })
+        console.log(res.rows)
+        return callback(res.rows)
+      } finally {
+        // Make sure to release the client before any error handling,
+        // just in case the error handling itself throws an error.
+        client.release()
+      }
+    })().catch(err => console.log(err.stack))
+}
+
+function getEvent(queryparams, callback) {
+  const { Pool } = require('pg')
+  //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
+  const pool = new Pool({
+    //connectionString,
+    user: 'postgres',
+    host: '164.92.194.239',
+    database: 'postgres',
+    port: 5432,
+  })
+    ; (async () => {
+      const client = await pool.connect()
+      try {
+        let start = queryparams.start
+        let end = queryparams.end
+        let category = queryparams.category
+        let urgency = queryparams.urgency
+        console.log(`select * from events where sent>=${start} and expires<=${end} and category=${category} and urgency=${urgency}`)
+        let res = await client.query({
+          text: `select * from events where sent>=$1 and expires>=$2 and category=$3 and urgency=$4`,
+          values: [start, end, category, urgency]
+        })
+        console.log(res.rows)
+        return callback(res.rows)
+      } finally {
+        // Make sure to release the client before any error handling,
+        // just in case the error handling itself throws an error.
+        client.release()
+      }
+    })().catch(err => console.log(err.stack))
+}
+
+
 
 server.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);

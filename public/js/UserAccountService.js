@@ -12,6 +12,17 @@ const server = http.createServer((req, res) => {
     console.log(urlSearchParams)
     console.log(req.method)
 
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Request-Method', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
+    res.setHeader('Access-Control-Allow-Headers', '*');
+
+    if (req.method === 'OPTIONS') {
+        res.writeHead(200);
+        res.end();
+        return;
+    }
+
     if (req.method == 'GET') {
         console.log('GET')
         res.setHeader('Content-Type', 'application/json');
@@ -92,7 +103,7 @@ function postInfo(queryparams, callback) {
                     let keys = Object.keys(queryparams)
                     let table = queryparams.table
                     for (let i = 0; i < keys.length; i++) {
-                        if (queryparams[keys[i]] != null && keys[i] !== "table" && keys[i] !== "preferenceid" && keys[i] !=="operation") {
+                        if (queryparams[keys[i]] != null && keys[i] !== "table" && keys[i] !== "preferenceid" && keys[i] !== "operation") {
                             console.log(`update ${table} set ${keys[i]}='${queryparams[keys[i]]}' where preferenceid=${preferenceid}`)
                             res = await client.query({
                                 text: `update ${table} set ${keys[i]} = '${queryparams[keys[i]]}' where preferenceid=$1`,
@@ -101,8 +112,7 @@ function postInfo(queryparams, callback) {
                         }
                     }
                 }
-                else if(operation === "add")
-                {
+                else if (operation === "add") {
                     let table = queryparams.table
                     let userid = queryparams.userid
                     let location = queryparams.location

@@ -87,6 +87,8 @@
           <label for="flood">Show floods</label><br>
           <input type="checkbox" id="storm" name="storm" value="storm">
           <label for="storm">Show bad weather</label><br>
+          <input type="checkbox" id="other" name="other" value="other">
+          <label for="other">Show other</label><br>
         </div>
         <div id="selectLastFloods">
           <br>
@@ -139,6 +141,52 @@
         <div id="weatherMenu">
         </div>
         <p id="errorMessage" style="color: red"></p>
+        <div id="event-form" style="display: none;">
+          <div>
+            <label for="category">
+              <span>Category</span>
+            </label>
+            <select id="category" required name="category" style="float: right;">
+              <option value="Geo">Geo</option>
+              <option value="Met">Met</option>
+              <option value="Safety">Safety</option>
+              <option value="Security">Security</option>
+              <option value="Rescue">Rescue</option>
+              <option value="Fire">Fire</option>
+              <option value="Health">Health</option>
+              <option value="Env">Env</option>
+              <option value="Transport">Transport</option>
+              <option value="Infra">Infra</option>
+              <option value="CBRNE">CBRNE</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label for="start-date-event">
+              <span>Start date:</span>
+            </label>
+            <input type="date" id="start-date-event" name="start-date-event" style="float: right;">
+          </div>
+          <div>
+            <label for="end-date-event">
+              <span>End date:</span>
+            </label>
+            <input type="date" id="end-date-event" name="end-date-event" style="float: right;">
+          </div>
+          <div>
+            <label for="urgency-event">
+              <span>Urgency:</span>
+            </label>
+            <select id="urgency-event" required name="urgency-event" style="float: right;">
+              <option value="Immediate">Immediate</option>
+              <option value="Expected">Expected</option>
+              <option value="Future">Future</option>
+              <option value="Past">Past</option>
+              <option value="Unknown">Unknown</option>
+            </select>
+          </div>
+          <p id="errorMessage" style="color: red"></p>
+        </div>
         <button id="submit" type="submit">
           <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="#fff">
             <path d="M0 0h24v24H0z" fill="none" />

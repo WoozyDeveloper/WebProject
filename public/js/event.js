@@ -85,16 +85,14 @@ form.addEventListener('submit', (e) => {
     json[key] = value;
   }
 
-  json['identifier'] = 'urn:oid:fsdf';
+  /*json['identifier'] = 'urn:oid:fsdf';
   json['sender'] = 'alex@gmail.com';
   json['sent'] = '2020-06-18T02:31:10+03:00';
   json['status'] = 'Actual';
   json['msgType'] = 'Alert';
   json['scope'] = 'Public';
 
-  json['expires'] = '2022-06-20T02:31:10+03:00';
-
-  console.log(json);
+  json['expires'] = '2022-06-20T02:31:10+03:00';*/
 
   // Convert JSON to CAP XML format
 
@@ -118,7 +116,16 @@ form.addEventListener('submit', (e) => {
 
   // Create sent element
   const sent = xmlDoc.createElement('cap:sent');
-  sent.innerHTML = json.sent;
+  var currentdate = new Date();
+  var datetime = 
+  String(currentdate.getFullYear()) + "-"
+   + String(currentdate.getMonth() + 1).padStart(2,'0') + "-"
+   + String(currentdate.getDate()) + " "
+   + String(currentdate.getHours()) + ":"
+   + String(currentdate.getMinutes()) + ":"
+   + String(currentdate.getSeconds())
+  console.log(datetime)
+  sent.innerHTML = datetime;
   root.appendChild(sent);
 
   // Create status element
@@ -171,19 +178,21 @@ form.addEventListener('submit', (e) => {
   info.appendChild(certainty);
 
   // // Create expires element
-  // const expires = xmlDoc.createElement('cap:expires');
-  // expires.innerHTML = json.expires;
-  // info.appendChild(expires);
+  const expires = xmlDoc.createElement('cap:expires');
+  let string = String(json.expires).split("-")
+  json.expires = string[0] + "-" + string[1] + "-" + string[2] + " " + "00:00:00"
+  expires.innerHTML = json.expires;
+  info.appendChild(expires);
 
   // // Create senderName element
-  // const senderName = xmlDoc.createElement('cap:senderName');
-  // senderName.innerHTML = json.senderName;
-  // info.appendChild(senderName);
+  const senderName = xmlDoc.createElement('cap:senderName');
+  senderName.innerHTML = json.senderName;
+  info.appendChild(senderName);
 
   // // Create headline element
-  // const headline = xmlDoc.createElement('cap:headline');
-  // headline.innerHTML = json.headline;
-  // info.appendChild(headline);
+  const headline = xmlDoc.createElement('cap:headline');
+  headline.innerHTML = json.headline;
+  info.appendChild(headline);
 
   // Create description element
   const description = xmlDoc.createElement('cap:description');
@@ -206,6 +215,8 @@ form.addEventListener('submit', (e) => {
 
   const xmlString = new XMLSerializer().serializeToString(xmlDoc);
   console.log(xmlString);
+
+  console.log(json.polygon);
 
   // Send the XML to the server
   const xhr = new XMLHttpRequest();

@@ -11,6 +11,17 @@ const server = http.createServer(async (req, res) => {
   const urlSearchParams = new URLSearchParams(req.url);
   const params = Object.fromEntries(urlSearchParams.entries());
 
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Request-Method', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
+  res.setHeader('Access-Control-Allow-Headers', '*');
+
+  if (req.method === 'OPTIONS') {
+    res.writeHead(200);
+    res.end();
+    return;
+  }
+
   if (req.method == "GET") {
   } else if (req.method == "POST") {
     if (req.url.includes("register")) {

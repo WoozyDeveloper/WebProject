@@ -53,6 +53,7 @@ let checkArray = [
   new checkElement("earthquake", false),
   new checkElement("storm", false),
   new checkElement("flood", false),
+  new checkElement("other", false)
 ];
 
 function isLoaded(type, loaded) {
@@ -63,12 +64,14 @@ function isLoaded(type, loaded) {
 var earthquakeCheckBox = document.querySelector("input[name=earthquake]");
 var stormCheckBox = document.querySelector("input[name=storm]");
 var floodCheckBox = document.querySelector("input[name=flood]");
+var otherCheckBox = document.querySelector("input[name=other]")
 
-var checkBoxes = [earthquakeCheckBox, stormCheckBox, floodCheckBox];
+var checkBoxes = [earthquakeCheckBox, stormCheckBox, floodCheckBox, otherCheckBox];
 var loaded = [
   new isLoaded("earthquake", false),
   new isLoaded("flood", false),
   new isLoaded("storm", false),
+  new isLoaded("other", false)
 ];
 
 var floodMarkers = [];
@@ -91,6 +94,8 @@ checkBoxes.forEach(function (checkbox) {
         document.getElementById("selectLastFloods").style.display = "none";
         document.getElementById("weatherMenu").style.display = "none";
         document.getElementById("submit").style.display = "block";
+        document.getElementById("event-form").style.display = "none"
+        document.querySelector("input[name=other]").checked = false;
         clickable = false;
       }
     } else if (checkbox.name === "storm") {
@@ -107,7 +112,9 @@ checkBoxes.forEach(function (checkbox) {
         document.getElementById("weatherMenu").style.display = "block";
         document.getElementsByClassName("duration")[0].style.display = "block";
         document.getElementById("submit").style.display = "block";
+        document.querySelector("input[name=other]").checked = false;
         let weatherMenu = document.getElementById("weatherMenu")
+        document.getElementById("event-form").style.display = "none"
         while (weatherMenu.firstChild) {
           weatherMenu.removeChild(weatherMenu.firstChild)
         }
@@ -121,6 +128,7 @@ checkBoxes.forEach(function (checkbox) {
       if (this.checked) {
         document.querySelector("input[name=earthquake]").checked = false;
         document.querySelector("input[name=storm]").checked = false;
+        document.querySelector("input[name=other]").checked = false;
         checkArray.find((obj) => obj.type === "earthquake").checked = false;
         checkArray.find((obj) => obj.type === "storm").checked = false;
         document.getElementById("earthquakeSettings").style.display = "none";
@@ -129,7 +137,27 @@ checkBoxes.forEach(function (checkbox) {
         document.getElementById("selectLastFloods").style.display = "block";
         document.getElementById("weatherMenu").style.display = "none";
         document.getElementById("submit").style.display = "block";
+        document.getElementById("event-form").style.display = "none"
         clickable = false;
+      }
+    } else if (checkbox.name === "other") {
+      checkArray.find((obj) => obj.type === "other").checked = this.checked;
+      if (this.checked) {
+        document.querySelector("input[name=earthquake]").checked = false;
+        document.querySelector("input[name=storm]").checked = false;
+        document.querySelector("input[name=flood]").checked = false;
+        checkArray.find((obj) => obj.type === "earthquake").checked = false;
+        checkArray.find((obj) => obj.type === "storm").checked = false;
+        checkArray.find((obj) => obj.type === "flood").checked = false;
+        document.getElementById("earthquakeSettings").style.display = "none";
+        document.getElementsByClassName("duration")[0].style.display = "none";
+        document.getElementById("showing-label").style.display = "none";
+        document.getElementById("selectLastFloods").style.display = "none";
+        document.getElementById("weatherMenu").style.display = "none";
+        document.getElementById("submit").style.display = "block";
+        clickable = false;
+        let event_form = document.getElementById("event-form")
+        event_form.style.display = "block"
       }
     }
   });
@@ -404,8 +432,8 @@ function addCities(start, end) {
 
         event.classList.add("slide");
 
-        event.innerHTML = 
-        `<div class="slide-details">
+        event.innerHTML =
+          `<div class="slide-details">
         <p>${weatherevent}</p>
         <div class="slide-subheading">
         <p style="font-size: 13px;">${description}</p>
@@ -414,8 +442,8 @@ function addCities(start, end) {
         <svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 24 24" width="12px" fill="#fff"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
         ${location}
         </div>
-        <p style="font-size: 13px">${startdate.substring(0,10)}</p>
-        <p style="font-size: 13px">${enddate.substring(0,10)}</p>
+        <p style="font-size: 13px">${startdate.substring(0, 10)}</p>
+        <p style="font-size: 13px">${enddate.substring(0, 10)}</p>
         </div>`;
 
         events.appendChild(event);
@@ -464,7 +492,7 @@ function addUserEarthquakes(start, end) {
            <p>User: ${userid}</p>`
         );
 
-        const marker = new mapboxgl.Marker({ "color": "brown", "scale":"0.75" })
+        const marker = new mapboxgl.Marker({ "color": "brown", "scale": "0.75" })
           .setLngLat([long, lat])
           .setPopup(popup)
           .addTo(map);
@@ -476,8 +504,8 @@ function addUserEarthquakes(start, end) {
 
         event.classList.add("slide");
 
-        event.innerHTML = 
-        `<div class="slide-details">
+        event.innerHTML =
+          `<div class="slide-details">
         <p>M ${magnitude}</p>
         <div class="slide-subheading">
         <p style="font-size: 13px;">${description}</p>
@@ -486,8 +514,8 @@ function addUserEarthquakes(start, end) {
         <svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 24 24" width="12px" fill="#fff"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
         ${location}
         </div>
-        <p style="font-size: 13px">${startdate.substring(0,10)}</p>
-        <p style="font-size: 13px">${enddate.substring(0,10)}</p>
+        <p style="font-size: 13px">${startdate.substring(0, 10)}</p>
+        <p style="font-size: 13px">${enddate.substring(0, 10)}</p>
         </div>`;
 
         events.appendChild(event);
@@ -499,6 +527,78 @@ function addUserEarthquakes(start, end) {
         event.appendChild(img);
 
         events.appendChild(event);
+      }
+    })
+}
+
+let eventMarkers = []
+function showOtherEvents(queryparams) {
+  console.log(queryparams)
+  fetch(`http://localhost:4003?start=${queryparams["start-date-event"]}&end=${queryparams["end-date-event"]}&urgency=${queryparams.urgency}&category=${queryparams.category}`)
+    .then(response => response.json())
+    .then((data) => {
+      for (let i = 0; i < data.length; i++) {
+        let polygon = data[i].polygon
+        console.log(polygon)
+        let coords = String(polygon).split(" ")
+        let identifier = data[i].sender
+        let eventtype = data[i].eventtype
+        let urgency = data[i].urgency
+        let category = data[i].category
+        let severity = data[i].severity
+        let sent = data[i].sent
+        let expires = data[i].expires
+
+        const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
+          `<p>Category: ${category}</p>
+           <p>Event type: ${eventtype}</p> 
+           <p>Urgency: ${urgency}</p>
+           <p>Severity: ${severity}</p>
+           <p>Posted by: ${identifier}</p>`
+        );
+
+        console.log(coords)
+        for (let j = 0; j < coords.length; j++) {
+          let lng = coords[j].split(",")[1]
+          let lat = coords[j].split(",")[0]
+          const marker = new mapboxgl.Marker({ "color": "green", "scale": "0.75" })
+            .setLngLat([lng, lat])
+            .setPopup(popup)
+            .addTo(map);
+          eventMarkers.push(marker);
+
+          if (j == 0) {
+            let events = document.getElementById("events");
+
+            let event = document.createElement("div");
+
+            event.classList.add("slide");
+
+            event.innerHTML =
+           `<div class="slide-details">
+            <p>Urgency: ${urgency}</p>
+            <div class="slide-subheading">
+            <p style="font-size: 13px;">Severity: ${severity}</p>
+            </div>
+            <div class="slide-place">
+            <svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 24 24" width="12px" fill="#fff"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            ${eventtype}
+            </div>
+            <p style="font-size: 13px">${sent.substring(0, 10)}</p>
+            <p style="font-size: 13px">${expires.substring(0, 10)}</p>
+            </div>`;
+
+            events.appendChild(event);
+
+            const img = document.createElement("img");
+            img.src = `https://api.mapbox.com/v4/mapbox.satellite/${lng},${lat},7/360x300@2x.png?access_token=${TOKEN}`;
+            img.alt = category;
+
+            event.appendChild(img);
+
+            events.appendChild(event);
+          }
+        }
       }
     })
 }
@@ -802,6 +902,7 @@ map.on("idle", () => {
     if (
       (data.start && data.end && isDateValid) ||
       checkArray.find((obj) => obj.type === "flood").checked ||
+      checkArray.find((obj) => obj.type === "other").checked ||
       checkArray.find((obj) => obj.type === "storm").checked
     ) {
       var checkedSomething = false;
@@ -817,6 +918,9 @@ map.on("idle", () => {
         else if (loaded[i].type === "storm" && loaded[i].loaded) {
           removeCities();
           loaded.find((obj) => obj.type === "storm").loaded = false;
+        }
+        else if (loaded[i].type === "other" && loaded[i].loaded) {
+          loaded.find((obj) => obj.type === "other").loaded = false;
         }
       }
       for (let i = 0; i < checkArray.length; i++) {
@@ -858,6 +962,23 @@ map.on("idle", () => {
             }
             else
               addCities(data.start, data.end)
+          }
+          else if (checkElement.type === "other") {
+            console.log(data)
+            checkedSomething = true;
+            loaded.find((obj) => obj.type === "other").loaded = true;
+            let json = '{"start-date-event":"","end-date-event":"","urgency":"","category":""}'
+            json = JSON.parse(json)
+            json["start-date-event"] = data["start-date-event"]
+            json["end-date-event"] = data["end-date-event"]
+            json.urgency = data["urgency-event"]
+            json.category = data.category
+            console.log(json)
+            const eventsNode = document.getElementById("events");
+            while (eventsNode.firstChild) {
+              eventsNode.removeChild(eventsNode.lastChild);
+            }
+            showOtherEvents(json)
           }
         }
       }
