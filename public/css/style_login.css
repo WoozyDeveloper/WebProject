@@ -9,6 +9,13 @@
   text-align: center;
 }
 
+#box p{
+  color: black;
+  text-decoration: underline;
+  font-size: xx-large;
+  text-align: center;
+}
+
 form {
   border-radius: 10%;
   background: white;

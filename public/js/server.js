@@ -65,13 +65,9 @@ function checkUser(body, callback) {
     const client = await pool.connect();
     try {
       const check = await client.query({
-        rowMode: "array",
-        text:
-          "SELECT * FROM USERS WHERE EMAIL='" +
-          extractedMail +
-          "' AND PASSWORD='" +
-          extractedPassword +
-          "'",
+        //text: `SELECT * FROM USERS WHERE EMAIL='${extractedMail}' AND PASSWORD='${extractedPassword}'`,
+        text: `SELECT * FROM USERS WHERE EMAIL=$1 AND PASSWORD=$2`,
+        values: [extractedMail, extractedPassword],
       });
 
       if (check.rowCount > 0) {
@@ -99,6 +95,8 @@ function checkUser(body, callback) {
   })().catch((err) => console.log(err.stack));
 }
 
+function checkInput(input) {}
+
 function postUser(body, callback) {
   let extractedMail = body.email;
   let extractedUsername = body.username;
@@ -119,7 +117,8 @@ function postUser(body, callback) {
     try {
       const check = await client.query({
         rowMode: "array",
-        text: "SELECT * FROM USERS WHERE EMAIL='" + extractedMail + "'",
+        text: `SELECT * FROM USERS WHERE EMAIL=$1`,
+        values: [extractedMail],
       });
 
       if (check.rowCount == 0) {
@@ -130,20 +129,15 @@ function postUser(body, callback) {
 
         const res = await client.query({
           rowMode: "array",
-          text:
-            "INSERT INTO USERS VALUES(" +
-            (dim.rowCount + 1) +
-            ",'" +
-            extractedMail +
-            "','" +
-            extractedUsername +
-            "','" +
-            CryptoJS.MD5(extractedPassword) +
-            "')",
+          text: `INSERT INTO USERS VALUES($1,$2,$3,$4)`,
+          values: [
+            dim.rowCount + 1,
+            extractedMail,
+            extractedUsername,
+            CryptoJS.MD5(extractedPassword),
+          ],
         });
-        console.log(res.rows);
 
-        //res.writeHead(200, {'Content-Type': 'text/plain'});
         response = {
           status: "new user",
         };
@@ -179,7 +173,7 @@ function getUsers(callback) {
     try {
       const res = await client.query({
         rowMode: "array",
-        text: "SELECT * FROM users",
+        text: "SELECT * FROM USERS",
       });
       console.log(res.rows);
       return callback(res.rows);

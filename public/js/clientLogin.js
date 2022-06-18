@@ -1,15 +1,15 @@
+window.onload = function LoadWindow(event) {
+  if (localStorage.getItem("sharedemail")) {
+    window.location.href = "http://localhost:3000/pages/user.html";
+  }
+};
+
 document.forms[0].onsubmit = async (e) => {
   e.preventDefault();
-  console.log("TESTTT");
   const data = {
     email: document.getElementById("email").value,
-
     password: document.getElementById("password").value,
-  };
-
-  console.log(email + password);
-  var sharedInfo = data.username;
-  localStorage.setItem("sharedusername", sharedInfo);
+  }; //get data from form
 
   console.log(data);
   const settings = {
@@ -23,9 +23,20 @@ document.forms[0].onsubmit = async (e) => {
     console.log(response);
 
     if (response.status === "existent user") {
-      console.log(sharedInfo);
+      //if the user exists(email and password match with those in the db)
+      localStorage.setItem("sharedemail", data.email);
       window.location.href = "http://localhost:3000/pages/user.html";
     } else {
+      //the user doesn't exist
+      const para = document.createElement("p");
+      const node = document.createTextNode(
+        "Sorry the credentials you are using are invalid"
+      );
+      para.appendChild(node);
+
+      const element = document.getElementById("box");
+      console.log("element= " + element);
+      element.appendChild(para);
     }
   } catch (err) {
     console.log(err);
