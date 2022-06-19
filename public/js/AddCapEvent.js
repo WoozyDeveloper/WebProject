@@ -92,6 +92,7 @@ form.addEventListener('submit', (e) => {
   json['status'] = 'Actual';
   json['msgType'] = 'Alert';
   json['scope'] = 'Public';
+  json['senderName'] = 'Alex';
 
   /*json['expires'] = '2022-06-20T02:31:10+03:00';*/
 
@@ -247,7 +248,7 @@ form.addEventListener('submit', (e) => {
 
   // Send the XML to the server
   const xhr = new XMLHttpRequest();
-  xhr.open('POST', 'http://localhost:4004');
+  xhr.open('POST', 'http://localhost:4003');
   xhr.setRequestHeader('Content-Type', 'application/xml');
   xhr.send(xmlString);
 });

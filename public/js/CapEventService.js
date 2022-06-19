@@ -65,8 +65,13 @@ function addEvent(queryparams, callback) {
       try {
         let res
         let identifier = queryparams["cap:alert"]["cap:identifier"]
+        let sendername = queryparams["cap:alert"]["cap:info"]["cap:senderName"]
         let sender = queryparams["cap:alert"]["cap:sender"]
         let sent = queryparams["cap:alert"]["cap:sent"]
+        let instruction = queryparams["cap:alert"]["cap:info"]["cap:instruction"]
+        let language = queryparams["cap:alert"]["cap:info"]["cap:language"]
+        let shelterLocation = queryparams["cap:alert"]["cap:info"]["cap:area"]["cap:geocode"]["cap:value"]
+        let headline = queryparams["cap:alert"]["cap:info"]["cap:headline"]
         let status = queryparams["cap:alert"]["cap:status"]
         let msgType = queryparams["cap:alert"]["cap:msgType"]
         let scope = queryparams["cap:alert"]["cap:scope"]
@@ -80,11 +85,12 @@ function addEvent(queryparams, callback) {
         let areaDescription = queryparams['cap:alert']['cap:info']['cap:area']['cap:areaDesc']
         let polygon = queryparams['cap:alert']['cap:info']['cap:area']['cap:polygon']
         res = await client.query({
-          text: `insert into Events(category, eventtype, urgency, severity, certainty, description, areadescription,
-                      polygon,identifier,sender,sent,status,msgType,scope,expires) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,
-                      $12,$13,$14,$15)`,
+          text: `insert into Events(category, eventtype, urgency, severity, certainty, description, areadesc,
+                      polygon,identifier,sendername,sent,status,msgType,scope,expires, sender, headline, shelterlocation, language, instruction) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,
+                      $12,$13,$14,$15,$16,$17,$18,$19,$20)`,
           values: [category, eventtype, urgency, severity, certainty, 
-            description, areaDescription, polygon, identifier, sender, sent, status, msgType, scope, expires]
+            description, areaDescription, polygon, identifier, sendername, sent, status, msgType, scope, expires, sender, headline,
+          shelterLocation, language, instruction]
         })
         console.log(res.rows)
         return callback(res.rows)
