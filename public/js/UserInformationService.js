@@ -96,17 +96,27 @@ function updateEmail(email, uid, callback) {
   (async () => {
     const client = await pool.connect();
     try {
-      console.log("m " + email + " id " + uid);
-      const check = await client.query({
-        text: `UPDATE USERS SET EMAIL=$1 WHERE ID=$2`,
-        values: [email, uid],
+      const validateEmail = await client.query({
+        text: `SELECT EMAIL FROM USERS WHERE EMAIL=$1`,
+        values: [email],
       });
-      console.log("check=" + check);
-      response = {
-        status: "updated user",
-      };
 
-      console.log("USER UPDATE REQUESTED!!!");
+      console.log("m " + email + " id " + uid);
+      if (validateEmail.rowCount === 0) {
+        const check = await client.query({
+          text: `UPDATE USERS SET EMAIL=$1 WHERE ID=$2`,
+          values: [email, uid],
+        });
+        console.log("check=" + check);
+        response = {
+          status: "updated user",
+        };
+        console.log("USER UPDATE REQUESTED!!!");
+      } else {
+        response = {
+          status: "user not updated",
+        };
+      }
       return callback(response);
     } finally {
       // Make sure to release the client before any error handling,

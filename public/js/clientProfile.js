@@ -162,19 +162,27 @@ function accountInfo() {
         if (response.status === "updated user") {
           localStorage.setItem("sharedemail", json.email);
           console.log(response);
+          changeDiv.removeChild(changeDiv.firstChild);
+          changeDiv.removeChild(changeDiv.firstChild);
+          let succesMessage = document.createElement("p");
+          succesMessage.style = "color: green;";
+          succesMessage.innerText = "Changed with success";
+          changeDiv.appendChild(succesMessage);
           location.reload();
+        } else if (response.status === "user not updated") {
+          console.log(response);
+          changeDiv.removeChild(changeDiv.firstChild);
+          changeDiv.removeChild(changeDiv.firstChild);
+          let succesMessage = document.createElement("p");
+          succesMessage.style = "color: red;";
+          succesMessage.innerText = "Email already exists";
+          changeDiv.appendChild(succesMessage);
         }
       } catch (err) {
         console.log(err);
       }
 
       console.log(document.getElementById("new-mail").value);
-      changeDiv.removeChild(changeDiv.firstChild);
-      changeDiv.removeChild(changeDiv.firstChild);
-      let succesMessage = document.createElement("p");
-      succesMessage.style = "color: green;";
-      succesMessage.innerText = "Changed with success";
-      changeDiv.appendChild(succesMessage);
     };
     changeDiv.appendChild(changeField);
     changeDiv.appendChild(changeFieldSend);
