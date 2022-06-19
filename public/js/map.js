@@ -537,6 +537,7 @@ function showOtherEvents(queryparams) {
   fetch(`http://localhost:4003?start=${queryparams["start-date-event"]}&end=${queryparams["end-date-event"]}&urgency=${queryparams.urgency}&category=${queryparams.category}`)
     .then(response => response.json())
     .then((data) => {
+      let put = false;
       for (let i = 0; i < data.length; i++) {
         let polygon = data[i].polygon
         console.log(polygon)
@@ -567,7 +568,8 @@ function showOtherEvents(queryparams) {
             .addTo(map);
           eventMarkers.push(marker);
 
-          if (j == 0) {
+          if (!put) {
+            put = true
             let events = document.getElementById("events");
 
             let event = document.createElement("div");
