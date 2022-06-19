@@ -27,3 +27,31 @@
     </cap:area>
   </cap:info>
 </cap:alert>
+<cap:alert xmlns:cap="urn:oasis:names:tc:emergency:cap:1.2">
+  <cap:identifier>urn:oid:fsdf</cap:identifier>
+  <cap:sender>alex@gmail.com</cap:sender>
+  <cap:sent>2022-06-19T03:45:52+00:00</cap:sent>
+  <cap:status>Actual</cap:status>
+  <cap:msgType>Alert</cap:msgType>
+  <cap:scope>Public</cap:scope>
+  <cap:info>
+    <cap:language>en</cap:language>
+    <cap:category>Geo</cap:category>
+    <cap:event>sdf</cap:event>
+    <cap:urgency>Immediate</cap:urgency>
+    <cap:severity>Extreme</cap:severity>
+    <cap:certainty>Observed</cap:certainty>
+    <cap:expires>2022-06-20T00:00:00+00:00</cap:expires>
+    <cap:senderName>undefined</cap:senderName>
+    <cap:headline>sdf</cap:headline>
+    <cap:description>sdf</cap:description>
+    <cap:area>
+      <cap:areaDesc>sdf</cap:areaDesc>
+      <cap:polygon>46.8152,25.0685 47.3739,25.0685 47.3739,26.1470 46.8152,26.1470 46.8152,25.0685</cap:polygon>
+      <cap:geocode>
+        <cap:valueName>shelterLocation</cap:valueName>
+        <cap:value>46.9374,25.0406</cap:value>
+      </cap:geocode>
+    </cap:area>
+  </cap:info>
+</cap:alert>

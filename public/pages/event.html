@@ -57,60 +57,6 @@
           <fieldset>
             <legend>Event Information</legend>
 
-            <div>
-              <label for="identifier">
-                <span>Identifier</span>
-              </label>
-              <input type="text" id="identifier" required placeholder="ID" name="identifier">
-            </div>
-
-            <div>
-              <label for="sender">
-                <span>Sender</span>
-              </label>
-              <input type="text" id="sender" required placeholder="E-mail" name="sender">
-            </div>
-
-            <div>
-              <label for="status">
-                <span>Status</span>
-              </label>
-              <select id="status" required name="status">
-                <option value="Test">Test</option>
-                <option value="Active">Active</option>
-              </select>
-            </div>
-
-            <div>
-              <label for="msgType">
-                <span>Message type</span>
-              </label>
-              <select id="msgType" required name="msgType">
-                <option value="Alert">Alert</option>
-                <option value="Warning">Warning</option>
-              </select>
-            </div>
-
-            <div>
-              <label for="scope">
-                <span>Scope</span>
-              </label>
-              <select id="scope" required name="scope">
-                <option value="Public">Public</option>
-              </select>
-            </div>
-
-            <div>
-              <label for="language">
-                <span>Language</span>
-              </label>
-              <select id="language" required name="language">
-                <option value="English">English</option>
-                <option value="Romanian">Romanian</option>
-              </select>
-            </div>
-
-
             <!-- Category -->
             <div>
               <label for="category">
@@ -190,7 +136,7 @@
               <label for="expires">
                 <span>Expires</span>
               </label>
-              <input id="expires" name="expires" type="date">
+              <input id="expires" name="expires" type="date" required>
             </div>
 
 
@@ -204,16 +150,6 @@
               <label for="description">Description</label>
               <textarea id="description" rows="5" cols="50" required name="description"></textarea>
             </div>
-
-            <div>
-              <label for="web">Website</label>
-              <input id="web" name="web" type="text">
-            </div>
-
-            <div>
-              <label for="contact">Contact</label>
-              <input id="contact" name="contact" type="text">
-            </div>
             <!-- Description -->
 
             <!-- Area Description -->
@@ -223,26 +159,35 @@
             </div>
             <!-- Area Description -->
 
+            <!-- Instruction -->
             <div>
-              <label for="circle">
-                <span>Circle</span>
+              <label for="instruction">
+                <span>Instruction</span>
               </label>
-              <input type="text" id="circle" placeholder="Format: lat,long<space>radius	" name="circle">
+              <textarea id="instruction" rows="5" cols="50" required name="instruction"></textarea>
             </div>
+            <!-- Instruction -->
 
+            <!-- Shelter Location-->
             <div>
-              <label for="geocode">
-                <span>Geocode</span>
+              <label for="shelter">
+                <span>Shelter Location</span>
               </label>
-              <input type="text" id="geocode" placeholder="Format: 'type' = 'value'" name="geocode">
+              <input type="text" id="shelter" placeholder="Format: 'type' = 'value'" name="shelter" required>
             </div>
+            <!-- Shelter Location-->
 
+            <!-- Area -->
             <div>
               <label for="polygon">
-                <span>Polygon</span>
+                <span>Area of the event</span>
               </label>
-              <input type="text" id="polygon" placeholder="Format: SW SE NE NW SW (lat,lon points)" name="polygon">
+              <input type="text" id="polygon" placeholder="Format: SW SE NE NW SW (lat,lon points)" name="polygon"
+                required>
             </div>
+            <!-- Area -->
+
+
           </fieldset>
 
           <div id="map"></div>

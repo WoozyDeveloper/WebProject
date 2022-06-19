@@ -56,25 +56,24 @@
 
       <geocode>
 
-        <valueName>SAME</valueName>
-
-        <value>006109</value>
-
-      </geocode>
-
-      <geocode>
-
-        <valueName>SAME</valueName>
-
-        <value>006009</value>
+        <valueName>shelter</valueName>
+        <value>006109,23424</value>
 
       </geocode>
 
       <geocode>
 
-        <valueName>SAME</valueName>
+        <valueName>LON</valueName>
 
-        <value>006003</value>
+        <value>34.5</value>
+
+      </geocode>
+
+      <geocode>
+
+        <valueName>LAT</valueName>
+
+        <value>38.47</value>
 
       </geocode>
 

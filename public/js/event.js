@@ -1,6 +1,6 @@
-const geocodeInput = document.getElementById('geocode');
+const shelterInput = document.getElementById('shelter');
 const polygonInput = document.getElementById('polygon');
-const circleInput = document.getElementById('circle');
+// const circleInput = document.getElementById('shelter');
 
 const map = L.map('map').setView([46, 24.9668], 6);
 
@@ -24,7 +24,7 @@ const drawControl = new L.Control.Draw({
     polygon: true,
     polyline: false,
     rectangle: true,
-    circle: true,
+    circle: false,
     marker: true,
     circlemarker: false,
   },
@@ -42,7 +42,7 @@ map.on(L.Draw.Event.CREATED, function (event) {
 
 function populateInput(layer) {
   if (layer instanceof L.Marker) {
-    geocodeInput.value =
+    shelterInput.value =
       layer.getLatLng().lat.toFixed(4) + ',' + layer.getLatLng().lng.toFixed(4);
     console.log(layer.getLatLng());
   } else if (layer instanceof L.Polygon || layer instanceof L.Rectangle) {
@@ -56,18 +56,19 @@ function populateInput(layer) {
       ',' +
       layer.getLatLngs()[0][0].lng.toFixed(4);
     polygonInput.value = polygonCoords;
-  } else if (layer instanceof L.Circle) {
-    circleInput.value =
-      layer.getLatLng().lat.toFixed(4) + ',' + layer.getLatLng().lng.toFixed(4);
-    console.log(layer.getLatLng());
   }
+  // else if (layer instanceof L.Circle) {
+  //   circleInput.value =
+  //     layer.getLatLng().lat.toFixed(4) + ',' + layer.getLatLng().lng.toFixed(4);
+  //   console.log(layer.getLatLng());
+  // }
 }
 
 map.on(L.Draw.Event.DELETED, function (event) {
   console.log('Deleted');
-  geocodeInput.value = '';
+  shelterInput.value = '';
   polygonInput.value = '';
-  circleInput.value = '';
+  // circleInput.value = '';
 });
 
 // Form stuff
@@ -85,14 +86,14 @@ form.addEventListener('submit', (e) => {
     json[key] = value;
   }
 
-  /*json['identifier'] = 'urn:oid:fsdf';
+  json['identifier'] = 'urn:oid:fsdf';
   json['sender'] = 'alex@gmail.com';
   json['sent'] = '2020-06-18T02:31:10+03:00';
   json['status'] = 'Actual';
   json['msgType'] = 'Alert';
   json['scope'] = 'Public';
 
-  json['expires'] = '2022-06-20T02:31:10+03:00';*/
+  /*json['expires'] = '2022-06-20T02:31:10+03:00';*/
 
   // Convert JSON to CAP XML format
 
@@ -117,14 +118,20 @@ form.addEventListener('submit', (e) => {
   // Create sent element
   const sent = xmlDoc.createElement('cap:sent');
   var currentdate = new Date();
-  var datetime = 
-  String(currentdate.getFullYear()) + "-"
-   + String(currentdate.getMonth() + 1).padStart(2,'0') + "-"
-   + String(currentdate.getDate()) + "T"
-   + String(currentdate.getHours()) + ":"
-   + String(currentdate.getMinutes()).padStart(2,'0') + ":"
-   + String(currentdate.getSeconds()) + "+00:00"
-  console.log(datetime)
+  var datetime =
+    String(currentdate.getFullYear()) +
+    '-' +
+    String(currentdate.getMonth() + 1).padStart(2, '0') +
+    '-' +
+    String(currentdate.getDate()).padStart(2, '0') +
+    'T' +
+    String(currentdate.getHours()).padStart(2, '0') +
+    ':' +
+    String(currentdate.getMinutes()).padStart(2, '0') +
+    ':' +
+    String(currentdate.getSeconds()).padStart(2, '0') +
+    '+00:00';
+  console.log(datetime);
   sent.innerHTML = datetime;
   root.appendChild(sent);
 
@@ -179,8 +186,9 @@ form.addEventListener('submit', (e) => {
 
   // // Create expires element
   const expires = xmlDoc.createElement('cap:expires');
-  let string = String(json.expires).split("-")
-  json.expires = string[0] + "-" + string[1] + "-" + string[2] + "T" + "00:00:00+00:00"
+  let string = String(json.expires).split('-');
+  json.expires =
+    string[0] + '-' + string[1] + '-' + string[2] + 'T' + '00:00:00+00:00';
   expires.innerHTML = json.expires;
   info.appendChild(expires);
 
@@ -199,6 +207,11 @@ form.addEventListener('submit', (e) => {
   description.innerHTML = json.description;
   info.appendChild(description);
 
+  // Create instruction element
+  const instruction = xmlDoc.createElement('cap:instruction');
+  instruction.innerHTML = json.instruction;
+  info.appendChild(instruction);
+
   // Create area element
   const area = xmlDoc.createElement('cap:area');
   info.appendChild(area);
@@ -213,14 +226,28 @@ form.addEventListener('submit', (e) => {
   polygon.innerHTML = json.polygon;
   area.appendChild(polygon);
 
+  // Create geocode element
+  const geocode = xmlDoc.createElement('cap:geocode');
+
+  const valueName = xmlDoc.createElement('cap:valueName');
+  valueName.innerHTML = 'shelterLocation';
+  geocode.appendChild(valueName);
+
+  const value = xmlDoc.createElement('cap:value');
+  value.innerHTML = json.shelter;
+  geocode.appendChild(value);
+
+  area.appendChild(geocode);
+
+  // Convert the XML document to a string
   const xmlString = new XMLSerializer().serializeToString(xmlDoc);
   console.log(xmlString);
 
-  console.log(json.polygon);
+  console.log(json);
 
   // Send the XML to the server
   const xhr = new XMLHttpRequest();
-  xhr.open('POST', 'http://localhost:4003');
+  xhr.open('POST', 'http://localhost:4004');
   xhr.setRequestHeader('Content-Type', 'application/xml');
   xhr.send(xmlString);
 });

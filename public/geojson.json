@@ -1,0 +1,39 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "stroke": "#555555",
+        "stroke-width": 2,
+        "stroke-opacity": 1,
+        "fill": "#b33737",
+        "fill-opacity": 0.5
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [27.575297355651855, 47.16436280131059],
+            [27.57795810699463, 47.16197014838819],
+            [27.582077980041504, 47.163108130899104],
+            [27.578086853027344, 47.16564661942949],
+            [27.575297355651855, 47.16436280131059]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "marker-color": "#16d436",
+        "marker-size": "medium",
+        "marker-symbol": "campsite"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [27.57568359375, 47.16094886127813]
+      }
+    }
+  ]
+}

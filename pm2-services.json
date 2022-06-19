@@ -1,0 +1,20 @@
+{
+  "apps": [
+    {
+      "name": "user-account-service",
+      "script": "./public/js/UserAccountService.js"
+    },
+    {
+      "name": "user-event-service",
+      "script": "./public/js/UserEventService.js"
+    },
+    {
+      "name": "login-service",
+      "script": "./public/js/server.js"
+    },
+    {
+      "name": "cap-service",
+      "script": "./public/js/CapService.js"
+    }
+  ]
+}
