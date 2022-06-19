@@ -1,144 +1,209 @@
-const http = require('http');
+const { parse } = require("querystring");
+const http = require("http");
+var CryptoJS = require("crypto-js");
+const hostname = "127.0.0.1";
+const port = 4000;
+//Can be found in the Details page
 
-const querystring = require('query-string')
+const server = http.createServer(async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
 
-const hostname = '127.0.0.1';
-const port = 4002;
+  const urlSearchParams = new URLSearchParams(req.url);
+  const params = Object.fromEntries(urlSearchParams.entries());
 
-const server = http.createServer((req, res) => {
-    res.statusCode = 200;
-    const urlSearchParams = querystring.parseUrl(req.url);
-    const params = urlSearchParams.query;
-    console.log(urlSearchParams)
-    console.log(req.method)
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Request-Method', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
+  res.setHeader('Access-Control-Allow-Headers', '*');
 
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Request-Method', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
-    res.setHeader('Access-Control-Allow-Headers', '*');
+  if (req.method === 'OPTIONS') {
+    res.writeHead(200);
+    res.end();
+    return;
+  }
 
-    if (req.method === 'OPTIONS') {
-        res.writeHead(200);
-        res.end();
-        return;
+  if (req.method == "GET") {
+  } else if (req.method == "POST") {
+    if (req.url.includes("register")) {
+      var body = "";
+      req.on("data", function (data) {
+        body += data;
+      });
+
+      req.on("end", function () {
+        console.log(body);
+        body = JSON.parse(body);
+
+        postUser(body, function (response) {
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(`${JSON.stringify(response)}`);
+        });
+      });
+    } else if (req.url.includes("login")) {
+      var body = "";
+      req.on("data", function (data) {
+        body += data;
+      });
+
+      req.on("end", function () {
+        body = JSON.parse(body);
+
+        checkUser(body, function (response) {
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(`${JSON.stringify(response)}`);
+        });
+      });
     }
-
-    if (req.method == 'GET') {
-        console.log('GET')
-        res.setHeader('Content-Type', 'application/json');
-        getInfo(params, function (response) { res.end(JSON.stringify(response)) })
-    }
-    else if (req.method == 'POST') {
-        console.log('POST')
-        var body = ''
-        req.on('data', function (data) {
-            body += data
-            console.log(data)
-            console.log('Partial body: ' + body)
-        })
-        req.on('end', function () {
-            console.log('Body: ' + body)
-            res.writeHead(200, { 'Content-Type': 'application/json' })
-            postInfo(JSON.parse(body), function (response) { res.end(JSON.stringify(response)) })
-        })
-    }
+  }
 });
 
+function checkUser(body, callback) {
+  let extractedMail = body.email;
+  let username = ""; //username-ul il extrag in DB
+  let extractedPassword = CryptoJS.MD5(body.password);
+  let response = "";
 
-function getInfo(queryparams, callback) {
-    const { Pool } = require('pg')
-    //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
-    const pool = new Pool({
-        //connectionString,
-        user: 'postgres',
-        host: '164.92.194.239',
-        database: 'postgres',
-        port: 5432,
-    })
-        ; (async () => {
-            const client = await pool.connect()
-            try {
-                let keys = Object.keys(queryparams)
-                let table = queryparams.table
-                let res
-                for (let i = 0; i < keys.length; i++) {
-                    if (queryparams[keys[i]] != null && keys[i] !== "table") {
-                        console.log(`select * from ${table} where ${keys[i]}='${queryparams[keys[i]]}'`)
-                        res = await client.query({
-                            text: `select * from ${table} where ${keys[i]}=$1`,
-                            values: [queryparams[keys[i]]]
-                        })
-                        i = keys.length + 1
-                    }
-                }
-                console.log(res.rows)
-                return callback(res.rows)
-            } finally {
-                // Make sure to release the client before any error handling,
-                // just in case the error handling itself throws an error.
-                client.release()
-            }
-        })().catch(err => console.log(err.stack))
+  const { Pool } = require("pg");
+  //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
+  const pool = new Pool({
+    //connectionString,
+    user: "postgres",
+    host: "164.92.194.239",
+    database: "postgres",
+    port: 5432,
+  });
+  (async () => {
+    const client = await pool.connect();
+    try {
+      const check = await client.query({
+        //text: `SELECT * FROM USERS WHERE EMAIL='${extractedMail}' AND PASSWORD='${extractedPassword}'`,
+        text: `SELECT * FROM USERS WHERE EMAIL=$1 AND PASSWORD=$2`,
+        values: [extractedMail, extractedPassword],
+      });
+
+      if (check.rowCount > 0) {
+        console.log(check.rows);
+
+        response = {
+          status: "existent user",
+        };
+      } else {
+        console.log(
+          "user doesn't exist:" + extractedMail + " " + extractedPassword
+        );
+
+        response = {
+          status: "no user found",
+        };
+      }
+      return callback(response);
+    } finally {
+      // Make sure to release the client before any error handling,
+      // just in case the error handling itself throws an error.
+
+      client.release();
+    }
+  })().catch((err) => console.log(err.stack));
 }
 
+function checkInput(input) {}
 
-function postInfo(queryparams, callback) {
-    const { Pool } = require('pg')
-    //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
-    const pool = new Pool({
-        //connectionString,
-        user: 'postgres',
-        host: '164.92.194.239',
-        database: 'postgres',
-        port: 5432,
-    })
-        ; (async () => {
-            const client = await pool.connect()
-            try {
-                let operation = queryparams.operation
-                if (operation === "replace") {
-                    let res
-                    let userid = queryparams.userid
-                    let preferenceid = queryparams.preferenceid
-                    let keys = Object.keys(queryparams)
-                    let table = queryparams.table
-                    for (let i = 0; i < keys.length; i++) {
-                        if (queryparams[keys[i]] != null && keys[i] !== "table" && keys[i] !== "preferenceid" && keys[i] !== "operation") {
-                            console.log(`update ${table} set ${keys[i]}='${queryparams[keys[i]]}' where preferenceid=${preferenceid}`)
-                            res = await client.query({
-                                text: `update ${table} set ${keys[i]} = '${queryparams[keys[i]]}' where preferenceid=$1`,
-                                values: [preferenceid]
-                            })
-                        }
-                    }
-                }
-                else if (operation === "add") {
-                    let table = queryparams.table
-                    let userid = queryparams.userid
-                    let location = queryparams.location
-                    let eventtype = queryparams.eventtype
-                    let latitude = queryparams.latitude
-                    let longitude = queryparams.longitude
-                    let notificationmethod = queryparams.notificationmethod
-                    let preferenceid = await client.query({
-                        text: `select max(preferenceid)+1 as "id" from UserPreferences`
-                    })
-                    let res = await client.query({
-                        text: `insert into ${table}(userid,location,eventtype,latitude,longitude,notificationmethod,preferenceid)
-                        values($1,$2,$3,$4,$5,$6,$7)`,
-                        values: [userid, location, eventtype, latitude, longitude, notificationmethod, preferenceid.rows[0].id]
-                    })
-                }
-                response = '{"executed":"yes"}'
-                return callback(JSON.parse(response))
-            } finally {
-                // Make sure to release the client before any error handling,
-                // just in case the error handling itself throws an error.
-                client.release()
-            }
-        })().catch(err => console.log(err.stack))
+function postUser(body, callback) {
+  let extractedMail = body.email;
+  let extractedUsername = body.username;
+  let extractedPassword = body.password;
+  let response = "";
+
+  const { Pool } = require("pg");
+  //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
+  const pool = new Pool({
+    //connectionString,
+    user: "postgres",
+    host: "164.92.194.239",
+    database: "postgres",
+    port: 5432,
+  });
+  (async () => {
+    const client = await pool.connect();
+    try {
+      const check = await client.query({
+        rowMode: "array",
+        text: `SELECT * FROM USERS WHERE EMAIL=$1`,
+        values: [extractedMail],
+      });
+
+      if (check.rowCount == 0) {
+        const dim = await client.query({
+          rowMode: "array",
+          text: "SELECT * FROM USERS",
+        });
+
+        const res = await client.query({
+          rowMode: "array",
+          text: `INSERT INTO USERS VALUES($1,$2,$3,$4)`,
+          values: [
+            dim.rowCount + 1,
+            extractedMail,
+            extractedUsername,
+            CryptoJS.MD5(extractedPassword),
+          ],
+        });
+
+        response = {
+          status: "new user",
+        };
+      } else {
+        console.log("email already exists:" + extractedMail);
+
+        response = {
+          status: "user found",
+        };
+      }
+      return callback(response);
+    } finally {
+      // Make sure to release the client before any error handling,
+      // just in case the error handling itself throws an error.
+
+      client.release();
+    }
+  })().catch((err) => console.log(err.stack));
+}
+
+function getUsers(callback) {
+  const { Pool } = require("pg");
+  //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
+  const pool = new Pool({
+    //connectionString,
+    user: "postgres",
+    host: "164.92.194.239",
+    database: "postgres",
+    port: 5432,
+  });
+  (async () => {
+    const client = await pool.connect();
+    try {
+      const res = await client.query({
+        rowMode: "array",
+        text: "SELECT * FROM USERS",
+      });
+      console.log(res.rows);
+      return callback(res.rows);
+    } finally {
+      // Make sure to release the client before any error handling,
+      // just in case the error handling itself throws an error.
+      client.release();
+    }
+  })().catch((err) => console.log(err.stack));
+}
+
+function mergeGEOJSON(links, callback) {
+  var geojsonMerge = require("@mapbox/geojson-merge");
+
+  var mergedGeoJSON = geojsonMerge.merge(links[0], links[1]);
+
+  return callback(mergedGeoJSON);
 }
 
 server.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
+  console.log(`Server running at http://${hostname}:${port}/`);
 });
