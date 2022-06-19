@@ -188,8 +188,7 @@ async function sendEmailToAllUsersForMoment(subject, html) {
     port: 5432,
   });
   const emails = await pool.query('SELECT email FROM users');
-  // emails.rows.forEach(async (email) => {
-  //   sendEmail(email.email, subject, '', html);
-  // });
-  sendEmail('cretu.alexandru2000@gmail.com', subject, '', html);
+  emails.rows.forEach(async (email) => {
+    sendEmail(email.email, subject, '', html);
+  });
 }

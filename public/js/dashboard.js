@@ -1,6 +1,6 @@
 const cardsContainer = document.querySelector('.cards');
 
-function createCard() {
+function createCard(headline, description, eventImage) {
   // Create a new card element
   let card_item = document.createElement('li');
   card_item.classList.add('cards_item');
@@ -11,7 +11,7 @@ function createCard() {
   let card_image = document.createElement('div');
   card_image.classList.add('card_image');
   let card_image_img = document.createElement('img');
-  card_image_img.src = 'https://picsum.photos/500/300/?image=10';
+  card_image_img.src = eventImage;
   card_image.appendChild(card_image_img);
 
   let card_content = document.createElement('div');
@@ -19,12 +19,11 @@ function createCard() {
 
   let card_title = document.createElement('h2');
   card_title.classList.add('card_title');
-  card_title.innerHTML = 'Card Grid Layout';
+  card_title.innerHTML = headline;
 
   let card_text = document.createElement('p');
   card_text.classList.add('card_text');
-  card_text.innerHTML =
-    'Demo of pixel perfect pure CSS simple responsive card grid layout';
+  card_text.innerHTML = description;
 
   let actions = document.createElement('div');
   actions.classList.add('actions');
@@ -64,6 +63,86 @@ function createCard() {
   return card_item;
 }
 
-for (let i = 0; i < 10; i++) {
-  cardsContainer.appendChild(createCard());
-}
+const geoJson = {
+  type: 'FeatureCollection',
+  features: [
+    {
+      type: 'Feature',
+      properties: {
+        stroke: '#555555',
+        'stroke-width': 2,
+        'stroke-opacity': 1,
+        fill: '#b33737',
+        'fill-opacity': 0.5,
+      },
+      geometry: {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [27.575297355651855, 47.16436280131059],
+            [27.57795810699463, 47.16197014838819],
+            [27.582077980041504, 47.163108130899104],
+            [27.578086853027344, 47.16564661942949],
+            [27.575297355651855, 47.16436280131059],
+          ],
+        ],
+      },
+    },
+    {
+      type: 'Feature',
+      properties: {
+        'marker-color': '#16d436',
+        'marker-size': 'medium',
+        'marker-symbol': 'campsite',
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [27.57568359375, 47.16094886127813],
+      },
+    },
+  ],
+};
+
+fetch(`http://localhost:4003`)
+  .then((response) => {
+    return response.json();
+  })
+  .then((json) => {
+    console.log(json);
+    for (let i = 0; i < json.length; i++) {
+      // console.log(json[i]);
+      let { headline, description, polygon, shelterlocation } = json[i];
+
+      // $$$$$$$$$$$$$$$$$$$$
+      // Parse the polygon to array of points
+      let polyPoints = polygon.split(' ');
+      let polygonPoints = [];
+      for (let i = 0; i < polyPoints.length; i += 1) {
+        let point = polyPoints[i].split(',');
+        polygonPoints.push([parseFloat(point[1]), parseFloat(point[0])]);
+      }
+      // console.log(polygonPoints);
+
+      // Parse the shelter to array of points
+      let shelterPoint = [];
+      let shelterArray = shelterlocation.split(',');
+      for (let i = 0; i < shelterArray.length; i += 2) {
+        shelterPoint.push(parseFloat(shelterArray[i + 1]));
+        shelterPoint.push(parseFloat(shelterArray[i]));
+      }
+
+      // Modify geoJson to include the polygon and shelter
+      geoJson.features[0].geometry.coordinates[0] = polygonPoints;
+      geoJson.features[1].geometry.coordinates = shelterPoint;
+
+      let eventImage = `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/geojson(${encodeURIComponent(
+        JSON.stringify(geoJson)
+      )})/auto/600x300@2x?access_token=pk.eyJ1IjoiYXhlbGxiZW4iLCJhIjoiY2pneHc0a2o2MGlkcTJ3bGxtdHB1cXoycSJ9.BRtJfvAR2e_5nA3irA2KSg&attribution=false&logo=false`;
+
+      //$$$$$$$$$$$$$$$$$
+      cardsContainer.appendChild(createCard(headline, description, eventImage));
+    }
+  })
+  .catch((err) => {
+    console.log(err);
+  });
