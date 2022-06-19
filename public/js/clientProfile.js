@@ -28,14 +28,12 @@ function escapeHtml(text) {
   });
 }
 
-fetch(
-  `http://localhost:4002/?table=users&email=${escapeHtml(emailStored)}`
-)
+fetch(`http://localhost:4002/?table=users&email=${escapeHtml(emailStored)}`)
   .then((response) => response.json())
   .then((data) => {
     userid = escapeHtml(data[0].id);
     usermail = escapeHtml(data[0].email);
-    usr = escapeHtml(data[0].username)
+    usr = escapeHtml(data[0].username);
   });
 
 function accountInfo() {
@@ -71,16 +69,43 @@ function accountInfo() {
     changeField.placeholder = "Type new username...";
     changeField.id = "new-username";
     let changeFieldSend = document.createElement("button");
+    let userInputData = "";
     changeFieldSend.innerText = "Confirm";
-    changeFieldSend.onclick = function (event) {
-      console.log(document.getElementById("new-username").value);
+    changeFieldSend.onclick = async function (event) {
+      userInputData = document.getElementById("new-username").value;
+      console.log(userInputData);
+
+      //begin update----------------------------------------
+      let json = {
+        username: userInputData,
+        id: userid,
+      };
+      console.log(json);
+      const settings = {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(json),
+      };
+      try {
+        const fetchResponse = await fetch(
+          "http://localhost:4002/updateUsername",
+          settings
+        );
+        const response = await fetchResponse.json();
+        console.log(response);
+      } catch (err) {
+        console.log(err);
+      }
+      //update done-----------------------------------------
       changeDiv.removeChild(changeDiv.firstChild);
       changeDiv.removeChild(changeDiv.firstChild);
+
       let succesMessage = document.createElement("p");
       succesMessage.style = "color: green;";
       succesMessage.innerText = "Changed with success";
       changeDiv.appendChild(succesMessage);
       userAndPic.removeChild(changeUsername);
+      location.reload();
     };
     changeDiv.appendChild(changeField);
     changeDiv.appendChild(changeFieldSend);
@@ -114,7 +139,35 @@ function accountInfo() {
     changeField.id = "new-mail";
     let changeFieldSend = document.createElement("button");
     changeFieldSend.innerText = "Confirm";
-    changeFieldSend.onclick = function (event) {
+
+    changeFieldSend.onclick = async function (event) {
+      let json = {
+        email: document.getElementById("new-mail").value,
+        id: userid,
+      };
+      console.log(json);
+      const settings = {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(json),
+      };
+      try {
+        const fetchResponse = await fetch(
+          "http://localhost:4002/updateEmail",
+          settings
+        );
+        const response = await fetchResponse.json();
+        console.log("punem " + json.email);
+        console.log("Avem:" + response.status);
+        if (response.status === "updated user") {
+          localStorage.setItem("sharedemail", json.email);
+          console.log(response);
+          location.reload();
+        }
+      } catch (err) {
+        console.log(err);
+      }
+
       console.log(document.getElementById("new-mail").value);
       changeDiv.removeChild(changeDiv.firstChild);
       changeDiv.removeChild(changeDiv.firstChild);

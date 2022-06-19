@@ -11,12 +11,12 @@ const server = http.createServer(async (req, res) => {
   const urlSearchParams = new URLSearchParams(req.url);
   const params = Object.fromEntries(urlSearchParams.entries());
 
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Request-Method', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
-  res.setHeader('Access-Control-Allow-Headers', '*');
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Request-Method", "*");
+  res.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET");
+  res.setHeader("Access-Control-Allow-Headers", "*");
 
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     res.writeHead(200);
     res.end();
     return;
@@ -105,8 +105,6 @@ function checkUser(body, callback) {
     }
   })().catch((err) => console.log(err.stack));
 }
-
-function checkInput(input) {}
 
 function postUser(body, callback) {
   let extractedMail = body.email;
