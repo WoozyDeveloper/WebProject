@@ -49,6 +49,11 @@ nav p {
   cursor: default;
 }
 
+.nav-logo{
+  height: 130px;
+  margin-bottom: 50px;
+}
+
 .navbar {
   z-index: 10;
   display: flex;

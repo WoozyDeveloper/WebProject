@@ -1,3 +1,5 @@
+
+
 .box{
   display: flex;
   height: 100%;
@@ -34,7 +36,7 @@ form input {
   font-size: 14px;
 }
 form button {
-  background: #79007d;
+  background: #41cff6;
   color: white;
   width: 100%;
   border: 0;
@@ -42,9 +44,9 @@ form button {
   cursor: pointer;
 }
 form button:hover,.form button:active,.form button:focus {
-  background: #b700be;
+  background: #1e90ff;
 }
 
 body {
-  background: linear-gradient(to left, #5d006c, #d289ff);  
+  background: linear-gradient(to left, #41cff6, #85b7f8);  
 }
