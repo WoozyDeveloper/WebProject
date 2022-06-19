@@ -32,7 +32,7 @@ body{
 .container{
     max-width: 70rem;
     padding: 0 2rem;
-  
+    margin: 0 auto;
     
 }
 header{
@@ -111,6 +111,6 @@ section{
     left: 0;
     z-index: -1;
     
-    background: linear-gradient(to top,#22aeff, transparent);
+    background: linear-gradient(to top,#4986ff, transparent);
 }
 
