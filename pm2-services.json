@@ -10,7 +10,7 @@
     },
     {
       "name": "cap-service",
-      "script": "./public/js/CapService.js"
+      "script": "./public/js/CapEventService.js"
     },
     {
       "name": "notification-service",
@@ -19,6 +19,10 @@
     {
       "name": "user-information-service",
       "script": "./public/js/UserInformationService.js"
+    },
+    {
+      "name": "client-server",
+      "script": "index.js"
     }
   ]
 }
