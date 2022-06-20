@@ -283,7 +283,7 @@ const parseToken = (req, res, next) => {
 
 function parseCookies(request) {
   const list = {};
-  const cookieHeader = request.headers?.cookie;
+  const cookieHeader = request.headers ? request.headers.cookie : null;
   if (!cookieHeader) return list;
 
   cookieHeader.split(`;`).forEach(function (cookie) {
