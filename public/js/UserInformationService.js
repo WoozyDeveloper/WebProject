@@ -59,14 +59,9 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, {
         "Content-Type": "application/json",
       });
-      updateUsername(
-        body.oldpassword,
-        body.username,
-        body.id,
-        function (response) {
-          res.end(JSON.stringify(response));
-        }
-      );
+      updateUsername(body.username, body.id, function (response) {
+        res.end(JSON.stringify(response));
+      });
     });
   } else if (req.method == "PATCH" && req.url.includes("updateEmail")) {
     console.log("DAU CU EMAIL");

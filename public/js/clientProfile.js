@@ -11,23 +11,34 @@ title.innerText = title.innerText + " " + emailStored;
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
+  if (parts.length === 2) return parts.pop().split(";").shift();
+}
+
+function deleteCookie(name) {
+  if (getCookie(name))
+    document.cookie = `username=${name}; expires=Thu, 18 Dec 1999 12:00:00 UTC; path=/`;
 }
 
 function parseJwt(token) {
-  var base64Url = token.split('.')[1];
-  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
-    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  }).join(''));
+  var base64Url = token.split(".")[1];
+  var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  var jsonPayload = decodeURIComponent(
+    window
+      .atob(base64)
+      .split("")
+      .map(function (c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join("")
+  );
 
   return JSON.parse(jsonPayload);
-};
+}
 
-console.log(parseJwt(getCookie('token')))
+console.log(parseJwt(getCookie("token")));
 var feedBox = document.getElementById("feed-box");
 var userid;
-var usermail = parseJwt(getCookie('token')).email;
+var usermail = parseJwt(getCookie("token")).email;
 var coords;
 var usr;
 var role;
@@ -53,9 +64,9 @@ fetch(`http://localhost:4002/?table=users&email=${escapeHtml(usermail)}`)
     usermail = escapeHtml(data[0].email);
     usr = escapeHtml(data[0].username);
     title.innerText = title.innerText + " " + usr;
-    role = escapeHtml(data[0].role)
-    if (role === 'admin') {
-      document.getElementsByClassName("setting")[1].style.display = "none"
+    role = escapeHtml(data[0].role);
+    if (role === "admin") {
+      document.getElementsByClassName("setting")[1].style.display = "none";
     }
   });
 
@@ -115,20 +126,25 @@ function accountInfo() {
           settings
         );
         const response = await fetchResponse.json();
+        if (response === "updated user") {
+          changeDiv.removeChild(changeDiv.firstChild);
+          changeDiv.removeChild(changeDiv.firstChild);
+
+          let succesMessage = document.createElement("p");
+          succesMessage.style = "color: green;";
+          succesMessage.innerText = "Changed with success";
+          changeDiv.appendChild(succesMessage);
+          userAndPic.removeChild(changeUsername);
+          if (getCookie("token")) {
+          }
+
+          window.location.href = "/login.html";
+        }
         console.log(response);
       } catch (err) {
         console.log(err);
       }
       //update done-----------------------------------------
-      changeDiv.removeChild(changeDiv.firstChild);
-      changeDiv.removeChild(changeDiv.firstChild);
-
-      let succesMessage = document.createElement("p");
-      succesMessage.style = "color: green;";
-      succesMessage.innerText = "Changed with success";
-      changeDiv.appendChild(succesMessage);
-      userAndPic.removeChild(changeUsername);
-      location.reload();
     };
     changeDiv.appendChild(changeField);
     changeDiv.appendChild(changeFieldSend);
@@ -244,7 +260,61 @@ function accountInfo() {
     password.appendChild(newPassword);
     password.appendChild(newPasswordConfirm);
     password.appendChild(changePasswordConfirm);
-    changePasswordConfirm.onclick = function (event) {
+    changePasswordConfirm.onclick = async function (event) {
+      if (
+        document.getElementById("new-password").value ===
+        document.getElementById("new-password-confirm").value
+      ) {
+        let json = {
+          oldpassword: document.getElementById("old-password").value,
+          password: document.getElementById("new-password").value,
+          id: userid,
+        };
+        console.log(json);
+        const settings = {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(json),
+        };
+        try {
+          const fetchResponse = await fetch(
+            "http://localhost:4002/updatePassword",
+            settings
+          );
+          const response = await fetchResponse.json();
+          console.log("punem " + json.password);
+          console.log("Avem:" + response.status);
+          if (response.status === "updated user") {
+            console.log(response);
+            changeDiv.removeChild(changeDiv.firstChild);
+            changeDiv.removeChild(changeDiv.firstChild);
+            let succesMessage = document.createElement("p");
+            succesMessage.style = "color: green;";
+            succesMessage.innerText = "Changed with success";
+            changeDiv.appendChild(succesMessage);
+            location.reload();
+          } else if (response.status === "user not updated") {
+            console.log(response);
+            changeDiv.removeChild(changeDiv.firstChild);
+            changeDiv.removeChild(changeDiv.firstChild);
+            let succesMessage = document.createElement("p");
+            succesMessage.style = "color: red;";
+            succesMessage.innerText = "Password not updated";
+            changeDiv.appendChild(succesMessage);
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        console.log("no match!!!");
+        changeDiv.removeChild(changeDiv.firstChild);
+        changeDiv.removeChild(changeDiv.firstChild);
+        let succesMessage = document.createElement("p");
+        succesMessage.style = "color: red;";
+        succesMessage.innerText = "Passwords don't match!";
+        changeDiv.appendChild(succesMessage);
+      }
+
       console.log(document.getElementById("old-password").value);
       console.log(document.getElementById("new-password").value);
       console.log(document.getElementById("new-password-confirm").value);
@@ -267,23 +337,23 @@ function accountInfo() {
     "display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start;";
   useridText.innerText = `User id: ${escapeHtml(userid)}`;
 
-  let roleDiv = document.createElement("div")
+  let roleDiv = document.createElement("div");
   roleDiv.style =
     "display: flex; flex-direction: row; align-items: flex-end; justify-content: flex-end;";
-  let roleLabel = document.createElement("p")
-  roleLabel.innerHTML = "Role: "
-  let roleText = document.createElement("p")
-  roleText.innerHTML = `${role}`
-  roleColor = (role === "admin" ? "blue" : "green")
-  roleText.style = `color: ${roleColor};`
-  roleDiv.appendChild(roleLabel)
-  roleDiv.appendChild(roleText)
+  let roleLabel = document.createElement("p");
+  roleLabel.innerHTML = "Role: ";
+  let roleText = document.createElement("p");
+  roleText.innerHTML = `${role}`;
+  roleColor = role === "admin" ? "blue" : "green";
+  roleText.style = `color: ${roleColor};`;
+  roleDiv.appendChild(roleLabel);
+  roleDiv.appendChild(roleText);
 
   accountDetails.appendChild(username);
   accountDetails.appendChild(mail);
   accountDetails.appendChild(password);
   accountDetails.appendChild(useridText);
-  accountDetails.appendChild(roleDiv)
+  accountDetails.appendChild(roleDiv);
 
   feedBox.append(accountDetails);
 }
@@ -426,38 +496,29 @@ function preferences() {
             otherOption.value = "Other";
             otherOption.innerText = "Other";
 
-
             if (eventtype === "Geo") {
               earthquakeOption.selected = true;
             } else if (eventtype === "Met") {
               weatherOption.selected = true;
             } else if (eventtype === "Safety") {
               safetyOption.selected = true;
-            }
-            else if (eventtype === "Security") {
+            } else if (eventtype === "Security") {
               securityOption.selected = true;
-            }
-            else if (eventtype === "Fire") {
+            } else if (eventtype === "Fire") {
               fireOption.selected = true;
-            }
-            else if (eventtype === "Rescue") {
+            } else if (eventtype === "Rescue") {
               rescueOption.selected = true;
             } else if (eventtype === "Health") {
               healthOption.selected = true;
-            }
-            else if (eventtype === "Env") {
+            } else if (eventtype === "Env") {
               envOption.selected = true;
-            }
-            else if (eventtype === "Transport") {
+            } else if (eventtype === "Transport") {
               transportOption.selected = true;
-            }
-            else if (eventtype === "Infra") {
+            } else if (eventtype === "Infra") {
               infraOption.selected = true;
-            }
-            else if (eventtype === "CBRNE") {
+            } else if (eventtype === "CBRNE") {
               cbrneOption.selected = true;
-            }
-            else if (eventtype === "Other") {
+            } else if (eventtype === "Other") {
               otherOption.selected = true;
             }
             eventtypeInput.appendChild(earthquakeOption);
@@ -622,7 +683,7 @@ function preferences() {
                   message.innerText = "Changes applied successfully";
                   message.style = "color: green;";
                 } else {
-                  message.innerText = "You fucked up"; //??????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+                  message.innerText = "Something went wrong";
                   message.style = "color: red;";
                 }
                 form.appendChild(message);
@@ -742,7 +803,6 @@ function addStyle(what) {
       eventtypeInput.appendChild(infraOption);
       eventtypeInput.appendChild(cbrneOption);
       eventtypeInput.appendChild(otherOption);
-
 
       eventtypeInputDiv.appendChild(eventtypeInputText);
       eventtypeInputDiv.appendChild(eventtypeInput);
