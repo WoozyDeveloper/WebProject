@@ -1,6 +1,6 @@
 // window.onload = function LoadWindow(event) {
 //   if (localStorage.getItem("sharedemail")) {
-//     window.location.href = "http://localhost:3000/pages/user.html";
+//     window.location.href = "http://157.230.100.116:3000/pages/user.html";
 //   }
 // };
 
@@ -18,7 +18,10 @@ document.forms[0].onsubmit = async (e) => {
     body: JSON.stringify(data),
   };
   try {
-    const fetchResponse = await fetch('http://localhost:3000/login', settings);
+    const fetchResponse = await fetch(
+      'http://157.230.100.116:3000/login',
+      settings
+    );
     const response = await fetchResponse.json();
     console.log(response);
 

@@ -77,7 +77,7 @@ const geoJson = {
 };
 
 // Create a server
-const hostname = 'localhost';
+const hostname = '157.230.100.116';
 const port = 4004;
 
 const server = http.createServer((req, res) => {

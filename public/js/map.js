@@ -191,7 +191,7 @@ function addFloodMarkers() {
       }
     });
 
-  fetch('http://localhost:4001?table=Floods')
+  fetch('http://157.230.100.116:4001?table=Floods')
     .then((response) => response.json())
     .then((data) => {
       for (let i = 0; i < data.length; i++) {
@@ -232,7 +232,7 @@ function showFloodPictures() {
     eventsNode.removeChild(eventsNode.lastChild);
   }
 
-  fetch('http://localhost:4001?table=Floods')
+  fetch('http://157.230.100.116:4001?table=Floods')
     .then((response) => response.json())
     .then((data) => {
       for (let i = 0; i < data.length; i++) {
@@ -419,7 +419,7 @@ function addCities(start, end) {
   start = startSplit[2] + startSplit[1] + startSplit[0];
   end = endSplit[2] + endSplit[1] + endSplit[0];
   fetch(
-    `http://localhost:4001/?table=Weather&starttime=${start}&endtime=${end}`
+    `http://157.230.100.116:4001/?table=Weather&starttime=${start}&endtime=${end}`
   )
     .then((response) => response.json())
     .then((data) => {
@@ -491,7 +491,7 @@ function removeCities() {
 var earthquakeMarkers = [];
 function addUserEarthquakes(start, end) {
   fetch(
-    `http://localhost:4001?table=Earthquakes&starttime=${start}&endtime=${end}`
+    `http://157.230.100.116:4001?table=Earthquakes&starttime=${start}&endtime=${end}`
   )
     .then((response) => response.json())
     .then((data) => {
@@ -599,7 +599,7 @@ let eventMarkers = [];
 function showOtherEvents(queryparams) {
   console.log(queryparams);
   fetch(
-    `http://localhost:4003?start=${queryparams['start-date-event']}&end=${queryparams['end-date-event']}&urgency=${queryparams.urgency}&category=${queryparams.category}`
+    `http://157.230.100.116:4003?start=${queryparams['start-date-event']}&end=${queryparams['end-date-event']}&urgency=${queryparams.urgency}&category=${queryparams.category}`
   )
     .then((response) => response.json())
     .then((data) => {

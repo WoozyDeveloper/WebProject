@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 
 const querystring = require('query-string');
 
-const hostname = 'localhost';
+const hostname = '157.230.100.116';
 const port = 4002;
 
 const server = http.createServer((req, res) => {

@@ -248,12 +248,12 @@ form.addEventListener('submit', (e) => {
 
   // Send the XML to the add-event-service
   const xhr = new XMLHttpRequest();
-  xhr.open('POST', 'http://localhost:4003');
+  xhr.open('POST', 'http://157.230.100.116:4003');
   xhr.setRequestHeader('Content-Type', 'application/xml');
   xhr.send(xmlString);
 
   // Send the XML to notification-service
-  xhr.open('POST', 'http://localhost:4004');
+  xhr.open('POST', 'http://157.230.100.116:4004');
   xhr.setRequestHeader('Content-Type', 'application/xml');
   xhr.send(xmlString);
 });
