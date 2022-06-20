@@ -243,7 +243,7 @@ const handlePost = async (req, res, parsedBody) => {
     }
 
     const token = jwt.sign(
-      { username: data.username, email: data.email, role: 'admin' },
+      { username: data.username, email: data.email, role: data.role },
       jwtKey,
       {
         expiresIn: '1h',
