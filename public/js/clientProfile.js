@@ -207,7 +207,8 @@ function accountInfo() {
           succesMessage.style = "color: green;";
           succesMessage.innerText = "Changed with success";
           changeDiv.appendChild(succesMessage);
-          location.reload();
+          deleteCookie("token");
+          window.location.href = "http://localhost:3000/pages/login.html";
         } else if (response.status === "user not updated") {
           console.log(response);
           changeDiv.removeChild(changeDiv.firstChild);
@@ -674,6 +675,7 @@ function preferences() {
                   "http://localhost:4002",
                   settings
                 );
+
                 const response = await fetchResponse.json();
                 console.log(response);
 

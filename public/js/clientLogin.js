@@ -1,8 +1,8 @@
-window.onload = function LoadWindow(event) {
-  if (localStorage.getItem("sharedemail")) {
-    window.location.href = "http://localhost:3000/pages/user.html";
-  }
-};
+// window.onload = function LoadWindow(event) {
+//   if (localStorage.getItem("sharedemail")) {
+//     window.location.href = "http://localhost:3000/pages/user.html";
+//   }
+// };
 
 document.forms[0].onsubmit = async (e) => {
   e.preventDefault();
