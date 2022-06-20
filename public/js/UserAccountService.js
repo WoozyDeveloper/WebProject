@@ -70,7 +70,7 @@ function checkUser(body, callback) {
   const pool = new Pool({
     //connectionString,
     user: "postgres",
-    host: "164.92.194.239",
+    host: "157.230.100.116",
     database: "postgres",
     port: 5432,
   });
@@ -138,7 +138,7 @@ function postUser(body, callback) {
   const pool = new Pool({
     //connectionString,
     user: "postgres",
-    host: "164.92.194.239",
+    host: "157.230.100.116",
     database: "postgres",
     port: 5432,
   });
@@ -194,7 +194,7 @@ function getUsers(callback) {
   const pool = new Pool({
     //connectionString,
     user: "postgres",
-    host: "164.92.194.239",
+    host: "157.230.100.116",
     database: "postgres",
     port: 5432,
   });

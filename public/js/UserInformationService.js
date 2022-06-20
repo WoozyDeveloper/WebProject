@@ -117,7 +117,7 @@ function updatePassword(oldpassword, password, uid, callback) {
   const pool = new Pool({
     //connectionString,
     user: 'postgres',
-    host: '164.92.194.239',
+    host: '157.230.100.116',
     database: 'postgres',
     port: 5432,
   });
@@ -171,7 +171,7 @@ function updateEmail(email, uid, callback) {
   const pool = new Pool({
     //connectionString,
     user: 'postgres',
-    host: '164.92.194.239',
+    host: '157.230.100.116',
     database: 'postgres',
     port: 5432,
   });
@@ -215,7 +215,7 @@ function updateUsername(usr, userid, callback) {
   const pool = new Pool({
     //connectionString,
     user: 'postgres',
-    host: '164.92.194.239',
+    host: '157.230.100.116',
     database: 'postgres',
     port: 5432,
   });
@@ -252,7 +252,7 @@ function getInfo(queryparams, callback) {
   const pool = new Pool({
     //connectionString,
     user: 'postgres',
-    host: '164.92.194.239',
+    host: '157.230.100.116',
     database: 'postgres',
     port: 5432,
   });
@@ -290,7 +290,7 @@ function postInfo(queryparams, callback) {
   const pool = new Pool({
     //connectionString,
     user: 'postgres',
-    host: '164.92.194.239',
+    host: '157.230.100.116',
     database: 'postgres',
     port: 5432,
   });
