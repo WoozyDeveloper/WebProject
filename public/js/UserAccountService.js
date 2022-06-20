@@ -1,7 +1,7 @@
 const { parse } = require('querystring');
 const http = require('http');
 const bcrypt = require('bcrypt');
-const hostname = '127.0.0.1';
+const hostname = 'localhost';
 const port = 4000;
 
 //Can be found in the Details page

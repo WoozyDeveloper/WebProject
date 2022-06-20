@@ -226,7 +226,7 @@ const handlePost = async (req, res, parsedBody) => {
 
     // fetch post data
     const data = await axios
-      .post(`http://127.0.0.1:4000/login/`, {
+      .post(`http://localhost:4000/login/`, {
         email,
         password,
       })

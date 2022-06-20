@@ -1,8 +1,8 @@
-const http = require("http");
+const http = require('http');
 
-const querystring = require("query-string");
+const querystring = require('query-string');
 
-const hostname = "127.0.0.1";
+const hostname = 'localhost';
 const port = 4001;
 
 const server = http.createServer((req, res) => {
@@ -20,63 +20,63 @@ const server = http.createServer((req, res) => {
     res.end();
     return;
   }
-  if (req.method == "GET") {
+  if (req.method == 'GET') {
     console.log(params);
     let queryparams = '{"type":"","starttime":"","endtime":"","table":""}';
     queryparams = JSON.parse(queryparams);
     if (params.starttime === undefined) {
       // daca nu se specifica timpul atunci se baga o data pentru care vor aparea toate evenimentele
-      queryparams.starttime = "01011800";
+      queryparams.starttime = '01011800';
     } else queryparams.starttime = params.starttime;
     if (params.endtime === undefined) {
-      queryparams.endtime = "01012900";
+      queryparams.endtime = '01012900';
     } else queryparams.endtime = params.endtime;
     queryparams.table = params.table;
-    res.setHeader("Content-Type", "application/json");
+    res.setHeader('Content-Type', 'application/json');
     getUserEvents(queryparams, function (response) {
       res.end(`${JSON.stringify(response)}`);
     });
-  } else if (req.method == "POST") {
-    console.log("POST");
-    var body = "";
-    req.on("data", function (data) {
+  } else if (req.method == 'POST') {
+    console.log('POST');
+    var body = '';
+    req.on('data', function (data) {
       body += data;
       console.log(data);
-      console.log("Partial body: " + body);
+      console.log('Partial body: ' + body);
     });
-    req.on("end", function () {
-      console.log("Body: " + body);
-      res.writeHead(200, { "Content-Type": "application/json" });
+    req.on('end', function () {
+      console.log('Body: ' + body);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
       postUserEvents(JSON.parse(body), function (response) {
         res.end(JSON.stringify(response));
       });
     });
-  } else if (req.method == "DELETE") {
-    console.log("DELETE");
-    var body = "";
-    req.on("data", function (data) {
+  } else if (req.method == 'DELETE') {
+    console.log('DELETE');
+    var body = '';
+    req.on('data', function (data) {
       body += data;
       console.log(data);
-      console.log("Partial body: " + body);
+      console.log('Partial body: ' + body);
     });
-    req.on("end", function () {
-      console.log("Body: " + body);
-      res.writeHead(200, { "Content-Type": "application/json" });
+    req.on('end', function () {
+      console.log('Body: ' + body);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
       deleteUserEvents(JSON.parse(body), function (response) {
         res.end(JSON.stringify(response));
       });
     });
-  } else if (req.method == "PUT") {
-    console.log("PUT");
-    var body = "";
-    req.on("data", function (data) {
+  } else if (req.method == 'PUT') {
+    console.log('PUT');
+    var body = '';
+    req.on('data', function (data) {
       body += data;
       console.log(data);
-      console.log("Partial body: " + body);
+      console.log('Partial body: ' + body);
     });
-    req.on("end", function () {
-      console.log("Body: " + body);
-      res.writeHead(200, { "Content-Type": "application/json" });
+    req.on('end', function () {
+      console.log('Body: ' + body);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
       putUserEvents(JSON.parse(body), function (response) {
         res.end(JSON.stringify(response));
       });
@@ -85,13 +85,13 @@ const server = http.createServer((req, res) => {
 });
 
 function getUserEvents(queryparams, callback) {
-  const { Pool } = require("pg");
+  const { Pool } = require('pg');
   //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
   const pool = new Pool({
     //connectionString,
-    user: "postgres",
-    host: "164.92.194.239",
-    database: "postgres",
+    user: 'postgres',
+    host: '164.92.194.239',
+    database: 'postgres',
     port: 5432,
   });
   (async () => {
@@ -103,7 +103,7 @@ function getUserEvents(queryparams, callback) {
       let enddate = queryparams.endtime;
       let type = queryparams.type;
       let res;
-      if (table === "UserEvents") {
+      if (table === 'UserEvents') {
         res = await client.query({
           text: `SELECT * FROM UserEvents where type = $1 and startdate >= to_date($2,'DDMMYYYY') and enddate <= to_date($3,'DDMMYYYY')`,
           values: [type, startdate, enddate],
@@ -125,13 +125,13 @@ function getUserEvents(queryparams, callback) {
 }
 
 function postUserEvents(data, callback) {
-  const { Pool } = require("pg");
+  const { Pool } = require('pg');
   //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
   const pool = new Pool({
     //connectionString,
-    user: "postgres",
-    host: "164.92.194.239",
-    database: "postgres",
+    user: 'postgres',
+    host: '164.92.194.239',
+    database: 'postgres',
     port: 5432,
   });
   (async () => {
@@ -150,12 +150,12 @@ function postUserEvents(data, callback) {
       let enddate = data.enddate;
       let userid = data.userid;
       let res;
-      if (table === "UserEvents") {
+      if (table === 'UserEvents') {
         let eventname = data.eventname;
         let eventplacename = data.eventnameplace;
 
         res = await client.query({
-          rowMode: "array",
+          rowMode: 'array',
           text: `insert into UserEvents(userid, eventid, type, eventname, eventplacename, latitude, longitude, startdate, enddate, details)
                          values($1,$2,$3,$4,$5,$6,$7,TO_DATE($8,'DDMMYYYY'),TO_DATE($9,'DDMMYYYY'),$10)`,
           values: [
@@ -173,10 +173,10 @@ function postUserEvents(data, callback) {
           //values: [1,1,'flood','a','b',1.1,1.2,'13091845','06011923','I saw this in Iasi!'] foloseste pt test
         });
       }
-      if (table === "Floods") {
+      if (table === 'Floods') {
         let waterbodyname = data.waterbodyname;
         res = await client.query({
-          rowMode: "array",
+          rowMode: 'array',
           text: `insert into Floods(location, waterbodyname, latitude, longitude, description, details, eventid, startdate, enddate,userid, severity) 
                         values($1,$2,$3,$4,$5,$6,$7,TO_DATE($8,'DDMMYYYY'),TO_DATE($9,'DDMMYYYY'),$10,$11)`,
           values: [
@@ -194,11 +194,11 @@ function postUserEvents(data, callback) {
           ],
           //values: [1,1,'flood','a','b',1.1,1.2,'13091845','06011923','I saw this in Iasi!'] foloseste pt test
         });
-      } else if (table === "Earthquakes") {
+      } else if (table === 'Earthquakes') {
         let magnitude = data.magnitude;
         let time = data.time;
         res = await client.query({
-          rowMode: "array",
+          rowMode: 'array',
           text: `insert into Earthquakes(eventid,location,enddate,magnitude,latitude,longitude,time,description,details,startdate,userid) 
                         values($1,$2,to_date($3, 'DDMMYYYY'),$4,$5,$6,$7,$8,$9,to_date($10, 'DDMMYYYY'),$11)`,
           values: [
@@ -216,10 +216,10 @@ function postUserEvents(data, callback) {
           ],
           //values: [1,1,'flood','a','b',1.1,1.2,'13091845','06011923','I saw this in Iasi!'] foloseste pt test
         });
-      } else if (table === "Weather") {
+      } else if (table === 'Weather') {
         let event = data.event;
         res = await client.query({
-          rowMode: "array",
+          rowMode: 'array',
           text: `insert into Weather(eventid, location, event, latitude, longitude, description, details, startdate, enddate,userid)
                          values($1,$2,$3,$4,$5,$6,$7,to_date($8,'DDMMYYYY'),to_date($9,'DDMMYYYY'),$10)`,
           values: [
@@ -248,13 +248,13 @@ function postUserEvents(data, callback) {
 }
 
 function deleteUserEvents(queryparams, callback) {
-  const { Pool } = require("pg");
+  const { Pool } = require('pg');
   //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
   const pool = new Pool({
     //connectionString,
-    user: "postgres",
-    host: "164.92.194.239",
-    database: "postgres",
+    user: 'postgres',
+    host: '164.92.194.239',
+    database: 'postgres',
     port: 5432,
   });
   (async () => {
@@ -264,23 +264,23 @@ function deleteUserEvents(queryparams, callback) {
       let eventid = queryparams.eventid;
       let table = queryparams.table;
       let res;
-      if (table === "UserEvents") {
+      if (table === 'UserEvents') {
         res = await client.query({
           text: `delete from UserEvents where eventid = $1`,
           values: [eventid], //folosim doar prima cheie ca parametru pt delete
         });
       }
-      if (table === "Floods") {
+      if (table === 'Floods') {
         res = await client.query({
           text: `delete from Floods where eventid = $1`,
           values: [eventid], //folosim doar prima cheie ca parametru pt delete
         });
-      } else if (table === "Earthquakes") {
+      } else if (table === 'Earthquakes') {
         res = await client.query({
           text: `delete from Earthquakes where eventid = $1`,
           values: [eventid], //folosim doar prima cheie ca parametru pt delete
         });
-      } else if (table === "Weather") {
+      } else if (table === 'Weather') {
         res = await client.query({
           text: `delete from Weather where eventid = $1`,
           values: [eventid], //folosim doar prima cheie ca parametru pt delete
@@ -297,13 +297,13 @@ function deleteUserEvents(queryparams, callback) {
 }
 
 function putUserEvents(queryparams, callback) {
-  const { Pool } = require("pg");
+  const { Pool } = require('pg');
   //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
   const pool = new Pool({
     //connectionString,
-    user: "postgres",
-    host: "164.92.194.239",
-    database: "postgres",
+    user: 'postgres',
+    host: '164.92.194.239',
+    database: 'postgres',
     port: 5432,
   });
   (async () => {
@@ -315,7 +315,7 @@ function putUserEvents(queryparams, callback) {
       console.log(table);
       let res;
       for (let i = 0; i < keys.length; i++) {
-        if (keys[i] !== "event_id" && keys[i] !== "table") {
+        if (keys[i] !== 'event_id' && keys[i] !== 'table') {
           res = await client.query({
             text: `update ${table} set ${keys[i]} = '${
               queryparams[keys[i]]

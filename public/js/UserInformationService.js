@@ -1,16 +1,16 @@
-const http = require("http");
-const bcrypt = require("bcrypt");
+const http = require('http');
+const bcrypt = require('bcrypt');
 
-const querystring = require("query-string");
+const querystring = require('query-string');
 
-const hostname = "127.0.0.1";
+const hostname = 'localhost';
 const port = 4002;
 
 const server = http.createServer((req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Request-Method", "*");
-  res.setHeader("Access-Control-Allow-Methods", "*");
-  res.setHeader("Access-Control-Allow-Headers", "*");
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Request-Method', '*');
+  res.setHeader('Access-Control-Allow-Methods', '*');
+  res.setHeader('Access-Control-Allow-Headers', '*');
 
   res.statusCode = 200;
   const urlSearchParams = querystring.parseUrl(req.url);
@@ -18,83 +18,83 @@ const server = http.createServer((req, res) => {
   console.log(urlSearchParams);
   console.log(req.method);
 
-  if (req.method === "OPTIONS") {
+  if (req.method === 'OPTIONS') {
     res.writeHead(200);
     res.end();
     return;
   }
 
-  if (req.method == "GET") {
-    console.log("GET");
-    res.setHeader("Content-Type", "application/json");
+  if (req.method == 'GET') {
+    console.log('GET');
+    res.setHeader('Content-Type', 'application/json');
     getInfo(params, function (response) {
       res.end(JSON.stringify(response));
     });
-  } else if (req.method == "POST") {
-    console.log("POST");
-    var body = "";
-    req.on("data", function (data) {
+  } else if (req.method == 'POST') {
+    console.log('POST');
+    var body = '';
+    req.on('data', function (data) {
       body += data;
       console.log(data);
-      console.log("Partial body: " + body);
+      console.log('Partial body: ' + body);
     });
-    req.on("end", function () {
-      console.log("Body: " + body);
-      res.writeHead(200, { "Content-Type": "application/json" });
+    req.on('end', function () {
+      console.log('Body: ' + body);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
       postInfo(JSON.parse(body), function (response) {
         res.end(JSON.stringify(response));
       });
     });
-  } else if (req.method == "PATCH" && req.url.includes("updateUsername")) {
-    console.log("DAU PATCH");
-    var body = "";
-    req.on("data", function (data) {
+  } else if (req.method == 'PATCH' && req.url.includes('updateUsername')) {
+    console.log('DAU PATCH');
+    var body = '';
+    req.on('data', function (data) {
       body += data;
-      console.log("DADADA " + JSON.stringify(body));
+      console.log('DADADA ' + JSON.stringify(body));
     });
 
-    req.on("end", function () {
+    req.on('end', function () {
       body = JSON.parse(body);
-      console.log("BODY=" + body);
+      console.log('BODY=' + body);
       res.writeHead(200, {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       });
       updateUsername(body.username, body.id, function (response) {
         res.end(JSON.stringify(response));
       });
     });
-  } else if (req.method == "PATCH" && req.url.includes("updateEmail")) {
-    console.log("DAU CU EMAIL");
-    var body = "";
-    req.on("data", function (data) {
+  } else if (req.method == 'PATCH' && req.url.includes('updateEmail')) {
+    console.log('DAU CU EMAIL');
+    var body = '';
+    req.on('data', function (data) {
       body += data;
-      console.log("DADADA " + JSON.stringify(body));
+      console.log('DADADA ' + JSON.stringify(body));
     });
-    req.on("end", function () {
+    req.on('end', function () {
       body = JSON.parse(body);
-      console.log("BODY=" + body);
+      console.log('BODY=' + body);
       res.writeHead(200, {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       });
-      console.log("m1 " + body.email + " id " + body.id);
+      console.log('m1 ' + body.email + ' id ' + body.id);
       updateEmail(body.email, body.id, function (response) {
         res.end(JSON.stringify(response));
       });
     });
-  } else if (req.method == "PATCH" && req.url.includes("updatePassword")) {
-    console.log("DAU CU PASSWORD");
-    var body = "";
-    req.on("data", function (data) {
+  } else if (req.method == 'PATCH' && req.url.includes('updatePassword')) {
+    console.log('DAU CU PASSWORD');
+    var body = '';
+    req.on('data', function (data) {
       body += data;
-      console.log("DADADA " + JSON.stringify(body));
+      console.log('DADADA ' + JSON.stringify(body));
     });
-    req.on("end", function () {
+    req.on('end', function () {
       body = JSON.parse(body);
-      console.log("BODY=" + body);
+      console.log('BODY=' + body);
       res.writeHead(200, {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       });
-      console.log("pass " + body.password + " id " + body.id);
+      console.log('pass ' + body.password + ' id ' + body.id);
       updatePassword(
         body.oldpassword,
         body.password,
@@ -112,19 +112,19 @@ function updatePassword(oldpassword, password, uid, callback) {
   const hashNewPassword = bcrypt.hashSync(password, salt);
   // const hashOldPassword = bcrypt.hashSync(oldpassword, salt);
 
-  const { Pool } = require("pg");
+  const { Pool } = require('pg');
   //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
   const pool = new Pool({
     //connectionString,
-    user: "postgres",
-    host: "164.92.194.239",
-    database: "postgres",
+    user: 'postgres',
+    host: '164.92.194.239',
+    database: 'postgres',
     port: 5432,
   });
   (async () => {
     const client = await pool.connect();
     try {
-      console.log("m " + password + " id " + uid);
+      console.log('m ' + password + ' id ' + uid);
 
       const currentPassword = await client.query({
         text: `SELECT PASSWORD FROM USERS WHERE ID=$1`,
@@ -132,24 +132,24 @@ function updatePassword(oldpassword, password, uid, callback) {
       });
 
       //console.log("hash old " + hashOldPassword);
-      console.log("old " + currentPassword.rows[0].password);
+      console.log('old ' + currentPassword.rows[0].password);
       if (bcrypt.compareSync(oldpassword, currentPassword.rows[0].password)) {
-        console.log("OLD PASSWORD=CURRENT PASSWORD");
+        console.log('OLD PASSWORD=CURRENT PASSWORD');
         const check = await client.query({
           text: `UPDATE USERS SET PASSWORD=$1 WHERE ID=$2`,
           values: [hashNewPassword, uid],
         });
-        console.log("check=" + check);
+        console.log('check=' + check);
         if (check) {
           response = {
-            status: "updated user",
+            status: 'updated user',
           };
         } else {
           response = {
-            status: "user not updated",
+            status: 'user not updated',
           };
         }
-        console.log("USER UPDATE REQUESTED!!!");
+        console.log('USER UPDATE REQUESTED!!!');
       } else {
         response = {
           status: "passwords don't match",
@@ -166,13 +166,13 @@ function updatePassword(oldpassword, password, uid, callback) {
 }
 
 function updateEmail(email, uid, callback) {
-  const { Pool } = require("pg");
+  const { Pool } = require('pg');
   //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
   const pool = new Pool({
     //connectionString,
-    user: "postgres",
-    host: "164.92.194.239",
-    database: "postgres",
+    user: 'postgres',
+    host: '164.92.194.239',
+    database: 'postgres',
     port: 5432,
   });
   (async () => {
@@ -183,20 +183,20 @@ function updateEmail(email, uid, callback) {
         values: [email],
       });
 
-      console.log("m " + email + " id " + uid);
+      console.log('m ' + email + ' id ' + uid);
       if (validateEmail.rowCount === 0) {
         const check = await client.query({
           text: `UPDATE USERS SET EMAIL=$1 WHERE ID=$2`,
           values: [email, uid],
         });
-        console.log("check=" + check);
+        console.log('check=' + check);
         response = {
-          status: "updated user",
+          status: 'updated user',
         };
-        console.log("USER UPDATE REQUESTED!!!");
+        console.log('USER UPDATE REQUESTED!!!');
       } else {
         response = {
-          status: "user not updated",
+          status: 'user not updated',
         };
       }
       return callback(response);
@@ -210,13 +210,13 @@ function updateEmail(email, uid, callback) {
 }
 
 function updateUsername(usr, userid, callback) {
-  const { Pool } = require("pg");
+  const { Pool } = require('pg');
   //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
   const pool = new Pool({
     //connectionString,
-    user: "postgres",
-    host: "164.92.194.239",
-    database: "postgres",
+    user: 'postgres',
+    host: '164.92.194.239',
+    database: 'postgres',
     port: 5432,
   });
   (async () => {
@@ -228,14 +228,14 @@ function updateUsername(usr, userid, callback) {
       });
       if (check) {
         response = {
-          status: "updated user",
+          status: 'updated user',
         };
       } else {
         response = {
-          status: "failed update",
+          status: 'failed update',
         };
       }
-      console.log("USER UPDATE REQUESTED!!!");
+      console.log('USER UPDATE REQUESTED!!!');
       return callback(response);
     } finally {
       // Make sure to release the client before any error handling,
@@ -247,13 +247,13 @@ function updateUsername(usr, userid, callback) {
 }
 
 function getInfo(queryparams, callback) {
-  const { Pool } = require("pg");
+  const { Pool } = require('pg');
   //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
   const pool = new Pool({
     //connectionString,
-    user: "postgres",
-    host: "164.92.194.239",
-    database: "postgres",
+    user: 'postgres',
+    host: '164.92.194.239',
+    database: 'postgres',
     port: 5432,
   });
   (async () => {
@@ -263,7 +263,7 @@ function getInfo(queryparams, callback) {
       let table = queryparams.table;
       let res;
       for (let i = 0; i < keys.length; i++) {
-        if (queryparams[keys[i]] != null && keys[i] !== "table") {
+        if (queryparams[keys[i]] != null && keys[i] !== 'table') {
           console.log(
             `select * from ${table} where ${keys[i]}='${queryparams[keys[i]]}'`
           );
@@ -285,20 +285,20 @@ function getInfo(queryparams, callback) {
 }
 
 function postInfo(queryparams, callback) {
-  const { Pool } = require("pg");
+  const { Pool } = require('pg');
   //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
   const pool = new Pool({
     //connectionString,
-    user: "postgres",
-    host: "164.92.194.239",
-    database: "postgres",
+    user: 'postgres',
+    host: '164.92.194.239',
+    database: 'postgres',
     port: 5432,
   });
   (async () => {
     const client = await pool.connect();
     try {
       let operation = queryparams.operation;
-      if (operation === "replace") {
+      if (operation === 'replace') {
         let res;
         let userid = queryparams.userid;
         let preferenceid = queryparams.preferenceid;
@@ -307,9 +307,9 @@ function postInfo(queryparams, callback) {
         for (let i = 0; i < keys.length; i++) {
           if (
             queryparams[keys[i]] != null &&
-            keys[i] !== "table" &&
-            keys[i] !== "preferenceid" &&
-            keys[i] !== "operation"
+            keys[i] !== 'table' &&
+            keys[i] !== 'preferenceid' &&
+            keys[i] !== 'operation'
           ) {
             console.log(
               `update ${table} set ${keys[i]}='${
@@ -324,7 +324,7 @@ function postInfo(queryparams, callback) {
             });
           }
         }
-      } else if (operation === "add") {
+      } else if (operation === 'add') {
         let table = queryparams.table;
         let userid = queryparams.userid;
         let location = queryparams.location;
