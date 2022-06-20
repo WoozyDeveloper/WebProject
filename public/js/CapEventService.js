@@ -4,7 +4,7 @@ const http = require('http');
 
 const querystring = require('query-string');
 
-const hostname = '127.0.0.1';
+const hostname = 'localhost';
 const port = 4003;
 
 const { Pool } = require('pg');
@@ -62,31 +62,31 @@ const server = http.createServer((req, res) => {
       res.end(JSON.stringify(response));
     });
   } else if (req.method == 'PUT') {
-    console.log("PUT");
-    var body = "";
-    req.on("data", function (data) {
+    console.log('PUT');
+    var body = '';
+    req.on('data', function (data) {
       body += data;
       console.log(data);
-      console.log("Partial body: " + body);
+      console.log('Partial body: ' + body);
     });
-    req.on("end", function () {
-      console.log("Body: " + body);
-      res.writeHead(200, { "Content-Type": "application/json" });
+    req.on('end', function () {
+      console.log('Body: ' + body);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
       putEvent(JSON.parse(body), function (response) {
         res.end(JSON.stringify(response));
       });
     });
   } else if (req.method == 'DELETE') {
-    console.log("DELETE");
-    var body = "";
-    req.on("data", function (data) {
+    console.log('DELETE');
+    var body = '';
+    req.on('data', function (data) {
       body += data;
       console.log(data);
-      console.log("Partial body: " + body);
+      console.log('Partial body: ' + body);
     });
-    req.on("end", function () {
-      console.log("Body: " + body);
-      res.writeHead(200, { "Content-Type": "application/json" });
+    req.on('end', function () {
+      console.log('Body: ' + body);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
       deleteEvent(JSON.parse(body), function (response) {
         res.end(JSON.stringify(response));
       });
@@ -107,7 +107,7 @@ function addEvent(queryparams, callback) {
       let language = queryparams['cap:alert']['cap:info']['cap:language'];
       let shelterLocation =
         queryparams['cap:alert']['cap:info']['cap:area']['cap:geocode'][
-        'cap:value'
+          'cap:value'
         ];
       let headline = queryparams['cap:alert']['cap:info']['cap:headline'];
       let status = queryparams['cap:alert']['cap:status'];
@@ -203,20 +203,24 @@ function putEvent(queryparams, callback) {
   (async () => {
     const client = await pool.connect();
     try {
-      let res
-      let keys = Object.keys(queryparams)
-      let identifier = queryparams.identifier
-      console.log(keys, queryparams.identifier)
+      let res;
+      let keys = Object.keys(queryparams);
+      let identifier = queryparams.identifier;
+      console.log(keys, queryparams.identifier);
       for (let i = 0; i < keys.length; i++) {
-        if (keys[i] !== "identifier")
-          console.log(`update events set ${keys[i]} = ${queryparams[keys[i]]} where identifier=${identifier}`)
+        if (keys[i] !== 'identifier')
+          console.log(
+            `update events set ${keys[i]} = ${
+              queryparams[keys[i]]
+            } where identifier=${identifier}`
+          );
         res = await client.query({
           text: `update events set ${keys[i]} = $1 where identifier=$2`,
           values: [queryparams[keys[i]], identifier],
         });
       }
-      console.log(res.rows)
-      return callback(JSON.parse('{"status":"success"}'))
+      console.log(res.rows);
+      return callback(JSON.parse('{"status":"success"}'));
     } finally {
       // Make sure to release the client before any error handling,
       // just in case the error handling itself throws an error.
@@ -229,13 +233,13 @@ function deleteEvent(queryparams, callback) {
   (async () => {
     const client = await pool.connect();
     try {
-      let identifier = queryparams.identifier
+      let identifier = queryparams.identifier;
       let res = await client.query({
         text: `delete from events where identifier=$1`,
         values: [identifier],
       });
-      console.log(res.rows)
-      return callback(JSON.parse('{"status":"success"}'))
+      console.log(res.rows);
+      return callback(JSON.parse('{"status":"success"}'));
     } finally {
       // Make sure to release the client before any error handling,
       // just in case the error handling itself throws an error.

@@ -226,7 +226,7 @@ const handlePost = async (req, res, parsedBody) => {
 
     // fetch post data
     const data = await axios
-      .post(`http://127.0.0.1:4000/login/`, {
+      .post(`http://localhost:4000/login/`, {
         email,
         password,
       })
@@ -260,7 +260,7 @@ const handlePost = async (req, res, parsedBody) => {
 
 const parseToken = (req, res, next) => {
   // Get the token from the cookie
-  const token = parseCookies(req)?.token;
+  const token = parseCookies(req) ? parseCookies(req).token : null;
   if (!token) {
     return null;
   }
@@ -283,12 +283,12 @@ const parseToken = (req, res, next) => {
 
 function parseCookies(request) {
   const list = {};
-  const cookieHeader = request.headers?.cookie;
+  const cookieHeader = request.headers ? request.headers.cookie : null;
   if (!cookieHeader) return list;
 
   cookieHeader.split(`;`).forEach(function (cookie) {
     let [name, ...rest] = cookie.split(`=`);
-    name = name?.trim();
+    name = name ? name.trim() : ``;
     if (!name) return;
     const value = rest.join(`=`).trim();
     if (!value) return;

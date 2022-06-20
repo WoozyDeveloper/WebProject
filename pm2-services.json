@@ -9,12 +9,20 @@
       "script": "./public/js/UserEventService.js"
     },
     {
-      "name": "login-service",
-      "script": "./public/js/server.js"
+      "name": "cap-service",
+      "script": "./public/js/CapEventService.js"
     },
     {
-      "name": "cap-service",
-      "script": "./public/js/CapService.js"
+      "name": "notification-service",
+      "script": "./public/js/NotificationService.js"
+    },
+    {
+      "name": "user-information-service",
+      "script": "./public/js/UserInformationService.js"
+    },
+    {
+      "name": "client-server",
+      "script": "index.js"
     }
   ]
 }
