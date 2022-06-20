@@ -19,6 +19,7 @@
   "homepage": "https://github.com/WoozyDeveloper/WebProject#readme",
   "dependencies": {
     "@mapbox/geojson-merge": "^1.1.1",
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
     "crypto": "^1.0.1",
     "crypto-js": "^4.1.1",

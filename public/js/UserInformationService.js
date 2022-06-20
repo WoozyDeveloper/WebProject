@@ -1,4 +1,5 @@
 const http = require("http");
+const bcrypt = require("bcrypt");
 
 const querystring = require("query-string");
 
@@ -58,9 +59,14 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, {
         "Content-Type": "application/json",
       });
-      updateUsername(body.username, body.id, function (response) {
-        res.end(JSON.stringify(response));
-      });
+      updateUsername(
+        body.oldpassword,
+        body.username,
+        body.id,
+        function (response) {
+          res.end(JSON.stringify(response));
+        }
+      );
     });
   } else if (req.method == "PATCH" && req.url.includes("updateEmail")) {
     console.log("DAU CU EMAIL");
@@ -80,8 +86,89 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify(response));
       });
     });
+  } else if (req.method == "PATCH" && req.url.includes("updatePassword")) {
+    console.log("DAU CU PASSWORD");
+    var body = "";
+    req.on("data", function (data) {
+      body += data;
+      console.log("DADADA " + JSON.stringify(body));
+    });
+    req.on("end", function () {
+      body = JSON.parse(body);
+      console.log("BODY=" + body);
+      res.writeHead(200, {
+        "Content-Type": "application/json",
+      });
+      console.log("pass " + body.password + " id " + body.id);
+      updatePassword(
+        body.oldpassword,
+        body.password,
+        body.id,
+        function (response) {
+          res.end(JSON.stringify(response));
+        }
+      );
+    });
   }
 });
+
+function updatePassword(oldpassword, password, uid, callback) {
+  const salt = bcrypt.genSaltSync(10);
+  const hashNewPassword = bcrypt.hashSync(password, salt);
+  // const hashOldPassword = bcrypt.hashSync(oldpassword, salt);
+
+  const { Pool } = require("pg");
+  //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
+  const pool = new Pool({
+    //connectionString,
+    user: "postgres",
+    host: "164.92.194.239",
+    database: "postgres",
+    port: 5432,
+  });
+  (async () => {
+    const client = await pool.connect();
+    try {
+      console.log("m " + password + " id " + uid);
+
+      const currentPassword = await client.query({
+        text: `SELECT PASSWORD FROM USERS WHERE ID=$1`,
+        values: [uid],
+      });
+
+      //console.log("hash old " + hashOldPassword);
+      console.log("old " + currentPassword.rows[0].password);
+      if (bcrypt.compareSync(oldpassword, currentPassword.rows[0].password)) {
+        console.log("OLD PASSWORD=CURRENT PASSWORD");
+        const check = await client.query({
+          text: `UPDATE USERS SET PASSWORD=$1 WHERE ID=$2`,
+          values: [hashNewPassword, uid],
+        });
+        console.log("check=" + check);
+        if (check) {
+          response = {
+            status: "updated user",
+          };
+        } else {
+          response = {
+            status: "user not updated",
+          };
+        }
+        console.log("USER UPDATE REQUESTED!!!");
+      } else {
+        response = {
+          status: "passwords don't match",
+        };
+      }
+      return callback(response);
+    } finally {
+      // Make sure to release the client before any error handling,
+      // just in case the error handling itself throws an error.
+
+      client.release();
+    }
+  })().catch((err) => console.log(err.stack));
+}
 
 function updateEmail(email, uid, callback) {
   const { Pool } = require("pg");
