@@ -27,7 +27,7 @@ const server = http.createServer((req, res) => {
       console.log('GET');
       let table = params.table;
       let email = params.email;
-      fetch(`https://localhost:4002/?table=${table}&email=${email}`)
+      fetch(`http://localhost:4002/?table=${table}&email=${email}`)
         .then((response) => response.json())
         .then((data) => {
           let userid = data[0].id;
@@ -44,7 +44,7 @@ const server = http.createServer((req, res) => {
       let urgency = params.urgency;
       let category = params.category;
       fetch(
-        `https://localhost:4003?start=${start}&end=${end}&urgency=${urgency}&category=${category}`
+        `http://localhost:4003?start=${start}&end=${end}&urgency=${urgency}&category=${category}`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -69,7 +69,7 @@ const server = http.createServer((req, res) => {
         };
         //console.log("JSON PARSE BODY: " + JSON.parse(body).email + " " + JSON.parse(body).password)
         const fetchResponse = await fetch(
-          'https://localhost:4000/login',
+          'http://localhost:4000/login',
           settings
         );
         const response = await fetchResponse.json();
@@ -93,7 +93,7 @@ const server = http.createServer((req, res) => {
         };
         //console.log("JSON PARSE BODY: " + JSON.parse(body).email + " " + JSON.parse(body).password)
         const fetchResponse = await fetch(
-          'https://localhost:4000/register',
+          'http://localhost:4000/register',
           settings
         );
         const response = await fetchResponse.json();
@@ -111,7 +111,7 @@ const server = http.createServer((req, res) => {
       });
       req.on('end', async function () {
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'https://localhost:4004');
+        xhr.open('POST', 'http://localhost:4004');
         xhr.setRequestHeader('Content-Type', 'application/xml');
         xhr.send(body);
         res.writeHead(200, { 'Content-Type': 'application/json' });

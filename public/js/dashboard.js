@@ -103,7 +103,7 @@ const geoJson = {
   ],
 };
 
-fetch(`https://localhost:4003`)
+fetch(`http://localhost:4003`)
   .then((response) => {
     return response.json();
   })

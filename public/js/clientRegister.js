@@ -18,7 +18,7 @@ document.forms[0].onsubmit = async (e) => {
   };
   try {
     const fetchResponse = await fetch(
-      'https://localhost:4000/register',
+      'http://localhost:4000/register',
       settings
     );
     const response = await fetchResponse.json(); //response from the server
