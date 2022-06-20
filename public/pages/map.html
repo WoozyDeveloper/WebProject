@@ -213,6 +213,7 @@
   </aside>
   <script>
     var token = Cookies.get('token');
+    console.log(token);
     if (token !== undefined) {
       var decoded = jwt_decode(token);
 
@@ -234,8 +235,7 @@
       document.getElementsByClassName("btn register nav-link")[1].style.display = "none"; //register
       document.getElementsByClassName("btn login nav-link")[0].style.display = "none"; //login
     }
-    else
-    {
+    else {
       console.log("nu exista token")
     }
   </script>

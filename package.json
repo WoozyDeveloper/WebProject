@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "php.exe -S localhost:3000 -t ./public"
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
   "homepage": "https://github.com/WoozyDeveloper/WebProject#readme",
   "dependencies": {
     "@mapbox/geojson-merge": "^1.1.1",
+    "axios": "^0.27.2",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
     "crypto": "^1.0.1",
@@ -27,7 +28,9 @@
     "dotenv": "^16.0.1",
     "fast-xml-parser": "^4.0.8",
     "handlebars": "^4.7.7",
+    "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.3",
+    "node-fetch": "2.0",
     "nodemailer": "^6.7.5",
     "nodemon": "^2.0.16",
     "oracledb": "^5.3.0",
