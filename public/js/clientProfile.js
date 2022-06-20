@@ -221,7 +221,61 @@ function accountInfo() {
     password.appendChild(newPassword);
     password.appendChild(newPasswordConfirm);
     password.appendChild(changePasswordConfirm);
-    changePasswordConfirm.onclick = function (event) {
+    changePasswordConfirm.onclick = async function (event) {
+      if (
+        document.getElementById("new-password").value ===
+        document.getElementById("new-password-confirm").value
+      ) {
+        let json = {
+          oldpassword: document.getElementById("old-password").value,
+          password: document.getElementById("new-password").value,
+          id: userid,
+        };
+        console.log(json);
+        const settings = {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(json),
+        };
+        try {
+          const fetchResponse = await fetch(
+            "http://localhost:4002/updatePassword",
+            settings
+          );
+          const response = await fetchResponse.json();
+          console.log("punem " + json.password);
+          console.log("Avem:" + response.status);
+          if (response.status === "updated user") {
+            console.log(response);
+            changeDiv.removeChild(changeDiv.firstChild);
+            changeDiv.removeChild(changeDiv.firstChild);
+            let succesMessage = document.createElement("p");
+            succesMessage.style = "color: green;";
+            succesMessage.innerText = "Changed with success";
+            changeDiv.appendChild(succesMessage);
+            location.reload();
+          } else if (response.status === "user not updated") {
+            console.log(response);
+            changeDiv.removeChild(changeDiv.firstChild);
+            changeDiv.removeChild(changeDiv.firstChild);
+            let succesMessage = document.createElement("p");
+            succesMessage.style = "color: red;";
+            succesMessage.innerText = "Password not updated";
+            changeDiv.appendChild(succesMessage);
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        console.log("no match!!!");
+        changeDiv.removeChild(changeDiv.firstChild);
+        changeDiv.removeChild(changeDiv.firstChild);
+        let succesMessage = document.createElement("p");
+        succesMessage.style = "color: red;";
+        succesMessage.innerText = "Passwords don't match!";
+        changeDiv.appendChild(succesMessage);
+      }
+
       console.log(document.getElementById("old-password").value);
       console.log(document.getElementById("new-password").value);
       console.log(document.getElementById("new-password-confirm").value);
@@ -519,7 +573,7 @@ function preferences() {
                   message.innerText = "Changes applied successfully";
                   message.style = "color: green;";
                 } else {
-                  message.innerText = "You fucked up"; //??????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+                  message.innerText = "Something went wrong";
                   message.style = "color: red;";
                 }
                 form.appendChild(message);
