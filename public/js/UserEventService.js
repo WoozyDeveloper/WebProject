@@ -90,7 +90,7 @@ function getUserEvents(queryparams, callback) {
   const pool = new Pool({
     //connectionString,
     user: 'postgres',
-    host: '164.92.194.239',
+    host: '157.230.100.116',
     database: 'postgres',
     port: 5432,
   });
@@ -130,7 +130,7 @@ function postUserEvents(data, callback) {
   const pool = new Pool({
     //connectionString,
     user: 'postgres',
-    host: '164.92.194.239',
+    host: '157.230.100.116',
     database: 'postgres',
     port: 5432,
   });
@@ -253,7 +253,7 @@ function deleteUserEvents(queryparams, callback) {
   const pool = new Pool({
     //connectionString,
     user: 'postgres',
-    host: '164.92.194.239',
+    host: '157.230.100.116',
     database: 'postgres',
     port: 5432,
   });
@@ -302,7 +302,7 @@ function putUserEvents(queryparams, callback) {
   const pool = new Pool({
     //connectionString,
     user: 'postgres',
-    host: '164.92.194.239',
+    host: '157.230.100.116',
     database: 'postgres',
     port: 5432,
   });
