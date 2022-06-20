@@ -260,7 +260,7 @@ const handlePost = async (req, res, parsedBody) => {
 
 const parseToken = (req, res, next) => {
   // Get the token from the cookie
-  const token = parseCookies(req)?.token;
+  const token = parseCookies(req) ? parseCookies(req).token : null;
   if (!token) {
     return null;
   }
