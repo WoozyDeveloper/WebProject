@@ -1,52 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Login</title>
-    <link rel="stylesheet" href="../css/style_navigation.css" />
-    <link rel="stylesheet" href="../css/style_login.css" />
-  </head>
-  <body>
-    <div id="box">
-      <form>
-        <input id="email" type="email" placeholder="E-mail" required />
-        <input id="password" type="password" placeholder="Password" required />
-        <button>LOGIN</button>
-      </form>
-    </div>
 
-    <div id="mySidenav" class="sidenav">
-      <hr />
-      <a href="../index.html" onClick="menu_click()">
-        <img alt="home icon" src="../images/home_icon.png" class="navbar_icon" />
-        <p class="navbar_text">Home</p>
-      </a>
-      <hr />
-      <a href="../pages/login.html" onClick="menu_click()">
-        <img alt="login" src="../images/loginIcon.png" class="navbar_icon" />
-        <p class="navbar_text">Login</p>
-      </a>
-      <hr />
-      <a href="../pages/contact.html" onClick="menu_click()">
-        <img alt="contact" src="../images/contact.png" class="navbar_icon" />
-        <p class="navbar_text">Contact</p>
-      </a>
-      <hr />
-      <a href="../pages/map.html" onClick="menu_click()">
-        <img alt="home icon" src="../images/home_icon.png" class="navbar_icon" />
-        <p class="navbar_text">Map</p>
-      </a>
-      <hr />
-      <a> </a>
-    </div>
-    
-      <p id="register">Don't have an account? Register <a href="../pages/register.html">here!</a></p>
-    
-    <span class="span" id="nav_button" onClick="move()"></span>
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+  <link rel="stylesheet" href="../css/style_navigation.css" />
+  <link rel="stylesheet" href="../css/style_login.css" />
+</head>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js"></script>
-    <script src="../js/ClientLogin.js"></script>
-    <script src="../js/animatie_buton.js"></script>
-  </body>
+<body>
+  <div id="box">
+    <form>
+      <input id="email" type="email" placeholder="E-mail" required />
+      <input id="password" type="password" placeholder="Password" required />
+      <button>LOGIN</button>
+    </form>
+  </div>
+
+  <div id="mySidenav" class="sidenav">
+    <hr />
+    <a href="/" onClick="menu_click()">
+      <img alt="home icon" src="../images/home_icon.png" class="navbar_icon" />
+      <p class="navbar_text">Home</p>
+    </a>
+    <hr />
+    <a href="/login" onClick="menu_click()">
+      <img alt="login" src="../images/loginIcon.png" class="navbar_icon" />
+      <p class="navbar_text">Login</p>
+    </a>
+    <hr />
+    <a href="/contact" onClick="menu_click()">
+      <img alt="contact" src="../images/contact.png" class="navbar_icon" />
+      <p class="navbar_text">Contact</p>
+    </a>
+    <hr />
+    <a href="/map" onClick="menu_click()">
+      <img alt="home icon" src="../images/home_icon.png" class="navbar_icon" />
+      <p class="navbar_text">Map</p>
+    </a>
+    <hr />
+    <a> </a>
+  </div>
+
+  <p id="register">Don't have an account? Register <a href="/register">here!</a></p>
+
+  <span class="span" id="nav_button" onClick="move()"></span>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js"></script>
+  <script src="../js/ClientLogin.js"></script>
+  <script src="../js/animatie_buton.js"></script>
+</body>
+
 </html>

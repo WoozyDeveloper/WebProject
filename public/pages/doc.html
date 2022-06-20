@@ -1,304 +1,293 @@
 <!DOCTYPE html>
 <!-- saved from url=(0037)https://w3c.github.io/scholarly-html/ -->
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=yes"
-    />
-    <title>Documentație CoSe</title>
-    <link rel="stylesheet" href="../css/doc.css" />
-  </head>
-  <body prefix="schema: http://schema.org">
-    <header>
-      <h1>Documentație CoSe</h1>
-    </header>
-    <div role="contentinfo">
-      <ol role="directory">
-        <li>
-          <a href="#abstract"><span>1. </span>Abstract</a>
-        </li>
-        <li>
-          <a href="#introduction"><span>2. </span>Introducere</a>
-        </li>
-        <li>
-          <a href="#structure"><span>3. </span>Structură</a>
-          <ol role="directory">
-            <li>
-              <a href="#Root"><span>3.1 </span>Tehnologii utilizate</a>
-            </li>
-            <li>
-              <a href="#article"><span>3.2 </span>Pagini</a>
-            </li>
-            <li>
-              <a href="#hunk"><span>3.3 </span>Experiența utilizatorului</a>
-            </li>
-            <li>
-              <a href="#backend"><span>3.4 </span>Backend</a>
-            </li>
-          </ol>
-        </li>
-        <li>
-          <a href="#semantics"><span>4. </span>Arhitectura aplicației web</a>
-        </li>
-        <li>
-          <a href="#scholarly-article"
-            ><span>5. </span>Stocarea codului aplicației</a
-          >
-        </li>
-        <li>
-          <a href="#hypermedia"><span>6. </span>Diagrame</a>
-        </li>
-        <li>
-          <a href="#processing-model"
-            ><span>7. </span>Distribuirea sarcinilor</a
-          >
-        </li>
-        <li>
-          <a href="#acks"><span>8. </span>Bonus</a>
-        </li>
-        <li>
-          <a href="#biblio-references"><span>9. </span>Resurse</a>
-        </li>
-      </ol>
-      <dl>
-        <dt>Autori</dt>
-        <dd>
-          Bursuc Serban-Mihai &amp; Onofrei Adrian-Mihai &amp;
-          <a href="https://alexcretu.com" target="_blank" rel="noopener"
-            >Alexandru Cretu</a
-          >
-        </dd>
-      </dl>
-    </div>
-    <section typeof="sa:Abstract" id="abstract" role="doc-abstract">
-      <h2><span>1. </span>Abstract</h2>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Documentație CoSe</title>
+  <link rel="stylesheet" href="../css/doc.css" />
+</head>
+
+<body prefix="schema: http://schema.org">
+  <header>
+    <h1>Documentație CoSe</h1>
+  </header>
+  <div role="contentinfo">
+    <ol role="directory">
+      <li>
+        <a href="#abstract"><span>1. </span>Abstract</a>
+      </li>
+      <li>
+        <a href="#introduction"><span>2. </span>Introducere</a>
+      </li>
+      <li>
+        <a href="#structure"><span>3. </span>Structură</a>
+        <ol role="directory">
+          <li>
+            <a href="#Root"><span>3.1 </span>Tehnologii utilizate</a>
+          </li>
+          <li>
+            <a href="#article"><span>3.2 </span>Pagini</a>
+          </li>
+          <li>
+            <a href="#hunk"><span>3.3 </span>Experiența utilizatorului</a>
+          </li>
+          <li>
+            <a href="#backend"><span>3.4 </span>Backend</a>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <a href="#semantics"><span>4. </span>Arhitectura aplicației web</a>
+      </li>
+      <li>
+        <a href="#scholarly-article"><span>5. </span>Stocarea codului aplicației</a>
+      </li>
+      <li>
+        <a href="#hypermedia"><span>6. </span>Diagrame</a>
+      </li>
+      <li>
+        <a href="#processing-model"><span>7. </span>Distribuirea sarcinilor</a>
+      </li>
+      <li>
+        <a href="#acks"><span>8. </span>Bonus</a>
+      </li>
+      <li>
+        <a href="#biblio-references"><span>9. </span>Resurse</a>
+      </li>
+    </ol>
+    <dl>
+      <dt>Autori</dt>
+      <dd>
+        Bursuc Serban-Mihai &amp; Onofrei Adrian-Mihai &amp;
+        <a href="https://alexcretu.com" target="_blank" rel="noopener">Alexandru Cretu</a>
+      </dd>
+    </dl>
+  </div>
+  <section typeof="sa:Abstract" id="abstract" role="doc-abstract">
+    <h2><span>1. </span>Abstract</h2>
+    <p>
+      CoSe (Crisis Containment Service) este o platformă care permite
+      gestionarea situațiilor de urgență (e.g. cutremure, incendii, inundații
+      etc.). Aplicația integrează facilități oferite de API-urile USGS
+      Earthquake Catalog, NOAA National Weather Service si Environment Agency
+      Real Time Flood-Monitoring pentru a pentru a prelua informații de
+      interes în legătură cu evenimentele petrecute și zone afectate din toată
+      lumea. De asemenea, CoSe transmite notificări și alerte populației
+      (afectate) prin diverse platforme sociale. Sistemul furnizează și
+      informații despre eventualele adăposturi și rute de salvare, în funcție
+      de categoria calamitatii înregistrate.
+    </p>
+  </section>
+  <section id="introduction" role="doc-introduction">
+    <!-- review? -->
+    <h2><span>2. </span>Introducere</h2>
+    <p>
+      Dezastrele naturale sunt imprevizibile, de aceea prevenția lor este
+      crucială pentru toți oamenii din lume. CoSe oferă utilizatorilor un
+      sistem de notificări pentru dezastre naturale. Utilizatorii pot alege
+      locația de interes (nu neapărat cea în care sunt staționați) și un
+      sistem de mesagerie la alegere (e-mail, social media, browser). Pe lângă
+      acest lucru CoSe oferă utilizatoriilor o bază de date cu toate
+      dezastrele naturale înregistrate în API-urile folosite, unde este
+      posibilă navigarea evenimentelor.
+    </p>
+  </section>
+  <section id="structure">
+    <!-- review? -->
+    <h2><span>3. </span>Structură</h2>
+    <p></p>
+    <section id="Root">
+      <!-- review? -->
+      <h3><span>3.1 </span>Tehnologii utilizate</h3>
       <p>
-        CoSe (Crisis Containment Service) este o platformă care permite
-        gestionarea situațiilor de urgență (e.g. cutremure, incendii, inundații
-        etc.). Aplicația integrează facilități oferite de API-urile USGS
-        Earthquake Catalog, NOAA National Weather Service si Environment Agency
-        Real Time Flood-Monitoring pentru a pentru a prelua informații de
-        interes în legătură cu evenimentele petrecute și zone afectate din toată
-        lumea. De asemenea, CoSe transmite notificări și alerte populației
-        (afectate) prin diverse platforme sociale. Sistemul furnizează și
-        informații despre eventualele adăposturi și rute de salvare, în funcție
-        de categoria calamitatii înregistrate.
+        Tehnologiile folosite pentru acest proiect sunt HTML5, CSS, JavaScript
+        (interfață) si PHP (back-end).
       </p>
     </section>
-    <section id="introduction" role="doc-introduction">
+    <section id="article">
       <!-- review? -->
-      <h2><span>2. </span>Introducere</h2>
+      <h3><span>3.2 </span>Pagini</h3>
+      <p style="font-weight: bold">Home</p>
       <p>
-        Dezastrele naturale sunt imprevizibile, de aceea prevenția lor este
-        crucială pentru toți oamenii din lume. CoSe oferă utilizatorilor un
-        sistem de notificări pentru dezastre naturale. Utilizatorii pot alege
-        locația de interes (nu neapărat cea în care sunt staționați) și un
-        sistem de mesagerie la alegere (e-mail, social media, browser). Pe lângă
-        acest lucru CoSe oferă utilizatoriilor o bază de date cu toate
-        dezastrele naturale înregistrate în API-urile folosite, unde este
-        posibilă navigarea evenimentelor.
+        Pagina default "Home" arată harta lumii cu toate dezastrele naturale
+        întamplate recent marcate în locațiile lor corespunzătoare. În
+        chenarul ”Latest Events” apar ultimele 3 evenimente întâmplate din
+        toate lumea. În stânga apar linkuri cu rețelele de socializare ale
+        instituțiilor care oferă API-urile pentru site.
+      </p>
+      <img src="../imagini_documentatie_1/home.png" alt="home" />
+      <p style="font-weight: bold">Login</p>
+      <p>
+        Utilizatorii au opțiunea de a crea un cont pe platformă. La crearea
+        unui cont platforma va prelua e-mailul utilizatorului pentru
+        împingerea notificărilor. Contul va reține preferințele utilizatorului
+        (locațiile de interes, tipul de dezastru natural de interes etc.)
+      </p>
+      <img src="../imagini_documentatie_1/login.png" alt="login" />
+      <p style="font-weight: bold">Înregistrare</p>
+      <p>
+        O pagină care preia date despre un nou utilizator: nume, prenume,
+        e-mail și parolă. Logarea are loc cu e-mail-ul si parola.
+      </p>
+      <img src="../imagini_documentatie_1/register.PNG" alt="register" />
+      <p style="font-weight: bold">Contact</p>
+      <p>
+        O pagină care oferă detalii de contact pentru echipa de dezvoltatori.
+      </p>
+      <img src="../imagini_documentatie_1/contact.png" alt="contact" />
+    </section>
+    <section id="hunk">
+      <!-- review? -->
+      <h3><span>3.3 </span>Experiența utilizatorului</h3>
+      <p>
+        Odată intrat pe site utilizatorul vede varianta implicită a site-ului:
+        harta cu toate evenimentele întâmplate în ultimele 24 de ore, un feed
+        cu ultimele 3 evenimente și niște scurte detalii despre ele, o căsuță
+        care are social media relevant site-ului. Navigarea între pagini se
+        face cu butonul din colț dreapta sus. Click-ul pe acest buton
+        dezvăluie un chenar cu toate paginile site-ului (menționate mai sus
+        mai puțin pagina de Înregistrare care apare pe pagina de login).
+      </p>
+      <img src="../imagini_documentatie_1/homenavbar.png" alt="homenavbar" />
+      <p>
+        În momentul în care în vreo zonă salvată în cont de utilizator apare
+        un dezastru natural ales în cont, utilizatorul va primi pe adresa de
+        mail folosită la crearea contului un mesaj cu un rezumat despre
+        eveniment, precum și o acțiune sugerată de site.
+      </p>
+      <p>
+        Depinzând de severitatea evenimentului, planul poate consista ori în
+        indicații precum părăsirea zonei rezidențiale și sugerarea unui loc de
+        adăpost, sugestii de pregătire (în caz de furtuni). Pentru evenimente
+        cu importanță scăzută nu vor apărea indicații.
       </p>
     </section>
-    <section id="structure">
+    <section id="backend">
       <!-- review? -->
-      <h2><span>3. </span>Structură</h2>
-      <p></p>
-      <section id="Root">
-        <!-- review? -->
-        <h3><span>3.1 </span>Tehnologii utilizate</h3>
-        <p>
-          Tehnologiile folosite pentru acest proiect sunt HTML5, CSS, JavaScript
-          (interfață) si PHP (back-end).
-        </p>
-      </section>
-      <section id="article">
-        <!-- review? -->
-        <h3><span>3.2 </span>Pagini</h3>
-        <p style="font-weight: bold">Home</p>
-        <p>
-          Pagina default "Home" arată harta lumii cu toate dezastrele naturale
-          întamplate recent marcate în locațiile lor corespunzătoare. În
-          chenarul ”Latest Events” apar ultimele 3 evenimente întâmplate din
-          toate lumea. În stânga apar linkuri cu rețelele de socializare ale
-          instituțiilor care oferă API-urile pentru site.
-        </p>
-        <img src="../imagini_documentatie_1/home.png" alt="home" />
-        <p style="font-weight: bold">Login</p>
-        <p>
-          Utilizatorii au opțiunea de a crea un cont pe platformă. La crearea
-          unui cont platforma va prelua e-mailul utilizatorului pentru
-          împingerea notificărilor. Contul va reține preferințele utilizatorului
-          (locațiile de interes, tipul de dezastru natural de interes etc.)
-        </p>
-        <img src="../imagini_documentatie_1/login.png" alt="login" />
-        <p style="font-weight: bold">Înregistrare</p>
-        <p>
-          O pagină care preia date despre un nou utilizator: nume, prenume,
-          e-mail și parolă. Logarea are loc cu e-mail-ul si parola.
-        </p>
-        <img src="../imagini_documentatie_1/register.PNG" alt="register" />
-        <p style="font-weight: bold">Contact</p>
-        <p>
-          O pagină care oferă detalii de contact pentru echipa de dezvoltatori.
-        </p>
-        <img src="../imagini_documentatie_1/contact.png" alt="contact" />
-      </section>
-      <section id="hunk">
-        <!-- review? -->
-        <h3><span>3.3 </span>Experiența utilizatorului</h3>
-        <p>
-          Odată intrat pe site utilizatorul vede varianta implicită a site-ului:
-          harta cu toate evenimentele întâmplate în ultimele 24 de ore, un feed
-          cu ultimele 3 evenimente și niște scurte detalii despre ele, o căsuță
-          care are social media relevant site-ului. Navigarea între pagini se
-          face cu butonul din colț dreapta sus. Click-ul pe acest buton
-          dezvăluie un chenar cu toate paginile site-ului (menționate mai sus
-          mai puțin pagina de Înregistrare care apare pe pagina de login).
-        </p>
-        <img src="../imagini_documentatie_1/homenavbar.png" alt="homenavbar" />
-        <p>
-          În momentul în care în vreo zonă salvată în cont de utilizator apare
-          un dezastru natural ales în cont, utilizatorul va primi pe adresa de
-          mail folosită la crearea contului un mesaj cu un rezumat despre
-          eveniment, precum și o acțiune sugerată de site.
-        </p>
-        <p>
-          Depinzând de severitatea evenimentului, planul poate consista ori în
-          indicații precum părăsirea zonei rezidențiale și sugerarea unui loc de
-          adăpost, sugestii de pregătire (în caz de furtuni). Pentru evenimente
-          cu importanță scăzută nu vor apărea indicații.
-        </p>
-      </section>
-      <section id="backend">
-        <!-- review? -->
-        <h3><span>3.4 </span>Backend</h3>
-        <p>
-          Backend-ul este realizat cu PHP. Funcționalitatea backendului este
-          simplă: scriptul PHP aduce informații în format .json din API-urile
-          oferite de Environment Agency Real Time Flood-Monitoring și USGS
-          Earthquake Catalog respectiv .xml din API-ul oferit de NOAA National
-          Weather Service. In backend sunt selectate anumite câmpuri relevante
-          din fișiere, cum ar fi numele zonei faptei etc. și mai puțin date
-          tehnice, care urmează să fie afișate în feed.
-        </p>
-        <p>
-          Planul de evacuare (unde este necesar) este generat automat dintr-un
-          set de mesaje standard - însă în cazurile unde este necesară o
-          evacuare se va selecta o zonă fără prognoză dăunătoare cât mai
-          apropiată de zona implicită.
-        </p>
-      </section>
-    </section>
-    <section id="semantics">
-      <!-- review? -->
-      <h2><span>4. </span>Arhitectura aplicației web</h2>
-
-      <img src="../imagini_documentatie_1/arhitecture.png" alt="diagrama" />
-    </section>
-    <section id="scholarly-article">
-      <!-- review? -->
-      <h2><span>5. </span>Stocarea codului aplicatiei</h2>
+      <h3><span>3.4 </span>Backend</h3>
       <p>
-        Codul aplicatiei este aflat aici:
-        <a href="https://github.com/WoozyDeveloper/WebProject">aici</a>.
+        Backend-ul este realizat cu PHP. Funcționalitatea backendului este
+        simplă: scriptul PHP aduce informații în format .json din API-urile
+        oferite de Environment Agency Real Time Flood-Monitoring și USGS
+        Earthquake Catalog respectiv .xml din API-ul oferit de NOAA National
+        Weather Service. In backend sunt selectate anumite câmpuri relevante
+        din fișiere, cum ar fi numele zonei faptei etc. și mai puțin date
+        tehnice, care urmează să fie afișate în feed.
+      </p>
+      <p>
+        Planul de evacuare (unde este necesar) este generat automat dintr-un
+        set de mesaje standard - însă în cazurile unde este necesară o
+        evacuare se va selecta o zonă fără prognoză dăunătoare cât mai
+        apropiată de zona implicită.
       </p>
     </section>
-    <section id="hypermedia">
-      <!-- review? -->
-      <h2><span>6. </span>Diagrama</h2>
-      <img src="../imagini_documentatie_1/diagrama.png" alt="diagrama" />
-    </section>
-    <section id="processing-model">
-      <!-- review? -->
-      <h2><span>7. </span>Distribuirea sarciniilor</h2>
-      <p>Bursuc Serban-Mihai</p>
-      <ul>
-        <li>Interfața Home + responsive.</li>
-        <li>
-          Pagina recent events (care a fost transformată în home anterior).
-        </li>
-        <li>Settings și search bar în recent events.</li>
-        <li>
-          Prelucrarea API-urilor și afișarea datelor, extragerea datelor JSON
-          XML etc.
-        </li>
-        <li>Pagina register.</li>
-      </ul>
+  </section>
+  <section id="semantics">
+    <!-- review? -->
+    <h2><span>4. </span>Arhitectura aplicației web</h2>
 
-      <p>Onofrei Adrian-Mihai</p>
-      <ul>
-        <li>Buton nav cu animatii</li>
-        <li>Pin-uri pe harta la locatiile dezastrelor</li>
-        <li>Sidenav care se inchide pe baza coordonatelor mouse-ului</li>
-        <li>Responsive pagina home</li>
-        <li>Pagina de Contact si Login</li>
-        <li>Pop-up cand utilizatorul da click pe pin</li>
-        <li>Backend la login si register + masuri de securitat</li>
-        <li>Afisarea unei raze de actiune cand utilizatorul da click pe pin</li>
-      </ul>
-      <p>Cretu Alexandru</p>
-      <ul>
-        <li>MVC Framkework</li>
-        <li>
-          Mapa + Recent Events(populare date din api) + Social Media
-          News(populare date de pe retele de socializare)
-        </li>
-        <li>
-          Afisarea datelor(din api-uri) despre dezastre dar si cele a
-          utilizatorilor
-        </li>
-        <li>
-          Push Notifications pentru alerta dezastrelor (Responsive Web App) +
-        </li>
-        <li>Backend la trimiterea mail-urilor</li>
-      </ul>
-    </section>
-    <section id="acks">
-      <!-- review? -->
-      <h2><span>8. </span>Măsuri de securitate</h2>
-      <ul>
-        <li>
-          Tratare SQL injection prin verificarea email-ului si a parolei trimisa
-          de utilizator inainte de a interoga baza de date.
-        </li>
-        <li>
-          Tratare XSS prin verificarea datelor trimise de utilizator inainte de
-          a le afisa in pagina.
-        </li>
-        <li>
-          Tratare de atacuri de tip CSRF prin verificarea token-ului de
-          securitate.
-        </li>
-        <li>
-          Tratare de atacuri de tip DDOS prin verificarea timpului de raspuns al
-          serverului.
-        </li>
-      </ul>
-    </section>
+    <img src="../imagini_documentatie_1/arhitecture.png" alt="diagrama" />
+  </section>
+  <section id="scholarly-article">
+    <!-- review? -->
+    <h2><span>5. </span>Stocarea codului aplicatiei</h2>
+    <p>
+      Codul aplicatiei este aflat aici:
+      <a href="https://github.com/WoozyDeveloper/WebProject">aici</a>.
+    </p>
+  </section>
+  <section id="hypermedia">
+    <!-- review? -->
+    <h2><span>6. </span>Diagrama</h2>
+    <img src="../imagini_documentatie_1/diagrama.png" alt="diagrama" />
+  </section>
+  <section id="processing-model">
+    <!-- review? -->
+    <h2><span>7. </span>Distribuirea sarciniilor</h2>
+    <p>Bursuc Serban-Mihai</p>
+    <ul>
+      <li>Interfața Home + responsive.</li>
+      <li>
+        Pagina recent events (care a fost transformată în home anterior).
+      </li>
+      <li>Settings și search bar în recent events.</li>
+      <li>
+        Prelucrarea API-urilor și afișarea datelor, extragerea datelor JSON
+        XML etc.
+      </li>
+      <li>Pagina register.</li>
+    </ul>
 
-    <section id="biblio-references">
-      <h2><span>9. </span>Resurse</h2>
-      <ul>
-        <li>
-          <a href="https://profs.info.uaic.ro/~andrei.panu/">Pagina materiei</a>
-        </li>
-        <li>
-          <a href="https://developer.mozilla.org/en-US/docs/Learn"
-            >Mozilla Developer Learn</a
-          >
-        </li>
-        <li><a href="https://www.w3schools.com/">W3Schools</a></li>
-        <li>
-          <a
-            href="https://profs.info.uaic.ro/~busaco/teach/courses/web/web-film.html"
-            >Cursuri Tehnologii Web</a
-          >
-        </li>
-      </ul>
-    </section>
-    <br /><br /><br />
-  </body>
+    <p>Onofrei Adrian-Mihai</p>
+    <ul>
+      <li>Buton nav cu animatii</li>
+      <li>Pin-uri pe harta la locatiile dezastrelor</li>
+      <li>Sidenav care se inchide pe baza coordonatelor mouse-ului</li>
+      <li>Responsive pagina home</li>
+      <li>Pagina de Contact si Login</li>
+      <li>Pop-up cand utilizatorul da click pe pin</li>
+      <li>Backend la login si register + masuri de securitat</li>
+      <li>Afisarea unei raze de actiune cand utilizatorul da click pe pin</li>
+    </ul>
+    <p>Cretu Alexandru</p>
+    <ul>
+      <li>MVC Framkework</li>
+      <li>
+        Mapa + Recent Events(populare date din api) + Social Media
+        News(populare date de pe retele de socializare)
+      </li>
+      <li>
+        Afisarea datelor(din api-uri) despre dezastre dar si cele a
+        utilizatorilor
+      </li>
+      <li>
+        Push Notifications pentru alerta dezastrelor (Responsive Web App) +
+      </li>
+      <li>Backend la trimiterea mail-urilor</li>
+    </ul>
+  </section>
+  <section id="acks">
+    <!-- review? -->
+    <h2><span>8. </span>Măsuri de securitate</h2>
+    <ul>
+      <li>
+        Tratare SQL injection prin verificarea email-ului si a parolei trimisa
+        de utilizator inainte de a interoga baza de date.
+      </li>
+      <li>
+        Tratare XSS prin verificarea datelor trimise de utilizator inainte de
+        a le afisa in pagina.
+      </li>
+      <li>
+        Tratare de atacuri de tip CSRF prin verificarea token-ului de
+        securitate.
+      </li>
+      <li>
+        Tratare de atacuri de tip DDOS prin verificarea timpului de raspuns al
+        serverului.
+      </li>
+    </ul>
+  </section>
+
+  <section id="biblio-references">
+    <h2><span>9. </span>Resurse</h2>
+    <ul>
+      <li>
+        <a href="https://profs.info.uaic.ro/~andrei.panu/">Pagina materiei</a>
+      </li>
+      <li>
+        <a href="https://developer.mozilla.org/en-US/docs/Learn">Mozilla Developer Learn</a>
+      </li>
+      <li><a href="https://www.w3schools.com/">W3Schools</a></li>
+      <li>
+        <a href="https://profs.info.uaic.ro/~busaco/teach/courses/web/web-film.html">Cursuri Tehnologii Web</a>
+      </li>
+    </ul>
+  </section>
+  <br /><br /><br />
+</body>
+
 </html>

@@ -26,12 +26,12 @@
     <img src="https://cdn.dribbble.com/users/107759/screenshots/4231691/radar.gif" alt="Loading...">
   </div>
   <nav class="navbar map">
-    <a href="../pages/map.html" class="nav-logo">
+    <a href="/map" class="nav-logo">
       <p><span>Cri</span>cose</p>
     </a>
     <ul class="nav-menu">
       <li class="nav-item">
-        <a href="../pages/dashboard.html" class="nav-link" style="display: none">Dashboard</a>
+        <a href="/dashboard" class="nav-link" style="display: none">Dashboard</a>
       </li>
       <!-- <li class="nav-item">
         <a href="#" class="nav-link">Blog</a>
@@ -44,13 +44,13 @@
       </li> -->
 
       <li class="nav-item">
-        <a href="../pages/event.html">
+        <a href="/add-event">
           <button class="btn register nav-link" style="display: none">Add Event</button>
         </a>
       </li>
 
       <li class="nav-item">
-        <button class="btn register nav-link" onclick="window.location.href='register.html'">Register</button>
+        <button class="btn register nav-link" onclick="window.location.href='/register'">Register</button>
       </li>
 
       <!-- <li class="nav-item">
@@ -58,7 +58,7 @@
       </li> -->
 
       <li class="nav-item">
-        <button class="btn login nav-link" onclick="window.location.href='login.html'">Log In</button>
+        <button class="btn login nav-link" onclick="window.location.href='/login'">Log In</button>
       </li>
 
     </ul>
@@ -224,7 +224,7 @@
       else {
       }
       let anchor = document.createElement("a")
-      anchor.setAttribute('href', '../pages/user.html');
+      anchor.setAttribute('href', '/account');
       let navMenu = document.getElementsByClassName("nav-menu")[0]
       let userIcon = document.createElement("img")
       userIcon.style = "width: 30px; height: 30px;"
