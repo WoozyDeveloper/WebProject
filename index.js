@@ -260,7 +260,7 @@ const handlePost = async (req, res, parsedBody) => {
 
 const parseToken = (req, res, next) => {
   // Get the token from the cookie
-  const token = parseCookies(req) ? parseCookies(req).token : null;
+  const token = parseCookies(req)?.token;
   if (!token) {
     return null;
   }
@@ -283,7 +283,7 @@ const parseToken = (req, res, next) => {
 
 function parseCookies(request) {
   const list = {};
-  const cookieHeader = request.headers ? request.headers.cookie : null;
+  const cookieHeader = request.headers?.cookie;
   if (!cookieHeader) return list;
 
   cookieHeader.split(`;`).forEach(function (cookie) {
