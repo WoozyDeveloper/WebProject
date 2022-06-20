@@ -213,14 +213,14 @@
   </aside>
   <script>
     var token = Cookies.get('token');
-    var decoded = jwt_decode(token);
-    if (decoded.logged === "true") {
+    if (token !== undefined) {
+      var decoded = jwt_decode(token);
+
       if (decoded.role === "admin") {
         document.getElementsByClassName("nav-link")[0].style.display = "block"; //dashboard
         document.getElementsByClassName("btn register nav-link")[0].style.display = "block"; //dashboard
       }
-      else
-      {
+      else {
       }
       let anchor = document.createElement("a")
       anchor.setAttribute('href', '../pages/user.html');
@@ -233,6 +233,10 @@
       navMenu.appendChild(anchor)
       document.getElementsByClassName("btn register nav-link")[1].style.display = "none"; //register
       document.getElementsByClassName("btn login nav-link")[0].style.display = "none"; //login
+    }
+    else
+    {
+      console.log("nu exista token")
     }
   </script>
   <script src="../js/map.js" type="module"></script>

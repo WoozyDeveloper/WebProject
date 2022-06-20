@@ -6,8 +6,7 @@ body {
     background-attachment: fixed;
 }
 
-#main-box
-{
+#main-box {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -22,8 +21,7 @@ body {
     width: max-content;
 }
 
-#user-box
-{
+#user-box {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -31,25 +29,66 @@ body {
     width: 66vw;
 }
 
-#settings-box
-{
+#settings-box {
     border: 3px solid black;
     border-radius: 10px;
 }
 
-#feed-box
-{
+#feed-box {
     border: 3px solid;
     border-radius: 10px;
 }
 
-#add-box
-{
+#add-box {
     border: 3px solid;
     border-radius: 10px;
 }
 
-.setting
-{
+.setting {
     border-radius: 10px;
+}
+@media (max-width: 1207px) {
+    #main-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+    #user-box {
+        margin-top: 3%;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        flex-direction: column;
+        width: 66vw;
+    }
+    
+    #settings-box {
+        margin-top: 3%;
+        border: 3px solid black;
+        border-radius: 10px;
+    }
+    
+    #feed-box {
+        margin-top: 3%;
+        border: 3px solid;
+        border-radius: 10px;
+    }
+    
+    #add-box {
+        margin-top: 3%;
+        border: 3px solid;
+        border-radius: 10px;
+    }
+
+    p
+    {
+        font-size: 3rem;
+    }
+
+    h1{
+        font-size: 4rem;
+    }
+
 }
