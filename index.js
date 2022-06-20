@@ -226,7 +226,7 @@ const handlePost = async (req, res, parsedBody) => {
 
     // fetch post data
     const data = await axios
-      .post(`http://localhost:4000/login/`, {
+      .post(`https://localhost:4000/login/`, {
         email,
         password,
       })
@@ -299,5 +299,5 @@ function parseCookies(request) {
 }
 
 server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}/`);
+  console.log(`Server running at https://localhost:${PORT}/`);
 });
