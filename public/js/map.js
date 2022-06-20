@@ -709,6 +709,21 @@ function showOtherEvents(queryparams) {
     });
 }
 
+function removeOtherEvents()
+{
+  if (map.getLayer('shelters')) {
+    map.removeLayer('shelters');
+  }
+
+  if (map.getLayer('area-event')) {
+    map.removeLayer('area-event');
+  }
+
+  if (map.getSource('events')) {
+    map.removeSource('events');
+  }
+}
+
 // Initialize mapbox popup
 const popup = new mapboxgl.Popup({
   closeButton: false,
@@ -1021,6 +1036,7 @@ map.on('idle', () => {
           removeCities();
           loaded.find((obj) => obj.type === 'storm').loaded = false;
         } else if (loaded[i].type === 'other' && loaded[i].loaded) {
+          removeOtherEvents();
           loaded.find((obj) => obj.type === 'other').loaded = false;
         }
       }

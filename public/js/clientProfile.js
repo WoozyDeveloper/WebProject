@@ -8,11 +8,29 @@ console.log("am iesit");
 console.log(emailStored);
 title.innerText = title.innerText + " " + emailStored;
 
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+function parseJwt(token) {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+
+  return JSON.parse(jsonPayload);
+};
+
+console.log(parseJwt(getCookie('token')))
 var feedBox = document.getElementById("feed-box");
 var userid;
-var usermail;
+var usermail = parseJwt(getCookie('token')).email;
 var coords;
 var usr;
+var role;
 
 function escapeHtml(text) {
   var map = {
@@ -28,12 +46,17 @@ function escapeHtml(text) {
   });
 }
 
-fetch(`http://localhost:4002/?table=users&email=${escapeHtml(emailStored)}`)
+fetch(`http://localhost:4002/?table=users&email=${escapeHtml(usermail)}`)
   .then((response) => response.json())
   .then((data) => {
     userid = escapeHtml(data[0].id);
     usermail = escapeHtml(data[0].email);
     usr = escapeHtml(data[0].username);
+    title.innerText = title.innerText + " " + usr;
+    role = escapeHtml(data[0].role)
+    if (role === 'admin') {
+      document.getElementsByClassName("setting")[1].style.display = "none"
+    }
   });
 
 function accountInfo() {
@@ -244,10 +267,23 @@ function accountInfo() {
     "display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start;";
   useridText.innerText = `User id: ${escapeHtml(userid)}`;
 
+  let roleDiv = document.createElement("div")
+  roleDiv.style =
+    "display: flex; flex-direction: row; align-items: flex-end; justify-content: flex-end;";
+  let roleLabel = document.createElement("p")
+  roleLabel.innerHTML = "Role: "
+  let roleText = document.createElement("p")
+  roleText.innerHTML = `${role}`
+  roleColor = (role === "admin" ? "blue" : "green")
+  roleText.style = `color: ${roleColor};`
+  roleDiv.appendChild(roleLabel)
+  roleDiv.appendChild(roleText)
+
   accountDetails.appendChild(username);
   accountDetails.appendChild(mail);
   accountDetails.appendChild(password);
   accountDetails.appendChild(useridText);
+  accountDetails.appendChild(roleDiv)
 
   feedBox.append(accountDetails);
 }
@@ -351,25 +387,92 @@ function preferences() {
             eventtypeInputText.innerText = "Event type: ";
 
             let earthquakeOption = document.createElement("option");
-            earthquakeOption.value = "earthquake";
-            earthquakeOption.innerText = "Earthquakes";
-            let floodOption = document.createElement("option");
+            earthquakeOption.value = "Geo";
+            earthquakeOption.innerText = "Geo";
+            /*let floodOption = document.createElement("option");
             floodOption.value = "flood";
-            floodOption.innerText = "Floods";
+            floodOption.innerText = "Floods";*/
             let weatherOption = document.createElement("option");
-            weatherOption.value = "weather";
-            weatherOption.innerText = "Weather";
+            weatherOption.value = "Met";
+            weatherOption.innerText = "Met";
+            let safetyOption = document.createElement("option");
+            safetyOption.value = "Safety";
+            safetyOption.innerText = "Safety";
+            let securityOption = document.createElement("option");
+            securityOption.value = "Security";
+            securityOption.innerText = "Security";
+            let rescueOption = document.createElement("option");
+            rescueOption.value = "Rescue";
+            rescueOption.innerText = "Rescue";
+            let fireOption = document.createElement("option");
+            fireOption.value = "Fire";
+            fireOption.innerText = "Fire";
+            let healthOption = document.createElement("option");
+            healthOption.value = "Health";
+            healthOption.innerText = "Health";
+            let envOption = document.createElement("option");
+            envOption.value = "Env";
+            envOption.innerText = "Env";
+            let transportOption = document.createElement("option");
+            transportOption.value = "Transport";
+            transportOption.innerText = "Transport";
+            let infraOption = document.createElement("option");
+            infraOption.value = "Infra";
+            infraOption.innerText = "Infra";
+            let cbrneOption = document.createElement("option");
+            cbrneOption.value = "CBRNE";
+            cbrneOption.innerText = "CBRNE";
+            let otherOption = document.createElement("option");
+            otherOption.value = "Other";
+            otherOption.innerText = "Other";
 
-            if (eventtype === "earthquake") {
+
+            if (eventtype === "Geo") {
               earthquakeOption.selected = true;
-            } else if (eventtype === "flood") {
-              floodOption.selected = true;
-            } else if (eventtype === "weather") {
+            } else if (eventtype === "Met") {
               weatherOption.selected = true;
+            } else if (eventtype === "Safety") {
+              safetyOption.selected = true;
+            }
+            else if (eventtype === "Security") {
+              securityOption.selected = true;
+            }
+            else if (eventtype === "Fire") {
+              fireOption.selected = true;
+            }
+            else if (eventtype === "Rescue") {
+              rescueOption.selected = true;
+            } else if (eventtype === "Health") {
+              healthOption.selected = true;
+            }
+            else if (eventtype === "Env") {
+              envOption.selected = true;
+            }
+            else if (eventtype === "Transport") {
+              transportOption.selected = true;
+            }
+            else if (eventtype === "Infra") {
+              infraOption.selected = true;
+            }
+            else if (eventtype === "CBRNE") {
+              cbrneOption.selected = true;
+            }
+            else if (eventtype === "Other") {
+              otherOption.selected = true;
             }
             eventtypeInput.appendChild(earthquakeOption);
-            eventtypeInput.appendChild(floodOption);
+            //eventtypeInput.appendChild(floodOption);
             eventtypeInput.appendChild(weatherOption);
+            eventtypeInput.appendChild(safetyOption);
+            eventtypeInput.appendChild(securityOption);
+            eventtypeInput.appendChild(rescueOption);
+            eventtypeInput.appendChild(fireOption);
+            eventtypeInput.appendChild(healthOption);
+            eventtypeInput.appendChild(envOption);
+            eventtypeInput.appendChild(transportOption);
+            eventtypeInput.appendChild(infraOption);
+            eventtypeInput.appendChild(cbrneOption);
+            eventtypeInput.appendChild(otherOption);
 
             eventtypeInputDiv.appendChild(eventtypeInputText);
             eventtypeInputDiv.appendChild(eventtypeInput);
@@ -587,17 +690,59 @@ function addStyle(what) {
       eventtypeInputText.innerText = "Event type: ";
 
       let earthquakeOption = document.createElement("option");
-      earthquakeOption.value = "earthquake";
-      earthquakeOption.innerText = "Earthquakes";
-      let floodOption = document.createElement("option");
+      earthquakeOption.value = "Geo";
+      earthquakeOption.innerText = "Geo";
+      /*let floodOption = document.createElement("option");
       floodOption.value = "flood";
-      floodOption.innerText = "Floods";
+      floodOption.innerText = "Floods";*/
       let weatherOption = document.createElement("option");
-      weatherOption.value = "weather";
-      weatherOption.innerText = "Weather";
+      weatherOption.value = "Met";
+      weatherOption.innerText = "Met";
+      let safetyOption = document.createElement("option");
+      safetyOption.value = "Safety";
+      safetyOption.innerText = "Safety";
+      let securityOption = document.createElement("option");
+      securityOption.value = "Security";
+      securityOption.innerText = "Security";
+      let rescueOption = document.createElement("option");
+      rescueOption.value = "Rescue";
+      rescueOption.innerText = "Rescue";
+      let fireOption = document.createElement("option");
+      fireOption.value = "Fire";
+      fireOption.innerText = "Fire";
+      let healthOption = document.createElement("option");
+      healthOption.value = "Health";
+      healthOption.innerText = "Health";
+      let envOption = document.createElement("option");
+      envOption.value = "Env";
+      envOption.innerText = "Env";
+      let transportOption = document.createElement("option");
+      transportOption.value = "Transport";
+      transportOption.innerText = "Transport";
+      let infraOption = document.createElement("option");
+      infraOption.value = "Infra";
+      infraOption.innerText = "Infra";
+      let cbrneOption = document.createElement("option");
+      cbrneOption.value = "CBRNE";
+      cbrneOption.innerText = "CBRNE";
+      let otherOption = document.createElement("option");
+      otherOption.value = "Other";
+      otherOption.innerText = "Other";
+
       eventtypeInput.appendChild(earthquakeOption);
-      eventtypeInput.appendChild(floodOption);
+      //eventtypeInput.appendChild(floodOption);
       eventtypeInput.appendChild(weatherOption);
+      eventtypeInput.appendChild(safetyOption);
+      eventtypeInput.appendChild(securityOption);
+      eventtypeInput.appendChild(rescueOption);
+      eventtypeInput.appendChild(fireOption);
+      eventtypeInput.appendChild(healthOption);
+      eventtypeInput.appendChild(envOption);
+      eventtypeInput.appendChild(transportOption);
+      eventtypeInput.appendChild(infraOption);
+      eventtypeInput.appendChild(cbrneOption);
+      eventtypeInput.appendChild(otherOption);
+
 
       eventtypeInputDiv.appendChild(eventtypeInputText);
       eventtypeInputDiv.appendChild(eventtypeInput);

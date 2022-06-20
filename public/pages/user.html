@@ -13,6 +13,8 @@
   <link rel="stylesheet"
     href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
   <link rel="stylesheet" href="../css/map.css">
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+  <script src="../js/jwt-decode.js"></script>
 </head>
 
 <body>
@@ -51,11 +53,6 @@
             <h1>Account info</h1>
           </a>
         </div>
-        <div class="setting" onclick="addedEvents()">
-          <a href="#">
-            <h1>Added events</h1>
-          </a>
-        </div>
         <div class="setting" onclick="preferences()">
           <a href="#">
             <h1>Preferences</h1>
@@ -74,7 +71,7 @@
         var map = new mapboxgl.Map({
           container: 'map',
           style: 'mapbox://styles/mapbox/streets-v11',
-          center: [-122.486052, 37.830348],
+          center: [24.9668, 45.9432],
           zoom: 14
         });
         map.on('style.load', function () {

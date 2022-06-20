@@ -45,6 +45,7 @@ body {
 
 #add-box
 {
+    border: 3px solid;
     border-radius: 10px;
 }
 

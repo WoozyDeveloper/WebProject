@@ -7,12 +7,25 @@ const querystring = require('query-string');
 const hostname = '127.0.0.1';
 const port = 4003;
 
+const { Pool } = require('pg');
+//const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
+const pool = new Pool({
+  //connectionString,
+  user: 'postgres',
+  host: '164.92.194.239',
+  database: 'postgres',
+  port: 5432,
+});
+
 const server = http.createServer((req, res) => {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Request-Method', '*');
   res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
   res.setHeader('Access-Control-Allow-Headers', '*');
+
+  const urlSearchParams = querystring.parseUrl(req.url);
+  const params = urlSearchParams.query;
 
   if (req.method === 'OPTIONS') {
     res.writeHead(200);
@@ -43,26 +56,45 @@ const server = http.createServer((req, res) => {
         });
       });
   } else if (req.method == 'GET') {
-    const urlSearchParams = querystring.parseUrl(req.url);
-    const params = urlSearchParams.query;
     console.log(params);
     res.writeHead(200, { 'Content-Type': 'application/json' });
     getEvent(params, function (response) {
       res.end(JSON.stringify(response));
     });
+  } else if (req.method == 'PUT') {
+    console.log("PUT");
+    var body = "";
+    req.on("data", function (data) {
+      body += data;
+      console.log(data);
+      console.log("Partial body: " + body);
+    });
+    req.on("end", function () {
+      console.log("Body: " + body);
+      res.writeHead(200, { "Content-Type": "application/json" });
+      putEvent(JSON.parse(body), function (response) {
+        res.end(JSON.stringify(response));
+      });
+    });
+  } else if (req.method == 'DELETE') {
+    console.log("DELETE");
+    var body = "";
+    req.on("data", function (data) {
+      body += data;
+      console.log(data);
+      console.log("Partial body: " + body);
+    });
+    req.on("end", function () {
+      console.log("Body: " + body);
+      res.writeHead(200, { "Content-Type": "application/json" });
+      deleteEvent(JSON.parse(body), function (response) {
+        res.end(JSON.stringify(response));
+      });
+    });
   }
 });
 
 function addEvent(queryparams, callback) {
-  const { Pool } = require('pg');
-  //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
-  const pool = new Pool({
-    //connectionString,
-    user: 'postgres',
-    host: '164.92.194.239',
-    database: 'postgres',
-    port: 5432,
-  });
   (async () => {
     const client = await pool.connect();
     try {
@@ -75,7 +107,7 @@ function addEvent(queryparams, callback) {
       let language = queryparams['cap:alert']['cap:info']['cap:language'];
       let shelterLocation =
         queryparams['cap:alert']['cap:info']['cap:area']['cap:geocode'][
-          'cap:value'
+        'cap:value'
         ];
       let headline = queryparams['cap:alert']['cap:info']['cap:headline'];
       let status = queryparams['cap:alert']['cap:status'];
@@ -130,15 +162,6 @@ function addEvent(queryparams, callback) {
 }
 
 function getEvent(queryparams, callback) {
-  const { Pool } = require('pg');
-  //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
-  const pool = new Pool({
-    //connectionString,
-    user: 'postgres',
-    host: '164.92.194.239',
-    database: 'postgres',
-    port: 5432,
-  });
   (async () => {
     const client = await pool.connect();
     try {
@@ -168,6 +191,51 @@ function getEvent(queryparams, callback) {
         console.log(res.rows);
         return callback(res.rows);
       }
+    } finally {
+      // Make sure to release the client before any error handling,
+      // just in case the error handling itself throws an error.
+      client.release();
+    }
+  })().catch((err) => console.log(err.stack));
+}
+
+function putEvent(queryparams, callback) {
+  (async () => {
+    const client = await pool.connect();
+    try {
+      let res
+      let keys = Object.keys(queryparams)
+      let identifier = queryparams.identifier
+      console.log(keys, queryparams.identifier)
+      for (let i = 0; i < keys.length; i++) {
+        if (keys[i] !== "identifier")
+          console.log(`update events set ${keys[i]} = ${queryparams[keys[i]]} where identifier=${identifier}`)
+        res = await client.query({
+          text: `update events set ${keys[i]} = $1 where identifier=$2`,
+          values: [queryparams[keys[i]], identifier],
+        });
+      }
+      console.log(res.rows)
+      return callback(JSON.parse('{"status":"success"}'))
+    } finally {
+      // Make sure to release the client before any error handling,
+      // just in case the error handling itself throws an error.
+      client.release();
+    }
+  })().catch((err) => console.log(err.stack));
+}
+
+function deleteEvent(queryparams, callback) {
+  (async () => {
+    const client = await pool.connect();
+    try {
+      let identifier = queryparams.identifier
+      let res = await client.query({
+        text: `delete from events where identifier=$1`,
+        values: [identifier],
+      });
+      console.log(res.rows)
+      return callback(JSON.parse('{"status":"success"}'))
     } finally {
       // Make sure to release the client before any error handling,
       // just in case the error handling itself throws an error.

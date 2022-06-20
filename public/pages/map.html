@@ -16,7 +16,8 @@
 
   <link rel="stylesheet" href="../css/map.css">
   <link rel="stylesheet" href="../css/nav.css">
-
+  <script src="../js/jwt-decode.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 
 </head>
 
@@ -24,14 +25,13 @@
   <div class="overlay">
     <img src="https://cdn.dribbble.com/users/107759/screenshots/4231691/radar.gif" alt="Loading...">
   </div>
-
   <nav class="navbar map">
     <a href="../pages/map.html" class="nav-logo">
       <p><span>Cri</span>cose</p>
     </a>
     <ul class="nav-menu">
       <li class="nav-item">
-        <a href="../pages/dashboard.html" class="nav-link">Dashboard</a>
+        <a href="../pages/dashboard.html" class="nav-link" style="display: none">Dashboard</a>
       </li>
       <!-- <li class="nav-item">
         <a href="#" class="nav-link">Blog</a>
@@ -45,7 +45,7 @@
 
       <li class="nav-item">
         <a href="../pages/event.html">
-          <button class="btn register nav-link">Add Event</button>
+          <button class="btn register nav-link" style="display: none">Add Event</button>
         </a>
       </li>
 
@@ -211,6 +211,30 @@
       </div>
     </div>
   </aside>
+  <script>
+    var token = Cookies.get('token');
+    var decoded = jwt_decode(token);
+    if (decoded.logged === "true") {
+      if (decoded.role === "admin") {
+        document.getElementsByClassName("nav-link")[0].style.display = "block"; //dashboard
+        document.getElementsByClassName("btn register nav-link")[0].style.display = "block"; //dashboard
+      }
+      else
+      {
+      }
+      let anchor = document.createElement("a")
+      anchor.setAttribute('href', '../pages/user.html');
+      let navMenu = document.getElementsByClassName("nav-menu")[0]
+      let userIcon = document.createElement("img")
+      userIcon.style = "width: 30px; height: 30px;"
+      userIcon.alt = "alt"
+      userIcon.src = "../images/userIcon.png"
+      anchor.appendChild(userIcon)
+      navMenu.appendChild(anchor)
+      document.getElementsByClassName("btn register nav-link")[1].style.display = "none"; //register
+      document.getElementsByClassName("btn login nav-link")[0].style.display = "none"; //login
+    }
+  </script>
   <script src="../js/map.js" type="module"></script>
   <script src="../js/map_overlay.js" type="module"></script>
   <script src="https://kit.fontawesome.com/924d13388b.js" crossorigin="anonymous"></script>
