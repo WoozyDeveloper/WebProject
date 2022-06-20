@@ -298,6 +298,6 @@ function parseCookies(request) {
   return list;
 }
 
-server.listen(PORT, '127.0.0.1', () => {
+server.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}/`);
 });
