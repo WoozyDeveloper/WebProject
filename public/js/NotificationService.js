@@ -8,9 +8,7 @@ const fs = require('fs');
 
 const readFile = promisify(fs.readFile);
 
-console.log(
-  require('dotenv').config({ path: path.resolve(__dirname, '../..', '.env') })
-);
+require('dotenv').config({ path: path.resolve(__dirname, '../..', '.env') });
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -188,6 +186,7 @@ async function sendEmailToAllUsersForMoment(subject, html) {
     port: 5432,
   });
   const emails = await pool.query('SELECT email FROM users');
+  console.log(emails.rows);
   emails.rows.forEach(async (email) => {
     sendEmail(email.email, subject, '', html);
   });
