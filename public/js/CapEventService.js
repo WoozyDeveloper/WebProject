@@ -1,94 +1,94 @@
-const { XMLParser, XMLBuilder, XMLValidator } = require('fast-xml-parser');
+const { XMLParser, XMLBuilder, XMLValidator } = require("fast-xml-parser");
 
-const http = require('http');
+const http = require("http");
 
-const querystring = require('query-string');
+const querystring = require("query-string");
 
-const hostname = 'localhost';
+const hostname = "localhost";
 const port = 4003;
 
-const { Pool } = require('pg');
+const { Pool } = require("pg");
 //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
 const pool = new Pool({
   //connectionString,
-  user: 'postgres',
-  host: '157.230.100.116',
-  database: 'postgres',
+  user: "postgres",
+  host: "157.230.100.116",
+  database: "postgres",
   port: 5432,
 });
 
 const server = http.createServer((req, res) => {
   // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Request-Method', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
-  res.setHeader('Access-Control-Allow-Headers', '*');
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Request-Method", "*");
+  res.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "*");
 
   const urlSearchParams = querystring.parseUrl(req.url);
   const params = urlSearchParams.query;
 
-  console.log(req.method)
+  console.log(req.method);
 
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     res.writeHead(200);
     res.end();
     return;
   }
 
   //  POST request.
-  if (req.method == 'POST') {
-    let body = '';
+  if (req.method == "POST") {
+    let body = "";
     req
-      .on('data', function (data) {
+      .on("data", function (data) {
         body += data;
       })
-      .on('end', function () {
-        console.log('Body: ' + body);
+      .on("end", function () {
+        console.log("Body: " + body);
 
         const parser = new XMLParser();
         let jObj = parser.parse(body);
 
         let json = JSON.parse(JSON.stringify(jObj));
-        console.log(json['cap:alert']['cap:info']['cap:area']);
+        console.log(json["cap:alert"]["cap:info"]["cap:area"]);
 
-        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.writeHead(200, { "Content-Type": "application/json" });
         //res.end(JSON.stringify(jObj));
         addEvent(JSON.parse(JSON.stringify(jObj)), function (response) {
           res.end(JSON.stringify(response));
         });
       });
-  } else if (req.method == 'GET') {
+  } else if (req.method == "GET") {
     console.log(params);
-    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.writeHead(200, { "Content-Type": "application/json" });
     getEvent(params, function (response) {
       res.end(JSON.stringify(response));
     });
-  } else if (req.method == 'PUT') {
-    console.log('PUT');
-    var body = '';
-    req.on('data', function (data) {
+  } else if (req.method == "PUT") {
+    console.log("PUT");
+    var body = "";
+    req.on("data", function (data) {
       body += data;
       console.log(data);
-      console.log('Partial body: ' + body);
+      console.log("Partial body: " + body);
     });
-    req.on('end', function () {
-      console.log('Body: ' + body);
-      res.writeHead(200, { 'Content-Type': 'application/json' });
+    req.on("end", function () {
+      console.log("Body: " + body);
+      res.writeHead(200, { "Content-Type": "application/json" });
       putEvent(JSON.parse(body), function (response) {
         res.end(JSON.stringify(response));
       });
     });
-  } else if (req.method == 'DELETE') {
-    console.log('DELETE');
-    var body = '';
-    req.on('data', function (data) {
+  } else if (req.method == "DELETE") {
+    console.log("DELETE");
+    var body = "";
+    req.on("data", function (data) {
       body += data;
       console.log(data);
-      console.log('Partial body: ' + body);
+      console.log("Partial body: " + body);
     });
-    req.on('end', function () {
-      console.log('Body: ' + body);
-      res.writeHead(200, { 'Content-Type': 'application/json' });
+    req.on("end", function () {
+      console.log("Body: " + body);
+      res.writeHead(200, { "Content-Type": "application/json" });
       deleteEvent(JSON.parse(body), function (response) {
         res.end(JSON.stringify(response));
       });
@@ -101,31 +101,31 @@ function addEvent(queryparams, callback) {
     const client = await pool.connect();
     try {
       let res;
-      let identifier = queryparams['cap:alert']['cap:identifier'];
-      let sendername = queryparams['cap:alert']['cap:info']['cap:senderName'];
-      let sender = queryparams['cap:alert']['cap:sender'];
-      let sent = queryparams['cap:alert']['cap:sent'];
-      let instruction = queryparams['cap:alert']['cap:info']['cap:instruction'];
-      let language = queryparams['cap:alert']['cap:info']['cap:language'];
+      let identifier = queryparams["cap:alert"]["cap:identifier"];
+      let sendername = queryparams["cap:alert"]["cap:info"]["cap:senderName"];
+      let sender = queryparams["cap:alert"]["cap:sender"];
+      let sent = queryparams["cap:alert"]["cap:sent"];
+      let instruction = queryparams["cap:alert"]["cap:info"]["cap:instruction"];
+      let language = queryparams["cap:alert"]["cap:info"]["cap:language"];
       let shelterLocation =
-        queryparams['cap:alert']['cap:info']['cap:area']['cap:geocode'][
-          'cap:value'
+        queryparams["cap:alert"]["cap:info"]["cap:area"]["cap:geocode"][
+          "cap:value"
         ];
-      let headline = queryparams['cap:alert']['cap:info']['cap:headline'];
-      let status = queryparams['cap:alert']['cap:status'];
-      let msgType = queryparams['cap:alert']['cap:msgType'];
-      let scope = queryparams['cap:alert']['cap:scope'];
-      let category = queryparams['cap:alert']['cap:info']['cap:category'];
-      let eventtype = queryparams['cap:alert']['cap:info']['cap:event'];
-      let urgency = queryparams['cap:alert']['cap:info']['cap:urgency'];
-      let severity = queryparams['cap:alert']['cap:info']['cap:severity'];
-      let certainty = queryparams['cap:alert']['cap:info']['cap:certainty'];
-      let expires = queryparams['cap:alert']['cap:info']['cap:expires'];
-      let description = queryparams['cap:alert']['cap:info']['cap:description'];
+      let headline = queryparams["cap:alert"]["cap:info"]["cap:headline"];
+      let status = queryparams["cap:alert"]["cap:status"];
+      let msgType = queryparams["cap:alert"]["cap:msgType"];
+      let scope = queryparams["cap:alert"]["cap:scope"];
+      let category = queryparams["cap:alert"]["cap:info"]["cap:category"];
+      let eventtype = queryparams["cap:alert"]["cap:info"]["cap:event"];
+      let urgency = queryparams["cap:alert"]["cap:info"]["cap:urgency"];
+      let severity = queryparams["cap:alert"]["cap:info"]["cap:severity"];
+      let certainty = queryparams["cap:alert"]["cap:info"]["cap:certainty"];
+      let expires = queryparams["cap:alert"]["cap:info"]["cap:expires"];
+      let description = queryparams["cap:alert"]["cap:info"]["cap:description"];
       let areaDescription =
-        queryparams['cap:alert']['cap:info']['cap:area']['cap:areaDesc'];
+        queryparams["cap:alert"]["cap:info"]["cap:area"]["cap:areaDesc"];
       let polygon =
-        queryparams['cap:alert']['cap:info']['cap:area']['cap:polygon'];
+        queryparams["cap:alert"]["cap:info"]["cap:area"]["cap:polygon"];
       res = await client.query({
         text: `insert into Events(category, eventtype, urgency, severity, certainty, description, areadesc,
                       polygon,identifier,sendername,sent,status,msgType,scope,expires, sender, headline, shelterlocation, language, instruction) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,
@@ -210,7 +210,7 @@ function putEvent(queryparams, callback) {
       let identifier = queryparams.identifier;
       console.log(keys, queryparams.identifier);
       for (let i = 0; i < keys.length; i++) {
-        if (keys[i] !== 'identifier')
+        if (keys[i] !== "identifier")
           console.log(
             `update events set ${keys[i]} = ${
               queryparams[keys[i]]
@@ -236,6 +236,7 @@ function deleteEvent(queryparams, callback) {
     const client = await pool.connect();
     try {
       let identifier = queryparams.identifier;
+      console.log("ID " + identifier);
       let res = await client.query({
         text: `delete from events where identifier=$1`,
         values: [identifier],

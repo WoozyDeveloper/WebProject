@@ -208,7 +208,7 @@ function accountInfo() {
           succesMessage.innerText = "Changed with success";
           changeDiv.appendChild(succesMessage);
           deleteCookie("token");
-          window.location.href = "http://localhost:3000/pages/login.html";
+          window.location.href = "/login";
         } else if (response.status === "user not updated") {
           console.log(response);
           changeDiv.removeChild(changeDiv.firstChild);
@@ -287,21 +287,34 @@ function accountInfo() {
           console.log("Avem:" + response.status);
           if (response.status === "updated user") {
             console.log(response);
-            changeDiv.removeChild(changeDiv.firstChild);
-            changeDiv.removeChild(changeDiv.firstChild);
+            password.removeChild(password.lastChild);
+            password.removeChild(password.lastChild);
+            password.removeChild(password.lastChild);
+            password.removeChild(password.lastChild);
             let succesMessage = document.createElement("p");
             succesMessage.style = "color: green;";
             succesMessage.innerText = "Changed with success";
-            changeDiv.appendChild(succesMessage);
-            location.reload();
+            password.appendChild(succesMessage);
           } else if (response.status === "user not updated") {
             console.log(response);
-            changeDiv.removeChild(changeDiv.firstChild);
-            changeDiv.removeChild(changeDiv.firstChild);
+            password.removeChild(password.lastChild);
+            password.removeChild(password.lastChild);
+            password.removeChild(password.lastChild);
+            password.removeChild(password.lastChild);
             let succesMessage = document.createElement("p");
             succesMessage.style = "color: red;";
             succesMessage.innerText = "Password not updated";
-            changeDiv.appendChild(succesMessage);
+            password.appendChild(succesMessage);
+          } else if (response.status === "passwords don't match") {
+            console.log(response);
+            password.removeChild(password.lastChild);
+            password.removeChild(password.lastChild);
+            password.removeChild(password.lastChild);
+            password.removeChild(password.lastChild);
+            let succesMessage = document.createElement("p");
+            succesMessage.style = "color: red;";
+            succesMessage.innerText = "Old password is wrong";
+            password.appendChild(succesMessage);
           }
         } catch (err) {
           console.log(err);
