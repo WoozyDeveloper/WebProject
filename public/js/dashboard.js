@@ -28,18 +28,6 @@ function createCard(headline, description, eventImage) {
   let actions = document.createElement('div');
   actions.classList.add('actions');
 
-  let card_btn_accept = document.createElement('button');
-  card_btn_accept.classList.add('btn');
-  card_btn_accept.classList.add('card_btn');
-  card_btn_accept.classList.add('btn-accept');
-  card_btn_accept.innerHTML = 'Accept';
-
-  let card_btn_decline = document.createElement('button');
-  card_btn_decline.classList.add('btn');
-  card_btn_decline.classList.add('card_btn');
-  card_btn_decline.classList.add('btn-decline');
-  card_btn_decline.innerHTML = 'Decline';
-
   let card_btn_end = document.createElement('button');
   card_btn_end.classList.add('btn');
   card_btn_end.classList.add('card_btn');
@@ -47,8 +35,6 @@ function createCard(headline, description, eventImage) {
   card_btn_end.innerHTML = 'End';
 
   // Append the the elements to the card
-  actions.appendChild(card_btn_accept);
-  actions.appendChild(card_btn_decline);
   actions.appendChild(card_btn_end);
 
   card_content.appendChild(card_title);

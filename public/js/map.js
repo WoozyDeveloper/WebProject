@@ -765,29 +765,29 @@ function showOtherEvents(queryparams) {
         let sheltLat = String(shelterLocation).split(",")[0]
         console.log(sheltLat, sheltLng)
         map.on('click', 'area-event', (e) => {
-          new mapboxgl.Popup()
-            .setLngLat([lng, lat])
+          const marker = new mapboxgl.Popup()
+            .setLngLat([lng,lat])
             .setHTML(
               `<p>Category: ${data[i].category}</p>
               <p>Event: ${data[i].eventtype}</p>
               <p>Urgency: ${data[i].urgency}</p>
               <p>Description: ${data[i].description}</p>
+              <p><b>Click me for escape route</b></p>
               `)
             .addTo(map);
+          marker.getElement().addEventListener('click', () => {
+            getRoute([lng, lat], [sheltLng, sheltLat])
+          });
         });
 
         map.on('click', 'shelters', (e) => {
           const marker = new mapboxgl.Popup()
-          .setLngLat([sheltLng, sheltLat])
-          .setHTML(
-            `<p>Shelter location for ${data[i].eventtype}</p>
+            .setLngLat([sheltLng, sheltLat])
+            .setHTML(
+              `<p>Shelter location for ${data[i].eventtype}</p>
                <p>Shelter status: ${data[i].status}</p>
               `)
-          .addTo(map);
-
-          marker.getElement().addEventListener('click', () => {
-            getRoute([lng,lat],[sheltLng,sheltLat])
-          });
+            .addTo(map);
         });
 
 
