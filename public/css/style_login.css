@@ -14,9 +14,10 @@
 }
 
 #box p{
+  margin-top: 2rem;
   color: black;
   text-decoration: underline;
-  font-size: xx-large;
+  font-size: large;
   text-align: center;
 }
 
@@ -28,12 +29,17 @@ form {
   padding: 45px;
   box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.2), 50px 50px 50px 0 rgba(0, 0, 0, 0.24);
 }
-@media (max-width : 500px) {
-  #box form{
-    height: 100vh;
-    width: 50vw;
+
+@media (max-width: 960px){
+  form {
     background-color: red;
+    border-radius: 10%;
+    background: white;
+    width: 50%;
+    padding: 45px;
+    box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.2), 50px 50px 50px 0 rgba(0, 0, 0, 0.24);
   }
+  
 }
 
 form input {
