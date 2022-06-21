@@ -27,6 +27,8 @@ const server = http.createServer((req, res) => {
   const urlSearchParams = querystring.parseUrl(req.url);
   const params = urlSearchParams.query;
 
+  console.log(req.method)
+
   if (req.method === 'OPTIONS') {
     res.writeHead(200);
     res.end();

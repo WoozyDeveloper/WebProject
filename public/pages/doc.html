@@ -12,7 +12,7 @@
 
 <body prefix="schema: http://schema.org">
   <header>
-    <h1>Documentație CoSe</h1>
+    <h1>CriCose</h1>
   </header>
   <div role="contentinfo">
     <ol role="directory">
@@ -69,16 +69,16 @@
   <section typeof="sa:Abstract" id="abstract" role="doc-abstract">
     <h2><span>1. </span>Abstract</h2>
     <p>
-      CoSe (Crisis Containment Service) este o platformă care permite
+      CriCoSe (Crisis Containment Service) este o platformă care permite
       gestionarea situațiilor de urgență (e.g. cutremure, incendii, inundații
       etc.). Aplicația integrează facilități oferite de API-urile USGS
       Earthquake Catalog, NOAA National Weather Service si Environment Agency
       Real Time Flood-Monitoring pentru a pentru a prelua informații de
       interes în legătură cu evenimentele petrecute și zone afectate din toată
-      lumea. De asemenea, CoSe transmite notificări și alerte populației
-      (afectate) prin diverse platforme sociale. Sistemul furnizează și
-      informații despre eventualele adăposturi și rute de salvare, în funcție
-      de categoria calamitatii înregistrate.
+      lumea. De altfel aplicația oferă o modalitate pentru autorități de a adăuga evenimente
+      care trebuie alertate (incendii, dezastre naturale). CriCoSe transmite notificări și alerte populației
+      (afectate) prin e-mail. Sistemul furnizează și
+      informații despre eventualele adăposturi și rute de salvare oferite de către autorități.
     </p>
   </section>
   <section id="introduction" role="doc-introduction">
@@ -86,13 +86,13 @@
     <h2><span>2. </span>Introducere</h2>
     <p>
       Dezastrele naturale sunt imprevizibile, de aceea prevenția lor este
-      crucială pentru toți oamenii din lume. CoSe oferă utilizatorilor un
+      crucială pentru toți oamenii din lume. CriCoSe oferă utilizatorilor un
       sistem de notificări pentru dezastre naturale. Utilizatorii pot alege
       locația de interes (nu neapărat cea în care sunt staționați) și un
-      sistem de mesagerie la alegere (e-mail, social media, browser). Pe lângă
-      acest lucru CoSe oferă utilizatoriilor o bază de date cu toate
+      sistem de mesagerie la alegere (e-mail). Pe lângă
+      acest lucru CriCoSe oferă utilizatoriilor o interfață care dispune toate
       dezastrele naturale înregistrate în API-urile folosite, unde este
-      posibilă navigarea evenimentelor.
+      posibilă navigarea evenimentelor și filtrarea acestora.
     </p>
   </section>
   <section id="structure">
@@ -104,38 +104,109 @@
       <h3><span>3.1 </span>Tehnologii utilizate</h3>
       <p>
         Tehnologiile folosite pentru acest proiect sunt HTML5, CSS, JavaScript
-        (interfață) si PHP (back-end).
+        (interfață) si NodeJS (back-end). Aplicația are la bază servere HTTP create cu ajutorul
+        API-ului HTTP din Node. Serviciile oferite (logarea, adăugarea evenimentelor) sunt încărcate
+        în servere NodeJS asemănătoare. S-au folosit tehnologiile dispuse pentru NodeJS: npm (Node Package Manager) pentru instalarea
+        librăriilor (bcrypt, jsonwebtoken, query-string, axios, node-postgres etc.) folosite. 
+      </p>
+      <p>
+        Probabil cel mai important API folosit este cel oferit de Mapbox folosit pentru afișarea evenimentelor din bazele de date folosite
+        de website. Mapbox oferă un API complex, care poate afișa chiar pe marcaje informații despre evenimente. Utilizatorii pot obține informații despre
+        orice eveniment dând click pe harta interactivă. Pentru inițializarea hărții  este nevoie doar de includerea unor fișiere script care se găsesc în documentație
+        la Mapbox. S-au folosit alte librarii încarcate folosing un CDN sau scripturi. S-au folosit: jwt-decode, Cookie.js (preia cookie-uri direct dupa nume și altele),
+      </p>
+      <p>
+        S-au folosit alte librarii încarcate folosing un CDN sau scripturi precum: jwt-decode, Cookie.js (preia cookie-uri direct dupa nume și altele) etc.
+      </p>
+      <h3 style="font-size: 15px;">Bcrypt</h3>
+      <p>
+        Folosit pentru hashuirea parolei. 
+      </p>
+      <h3 style="font-size: 15px;">JWT (JSON Web Token)</h3>
+      <p>
+        Folosit pentru crearea unui token folosit în cookie-ul responsabil pentru păstrarea datelor de logare (și altele, menționăm mai jos).
+        Este o componentă esențială funcționării site-ului.
+      </p>
+      <h3 style="font-size: 15px;">query-string</h3>
+      <p>
+        Folosit pentru parsarea query-urilor prezente în URL-ul requesturilor. Returnează un JSON cu toți parametrii query-ului precum și URL-ul primit.
+      </p>
+      <h3 style="font-size: 15px;">Axios</h3>
+      <p>
+        Funcția fetch nu este implementată în NodeJS, deci pentru a folosi fetch-ul trebuie abordată o implementare precum node-fetch sau Axios. 
+      </p>
+      <h3 style="font-size: 15px;">pg (node-postgres)</h3>
+      <p>
+        Pentru baza de date s-a folosit o bază de date relațională. Am ales să folosim node-postgres pentru simplicitatea acesteia și pentru documentația solidă
+        dispusă. Modulul pg a oferit conectarea la baza noastra de date ușoară și rapidă. Funcțiile folosite ne-au ușurat debuggingul, deoarece erorile specifice
+        unui DBMS se afișau în consola serverelor care foloseau modulul.
       </p>
     </section>
     <section id="article">
       <!-- review? -->
       <h3><span>3.2 </span>Pagini</h3>
+      <img src="../imagini_documentatie_1/account.png" alt="account information" />
+      <p style="font-weight: bold">Account Info</p>
+      <p>
+        Prin intermediul acestei pagini utilizatorul are posibilitatea de a-și updata username-ul, parola și email-ul. Tot aici acesta iși poate adăuga locațiile
+        de interes.
+      </p>
+      <img src="../imagini_documentatie_1/dashboard.png" alt="dashboard" />
+      <p style="font-weight: bold">Dashboard</p>
+      <p>
+        Dashboard-ul este accesibil doar celor ce au rolul de admin în contul lor. De aici se pot încheia evenimentele adaugate de către autorități.
+      </p>
+      <img src="../imagini_documentatie_1/map.png" alt="map" />
+      <p style="font-weight: bold">Map</p>
+      <p>
+        Centrul atenției, pagina Map afișează cu ajutorul API-ului Mapbox toate evenimentele din bazele de date folosite pe harta interactivă. 
+        Evenimentele sunt dispuse ori sub formă de marcaje care pot fi apăsate pentru detalii, ori sub formă de zone (unde evenimentul acoperă) o zonă mai mare.
+        Pe lânga asta, în dreapta apar imaginii din satelit (folosind tot API-ul de la Mapbox) cu zona afectată.
+      </p>
+      <p>
+        Depinzând de opțiune, există mai multe filtre. Majoritatea evenimentelor au ca filtru comun intervalul de timp în care se petrec. API-ul implicită
+        pentru inundații, cel oferit de UK Environment Agency nu are ca filtru acest lucru (dacă se caută date care conțin și coordonate ale locației), caz special
+        unde se pot obține doar ultimele X evenimente.
+      </p>
+      <p>
+        Interesant este API-ul oferit de NOAA National Weather Service, deoarece requestul de GET necesar pentru obținerea datelor este blocat de CORS.
+        Cu toate acestea am dezvoltat site-ul primind datele de la acest service deoarece am folosit o extensie disponibilă pentru browser care scoate protecția CORS.
+        Important de menținut la acest API este că el nu afișează dezastre, el afișează prognoza meteo DOAR pentru locațiile serviciului. Am setat afișarea pe hartă
+        astfel încât prognoze precum ”thunderstorm” să se afișeze cu roșu.
+      </p>
+      <p>
+        Categoria ”other” reprezintă de fapt API-ului principal al site-ului. Diferența dintre acest API și cel deprecated este faptul că noul API stochează
+        date necesar protocolului CAP, precum și alte tipuri de evenimente, nu doar cutremure inundații și vreme rea fără câmpuri necesare protocolului.
+        Datele acestor evenimente sunt create in protocolul CAP și pot fi ulterior pasate altor site-uri care respectă acest protocol. Site-ul folosește un serviciu
+        în care printr-un request de GET se pot obține toate astfel evenimente.
+      </p>
+      <p>
+        Din păcate cu acest update s-a pierdut un feature important, acela fiind de da click pe o zonă afectată si de afla evenimentul. Protocolul CAP necesită folosirea unui poligon,
+        iar poligonul desenat in Mapbox nu poate fi apăsat.
+      </p>
+      <img src="../imagini_documentatie_1/home_new.png" alt="home" />
       <p style="font-weight: bold">Home</p>
       <p>
-        Pagina default "Home" arată harta lumii cu toate dezastrele naturale
-        întamplate recent marcate în locațiile lor corespunzătoare. În
-        chenarul ”Latest Events” apar ultimele 3 evenimente întâmplate din
-        toate lumea. În stânga apar linkuri cu rețelele de socializare ale
-        instituțiilor care oferă API-urile pentru site.
+        Pagina default "Home" are rolul prezentativ. Pe aceasta se află titlul site-ului si o scurtă descriere a acestuia.
       </p>
-      <img src="../imagini_documentatie_1/home.png" alt="home" />
+      <img src="../imagini_documentatie_1/login_new.PNG" alt="home" />
       <p style="font-weight: bold">Login</p>
       <p>
-        Utilizatorii au opțiunea de a crea un cont pe platformă. La crearea
-        unui cont platforma va prelua e-mailul utilizatorului pentru
-        împingerea notificărilor. Contul va reține preferințele utilizatorului
-        (locațiile de interes, tipul de dezastru natural de interes etc.)
+        Sunt preluate datele introduse prin form (email, parola) si sunt cautate in baza de date. Dacă acestea au fost găsite, utilizatorului i se
+        va genera un cookie și va fi redirecționat pe pagina contului său. În caz contrat, un mesaj sugestiv va apărea pe ecran.
       </p>
-      <img src="../imagini_documentatie_1/login.png" alt="login" />
+      <img src="../imagini_documentatie_1/register_new.png" alt="login" />
       <p style="font-weight: bold">Înregistrare</p>
       <p>
-        O pagină care preia date despre un nou utilizator: nume, prenume,
-        e-mail și parolă. Logarea are loc cu e-mail-ul si parola.
+        Utilizatorii au opțiunea de a crea un cont pe platformă. La crearea
+        unui cont prin introducerea email-ului, username-ului si a unei parole. E-mailul trebuie sa fie unic in baza de date, deci nu pot fi create
+        mai multe conturi pe acelasi e-mail.
+        Parola odată ajunsă în server este hash-uită și stocată în baza de date alături de celelalte date păstrate așa cum au fost primite.
       </p>
-      <img src="../imagini_documentatie_1/register.PNG" alt="register" />
+      <img src="../imagini_documentatie_1/contact_new.PNG" alt="register" />
       <p style="font-weight: bold">Contact</p>
       <p>
-        O pagină care oferă detalii de contact pentru echipa de dezvoltatori.
+        Pagină cu dezvoltatorii acestui site.
       </p>
       <img src="../imagini_documentatie_1/contact.png" alt="contact" />
     </section>
@@ -143,46 +214,67 @@
       <!-- review? -->
       <h3><span>3.3 </span>Experiența utilizatorului</h3>
       <p>
-        Odată intrat pe site utilizatorul vede varianta implicită a site-ului:
-        harta cu toate evenimentele întâmplate în ultimele 24 de ore, un feed
-        cu ultimele 3 evenimente și niște scurte detalii despre ele, o căsuță
-        care are social media relevant site-ului. Navigarea între pagini se
-        face cu butonul din colț dreapta sus. Click-ul pe acest buton
-        dezvăluie un chenar cu toate paginile site-ului (menționate mai sus
-        mai puțin pagina de Înregistrare care apare pe pagina de login).
+        Pagina principală a site-ului este alcătuită dintr-un mesaj de bun venit precum și o scurtă descriere a site-ului.
       </p>
-      <img src="../imagini_documentatie_1/homenavbar.png" alt="homenavbar" />
+      <img src="../imagini_documentatie_1/home_new.png">
       <p>
-        În momentul în care în vreo zonă salvată în cont de utilizator apare
-        un dezastru natural ales în cont, utilizatorul va primi pe adresa de
-        mail folosită la crearea contului un mesaj cu un rezumat despre
-        eveniment, precum și o acțiune sugerată de site.
+        Pentru a accesa "inima" paginii, trebuie folosită bara de navigare invocată de butonul din colț sus dreapta.
+        Pagina cea mai de interes este Map.
+      </p>
+      <img src="../imagini_documentatie_1/map.png">
+      <p>
+        Implicit pagina map afișează cutremurele înregistrate din ultima lună în API-ul USGS Earthquake Catalog precum și în API-ului siteului 
+        <i>deprecated</i> (detalii menționate mai sus). Butonul din colț stânga jos deschide un meniu prin care se pot filtra evenimente.
+      </p>
+      <img src="../imagini_documentatie_1/map_menu.png">
+      <p>
+        Pentru a deveni un utilizator al serviciul de notificare, clientul trebuie să se înregistreze pe site folosind formalur de pe pagina register (accesat din login/map).
+        După care clientul va avea acces la pagina de utilizator. Aici se pot actualiza datele de logare.
+      </p>
+      <img src="../imagini_documentatie_1/account.png">
+      <p>
+        Pentru a adăuga o zonă de interes se apasă butonul Preferences.
+      </p>
+      <img src="../imagini_documentatie_1/preferences.png">
+      <p>
+        În coloana din mijloc apar evenimentele pentru care se vor trimite notificări în caz că apare vreun eveniment care include zona memorată (coordonatele).
+        În ultima coloană se pot adăuga noi evenimente de interes. Există doar câteva câmpuri necesare de completat, cel mai important fiind cel în care se selectează locația.
       </p>
       <p>
-        Depinzând de severitatea evenimentului, planul poate consista ori în
-        indicații precum părăsirea zonei rezidențiale și sugerarea unui loc de
-        adăpost, sugestii de pregătire (în caz de furtuni). Pentru evenimente
-        cu importanță scăzută nu vor apărea indicații.
+        Când un eveniment este adăugat în baza de date al site-ului, utilizatorii care s-au înregistrat și care au la zone de interes o zonă afectată vor primi un email pe adresa
+        cu care s-au înregistrat.
       </p>
+      <img src="../imagini_documentatie_1/mail.png">
+      
+      
     </section>
     <section id="backend">
       <!-- review? -->
       <h3><span>3.4 </span>Backend</h3>
-      <p>
-        Backend-ul este realizat cu PHP. Funcționalitatea backendului este
-        simplă: scriptul PHP aduce informații în format .json din API-urile
-        oferite de Environment Agency Real Time Flood-Monitoring și USGS
-        Earthquake Catalog respectiv .xml din API-ul oferit de NOAA National
-        Weather Service. In backend sunt selectate anumite câmpuri relevante
-        din fișiere, cum ar fi numele zonei faptei etc. și mai puțin date
-        tehnice, care urmează să fie afișate în feed.
-      </p>
-      <p>
-        Planul de evacuare (unde este necesar) este generat automat dintr-un
-        set de mesaje standard - însă în cazurile unde este necesară o
+      <ol>
+        <li>
+          Backendul aplicației a fost realizat în NodeJs.
+        </li>
+        <li>
+          De asemenea, am abordat o arhitectură bazată pe (micro)servicii.
+        </li>
+        
+        </ul>
+
+        <li>
+          Planul de evacuare (unde este necesar) este generat automat dintr-un
+        set de mesaje trimise print protocolul CAP - însă în cazurile unde este necesară o
         evacuare se va selecta o zonă fără prognoză dăunătoare cât mai
         apropiată de zona implicită.
-      </p>
+        </li>
+
+        <li>
+          Funcționalitatea backendului serviciului de evente este ca aduce informații în format .json din API-urile
+          oferite de Environment Agency Real Time Flood-Monitoring și USGS
+          Earthquake Catalog respectiv .xml din API-ul oferit de NOAA National
+          Weather Service. In backend sunt selectate anumite câmpuri relevante , cum ar fi numele zonei faptei etc.
+        </li>
+      </ol>
     </section>
   </section>
   <section id="semantics">
@@ -223,14 +315,10 @@
 
     <p>Onofrei Adrian-Mihai</p>
     <ul>
-      <li>Buton nav cu animatii</li>
-      <li>Pin-uri pe harta la locatiile dezastrelor</li>
-      <li>Sidenav care se inchide pe baza coordonatelor mouse-ului</li>
-      <li>Responsive pagina home</li>
-      <li>Pagina de Contact si Login</li>
-      <li>Pop-up cand utilizatorul da click pe pin</li>
-      <li>Backend la login si register + masuri de securitat</li>
-      <li>Afisarea unei raze de actiune cand utilizatorul da click pe pin</li>
+      <li>Buton nav</li>
+      <li>Sidenav care se inchide pe baza coordonatelor mouse-ului + buton log-out care apare doar daca ești autentificat</li>
+      <li>Pagina de Home, Contact, Login, Register</li>
+      <li>Backend la login, register, schimbare de username,email,parola din cont,log-out,masuri de securitate</li>
     </ul>
     <p>Cretu Alexandru</p>
     <ul>
@@ -254,27 +342,33 @@
     <h2><span>8. </span>Măsuri de securitate</h2>
     <ul>
       <li>
-        Tratare SQL injection prin verificarea email-ului si a parolei trimisa
-        de utilizator inainte de a interoga baza de date.
+        Tratare SQL injection prin prepared statements.
       </li>
       <li>
-        Tratare XSS prin verificarea datelor trimise de utilizator inainte de
-        a le afisa in pagina.
+        Tratare XSS prin modificarea input-ului primit de la utlizator cu ajutorul unei funcții ce înlocuiește
+        caractere precum &, <, >, ", ' in &amp, &lt, &gt, &quot, &#039. De asemenea, când datele sunt introduse pe pagină, sunt introduse ca și .innerText, nu .inntrHTML.
+        (introduse ca și text, nu ca un element HTML).
       </li>
       <li>
-        Tratare de atacuri de tip CSRF prin verificarea token-ului de
-        securitate.
+        Hash-uirea parolei în server înainte să fie introdusă în baza de date pentru a proteja datele clienților în cazul în care o persoana neautorizată
+        capătă acces la baza de date. De asemenea, parolele sunt considerate 'sensitive data' și nu trebuie memorate.
       </li>
       <li>
-        Tratare de atacuri de tip DDOS prin verificarea timpului de raspuns al
-        serverului.
+        Utilizarea JWT (json web token) pentru autentificare. Cu ajutorul unei fraze secrete
+        Cookie-ul generat este hash-uit, prin urmare clientul nu poate modifica cookie-ul astfel încât să fie văzut autentificat pe alt cont.
       </li>
     </ul>
   </section>
 
+  
+
   <section id="biblio-references">
     <h2><span>9. </span>Resurse</h2>
     <ul>
+      <li>
+        <a href="https://jwt.io/">Json Web Token</a>
+      </li>
+      
       <li>
         <a href="https://profs.info.uaic.ro/~andrei.panu/">Pagina materiei</a>
       </li>

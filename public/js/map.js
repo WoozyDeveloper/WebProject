@@ -364,11 +364,10 @@ function addCities(start, end) {
 
             const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
               `<p>City: ${cityNames[i]}</p>
-               <p>Maximum temperature: ${
-                 ((parseFloat(temp.textContent) - 32) / 1.8)
-                   .toFixed(0)
-                   .toString() + 'C\u00B0'
-               }</p>
+               <p>Maximum temperature: ${((parseFloat(temp.textContent) - 32) / 1.8)
+                .toFixed(0)
+                .toString() + 'C\u00B0'
+              }</p>
                <p>Forecast: ${forecast.textContent}</p>
                <p>Time: ${time}</p>
                <p>Date: ${date}</p>`
@@ -393,13 +392,11 @@ function addCities(start, end) {
             event.classList.add('slide');
 
             event.innerHTML = `<div class="slide-details"><p>${time}</p><div class="slide-subheading"><p style="font-size: 13px;">Maximum temperature:
-             ${
-               ((parseFloat(temp.textContent) - 32) / 1.8)
-                 .toFixed(0)
-                 .toString() + 'C\u00B0'
-             }</p><p style="font-size: 13px;">${date}</p></div><div class="slide-place"><svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 24 24" width="12px" fill="#fff"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>${
-              cityNames[i]
-            }</div></div>`;
+             ${((parseFloat(temp.textContent) - 32) / 1.8)
+                .toFixed(0)
+                .toString() + 'C\u00B0'
+              }</p><p style="font-size: 13px;">${date}</p></div><div class="slide-place"><svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 24 24" width="12px" fill="#fff"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>${cityNames[i]
+              }</div></div>`;
 
             events.appendChild(event);
 
@@ -595,6 +592,54 @@ function convertPointToGeoJson(point) {
   return pointGeoJson;
 }
 
+async function getRoute(start, end) {
+  // make a directions request using cycling profile
+  // an arbitrary start will always be the same
+  // only the end or destination will change
+  const query = await fetch(
+    `https://api.mapbox.com/directions/v5/mapbox/cycling/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${mapboxgl.accessToken}`,
+    { method: 'GET' }
+  );
+  const json = await query.json();
+  const data = json.routes[0];
+  const route = data.geometry.coordinates;
+  const geojson = {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'LineString',
+      coordinates: route
+    }
+  };
+
+
+  // if the route already exists on the map, we'll reset it using setData
+  if (map.getSource('route')) {
+    map.getSource('route').setData(geojson);
+  }
+  // otherwise, we'll make a new request
+  else {
+    map.addLayer({
+      id: 'route',
+      type: 'line',
+      source: {
+        type: 'geojson',
+        data: geojson
+      },
+      layout: {
+        'line-join': 'round',
+        'line-cap': 'round'
+      },
+      paint: {
+        'line-color': '#3887be',
+        'line-width': 5,
+        'line-opacity': 0.75
+      }
+    });
+  }
+  // add turn instructions here at the end
+}
+
 let eventMarkers = [];
 function showOtherEvents(queryparams) {
   console.log(queryparams);
@@ -709,6 +754,46 @@ function showOtherEvents(queryparams) {
         },
         filter: ['==', '$type', 'Point'],
       });
+
+      for (let i = 0; i < data.length; i++) {
+        let firstCoordinate = data[i].polygon
+        let lat = String(String(firstCoordinate).split(" ")).split(",")[0]
+        let lng = String(String(firstCoordinate).split(" ")).split(",")[1]
+        let shelterLocation = data[i].shelterlocation
+        console.log(shelterLocation)
+        let sheltLng = String(shelterLocation).split(",")[1]
+        let sheltLat = String(shelterLocation).split(",")[0]
+        console.log(sheltLat, sheltLng)
+        map.on('click', 'area-event', (e) => {
+          new mapboxgl.Popup()
+            .setLngLat([lng, lat])
+            .setHTML(
+              `<p>Category: ${data[i].category}</p>
+              <p>Event: ${data[i].eventtype}</p>
+              <p>Urgency: ${data[i].urgency}</p>
+              <p>Description: ${data[i].description}</p>
+              `)
+            .addTo(map);
+        });
+
+        map.on('click', 'shelters', (e) => {
+          const marker = new mapboxgl.Popup()
+          .setLngLat([sheltLng, sheltLat])
+          .setHTML(
+            `<p>Shelter location for ${data[i].eventtype}</p>
+               <p>Shelter status: ${data[i].status}</p>
+              `)
+          .addTo(map);
+
+          marker.getElement().addEventListener('click', () => {
+            getRoute([lng,lat],[sheltLng,sheltLat])
+          });
+        });
+
+
+
+
+      }
     });
 }
 
@@ -784,8 +869,8 @@ function addPopup(source, showTimeAgo) {
                             <br>
                             <strong>${moment(time).format('dddd LT')}</strong>
                             <strong>${moment(time).format(
-                              'DD/MM/YYYY'
-                            )}</strong>
+              'DD/MM/YYYY'
+            )}</strong>
                         </span>
                     </div>`
           )
