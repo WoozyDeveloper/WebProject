@@ -71,6 +71,39 @@ map.on(L.Draw.Event.DELETED, function (event) {
   // circleInput.value = '';
 });
 
+function makeid(length) {
+  var result = '';
+  var characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+function parseJwt(token) {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var jsonPayload = decodeURIComponent(
+    window
+      .atob(base64)
+      .split('')
+      .map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join('')
+  );
+
+  return JSON.parse(jsonPayload);
+}
+
 // Form stuff
 const form = document.querySelector('form');
 form.addEventListener('submit', (e) => {
@@ -86,13 +119,27 @@ form.addEventListener('submit', (e) => {
     json[key] = value;
   }
 
-  json['identifier'] = 'urn:oid:fsdf';
-  json['sender'] = 'alex@gmail.com';
-  json['sent'] = '2020-06-18T02:31:10+03:00';
-  json['status'] = 'Actual';
-  json['msgType'] = 'Alert';
-  json['scope'] = 'Public';
-  json['senderName'] = 'Alex';
+  // Get cookie value of token
+  const token = getCookie('token');
+
+  if (token) {
+    const parsedToken = parseJwt(token);
+    json['identifier'] = `urn:oid:${makeid(10)}`;
+    json['sender'] = parsedToken.email;
+    // json['sent'] = '2020-06-18T02:31:10+03:00';
+    json['status'] = 'Actual';
+    json['msgType'] = 'Alert';
+    json['scope'] = 'Public';
+    json['senderName'] = parsedToken.username;
+  } else {
+    json['identifier'] = `urn:oid:${makeid(10)}`;
+    json['sender'] = 'admin@cricose.com';
+    // json['sent'] = '2020-06-18T02:31:10+03:00';
+    json['status'] = 'Actual';
+    json['msgType'] = 'Alert';
+    json['scope'] = 'Public';
+    json['senderName'] = 'Admin';
+  }
 
   /*json['expires'] = '2022-06-20T02:31:10+03:00';*/
 
