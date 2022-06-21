@@ -8,6 +8,8 @@ const axios = require('axios');
 const PORT = process.env.PORT || 3000;
 
 const server = http.createServer((req, res) => {
+  console.log(req.url);
+  console.log(req.method);
   if (req.method === 'GET') {
     // Decode the token
     const decodedToken = parseToken(req, res);
