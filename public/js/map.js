@@ -135,6 +135,7 @@ checkBoxes.forEach(function (checkbox) {
         document.querySelector('input[name=other]').checked = false;
         checkArray.find((obj) => obj.type === 'earthquake').checked = false;
         checkArray.find((obj) => obj.type === 'storm').checked = false;
+        checkArray.find((obj) => obj.type === 'other').checked = false;
         document.getElementById('earthquakeSettings').style.display = 'none';
         document.getElementsByClassName('duration')[0].style.display = 'none';
         document.getElementById('showing-label').style.display = 'none';
@@ -642,7 +643,6 @@ async function getRoute(start, end) {
 
 let eventMarkers = [];
 function showOtherEvents(queryparams) {
-  console.log(queryparams);
   fetch(
     `http://localhost:4003?start=${queryparams['start-date-event']}&end=${queryparams['end-date-event']}&urgency=${queryparams.urgency}&category=${queryparams.category}`
   )
@@ -651,7 +651,6 @@ function showOtherEvents(queryparams) {
       let put = false;
       for (let i = 0; i < data.length; i++) {
         let polygon = data[i].polygon;
-        console.log(polygon);
         let coords = String(polygon).split(' ');
         let identifier = data[i].sender;
         let eventtype = data[i].eventtype;
@@ -669,7 +668,6 @@ function showOtherEvents(queryparams) {
            <p>Posted by: ${identifier}</p>`
         );
 
-        console.log(coords);
         for (let j = 0; j < coords.length; j++) {
           let lng = coords[j].split(',')[1];
           let lat = coords[j].split(',')[0];
@@ -721,18 +719,18 @@ function showOtherEvents(queryparams) {
       // for (let i = 0; i < data.length; i++) {
       geoJson.features.push(convertPolygonToGeoJson(data[0].polygon));
 
-      console.log(JSON.stringify(convertPolygonToGeoJson(data[0].polygon)));
-
       for (let i = 0; i < data.length; i++) {
         geoJson.features.push(convertPolygonToGeoJson(data[i].polygon));
         geoJson.features.push(convertPointToGeoJson(data[i].shelterlocation));
       }
 
+      if(!map.getSource('events'))
       map.addSource('events', {
         type: 'geojson',
         data: geoJson,
       });
 
+      if(!map.getLayer('area-event'))
       map.addLayer({
         id: 'area-event',
         type: 'fill',
@@ -744,6 +742,7 @@ function showOtherEvents(queryparams) {
         filter: ['==', '$type', 'Polygon'],
       });
 
+      if(!map.getLayer('shelters'))
       map.addLayer({
         id: 'shelters',
         type: 'circle',
@@ -760,10 +759,8 @@ function showOtherEvents(queryparams) {
         let lat = String(String(firstCoordinate).split(" ")).split(",")[0]
         let lng = String(String(firstCoordinate).split(" ")).split(",")[1]
         let shelterLocation = data[i].shelterlocation
-        console.log(shelterLocation)
         let sheltLng = String(shelterLocation).split(",")[1]
         let sheltLat = String(shelterLocation).split(",")[0]
-        console.log(sheltLat, sheltLng)
         map.on('click', 'area-event', (e) => {
           const marker = new mapboxgl.Popup()
             .setLngLat([lng,lat])
@@ -798,12 +795,17 @@ function showOtherEvents(queryparams) {
 }
 
 function removeOtherEvents() {
+
   if (map.getLayer('shelters')) {
     map.removeLayer('shelters');
   }
 
   if (map.getLayer('area-event')) {
     map.removeLayer('area-event');
+  }
+
+  if (map.getLayer('route')) {
+    map.removeLayer('route');
   }
 
   if (map.getSource('events')) {
@@ -887,7 +889,6 @@ function addPopup(source, showTimeAgo) {
 
 function displayEvents(url) {
   document.getElementById('events').innerHTML = '';
-  console.log(url);
   // Recent five earthquakes
   fetch(url)
     .then((response) => response.json())
@@ -1099,7 +1100,6 @@ map.on('idle', () => {
       date1.isBefore(date2) &&
       date2.isAfter(date1);
 
-    console.log(data);
 
     min = data.min;
     max = data.max;
@@ -1160,12 +1160,10 @@ map.on('idle', () => {
           } else if (checkElement.type === 'storm') {
             checkedSomething = true;
             loaded.find((obj) => obj.type === 'storm').loaded = true;
-            console.log('storm selected');
             if (date2.isBefore(range2)) {
               setErrorMessage('Cannot show forcast in the past');
             } else addCities(data.start, data.end);
           } else if (checkElement.type === 'other') {
-            console.log(data);
             checkedSomething = true;
             loaded.find((obj) => obj.type === 'other').loaded = true;
             let json =
@@ -1175,7 +1173,6 @@ map.on('idle', () => {
             json['end-date-event'] = data['end-date-event'];
             json.urgency = data['urgency-event'];
             json.category = data.category;
-            console.log(json);
             const eventsNode = document.getElementById('events');
             while (eventsNode.firstChild) {
               eventsNode.removeChild(eventsNode.lastChild);
