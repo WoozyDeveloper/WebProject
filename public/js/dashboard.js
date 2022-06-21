@@ -1,6 +1,6 @@
 const cardsContainer = document.querySelector(".cards");
 
-function createCard(headline, description, eventImage) {
+function createCard(identifier, headline, description, eventImage) {
   // Create a new card element
   let card_item = document.createElement("li");
   card_item.classList.add("cards_item");
@@ -118,7 +118,8 @@ fetch(`http://localhost:4003`)
     console.log(json);
     for (let i = 0; i < json.length; i++) {
       // console.log(json[i]);
-      let { headline, description, polygon, shelterlocation } = json[i];
+      let { headline, description, polygon, shelterlocation, identifier } =
+        json[i];
 
       // $$$$$$$$$$$$$$$$$$$$
       // Parse the polygon to array of points
@@ -147,7 +148,9 @@ fetch(`http://localhost:4003`)
       )})/auto/600x300@2x?access_token=pk.eyJ1IjoiYXhlbGxiZW4iLCJhIjoiY2pneHc0a2o2MGlkcTJ3bGxtdHB1cXoycSJ9.BRtJfvAR2e_5nA3irA2KSg&attribution=false&logo=false`;
 
       //$$$$$$$$$$$$$$$$$
-      cardsContainer.appendChild(createCard(headline, description, eventImage));
+      cardsContainer.appendChild(
+        createCard(identifier, headline, description, eventImage)
+      );
     }
   })
   .catch((err) => {
