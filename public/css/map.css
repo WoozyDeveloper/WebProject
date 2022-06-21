@@ -347,7 +347,7 @@ aside {
   margin-bottom: 1rem;
 }
 
-@media (max-width: 1162px) {
+@media (min-width: 1162px) {
   aside {
     width: 100%;
     top: 80%;
