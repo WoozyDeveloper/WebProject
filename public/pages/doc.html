@@ -369,19 +369,26 @@
     </ul>
     <p>Cretu Alexandru</p>
     <ul>
-      <li>MVC Framkework</li>
-      <li>
-        Mapa + Recent Events(populare date din api) + Social Media
-        News(populare date de pe retele de socializare)
-      </li>
-      <li>
-        Afisarea datelor(din api-uri) despre dezastre dar si cele a
-        utilizatorilor
-      </li>
-      <li>
-        Push Notifications pentru alerta dezastrelor (Responsive Web App) +
-      </li>
-      <li>Backend la trimiterea mail-urilor</li>
+      <li>Front</li>
+      <ul>
+        <li>Map - pagina unde se pot vedea toate evenimentele pe harta</li>
+        <li>Dashboard - pagina adminii pot vedea toate evenimentele pe carduri si pot da end + export csv</li>
+        <li>Add Event - pagina adminii pot adauga un nou eveniment</li>
+      </ul>
+      <li>Backend</li>
+      <ul>
+        <li>
+          Serviciul de add event. Serviciul primeste de un evenimnet prin protocolul cap il stocheaza in baza de date si trimite o noticare.
+        </li>
+        <li>
+          Serviciul de notificari. Serviciul trimite o notificare prin email catre persoanele afectate.
+        </li>
+        <li>
+          Controllerul ce se ocupa cu autentificare si autorizarea paginilor folosind jwt.
+        </li>
+      </ul>
+
+      
     </ul>
   </section>
   <section id="acks">

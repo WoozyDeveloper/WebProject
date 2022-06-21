@@ -181,7 +181,7 @@ function getEvent(queryparams, callback) {
           `select * from events where sent>=${start} and expires<=${end} and category=${category} and urgency=${urgency}`
         );
         let res = await client.query({
-          text: `select * from events where sent>=$1 and expires>=$2 and category=$3 and urgency=$4`,
+          text: `select * from events where sent>=$1 and expires<=$2 and category=$3 and urgency=$4`,
           values: [start, end, category, urgency],
         });
         console.log(res.rows);
