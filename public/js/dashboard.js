@@ -132,3 +132,40 @@ fetch(`http://localhost:4003`)
   .catch((err) => {
     console.log(err);
   });
+
+function createCSV(array) {
+  var keys = Object.keys(array[0]); //Collects Table Headers
+
+  var result = ''; //CSV Contents
+
+  result += keys.join(','); //Comma Seperates Headers
+  result += '\n'; //New Row
+
+  array.forEach(function (item) {
+    //Goes Through Each Array Object
+    keys.forEach(function (key) {
+      //Goes Through Each Object value
+      result += item[key].split(',').join(':') + ','; //Comma Seperates Each Key Value in a Row
+    });
+    result += '\n'; //Creates New Row
+  });
+
+  return result;
+}
+
+function exportCSV() {
+  fetch(`http://localhost:4003`)
+    .then((response) => {
+      return response.json();
+    })
+    .then((json) => {
+      console.log(json);
+      csv = 'data:text/csv;charset=utf-8,' + createCSV(json); //Creates CSV File Format
+      excel = encodeURI(csv); //Links to CSV
+
+      link = document.createElement('a');
+      link.setAttribute('href', excel); //Links to CSV File
+      link.setAttribute('download', 'Disasters.csv');
+      link.click();
+    });
+}
