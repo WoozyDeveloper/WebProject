@@ -128,14 +128,14 @@ const server = http.createServer((req, res) => {
 
         // Parse the polygon to array of points
         let polygon = parsePolygonString(areaPolygon);
-        console.log(polygonPoints);
+        console.log(polygon);
 
         // Parse the shelter to array of points
         let shelterPoint = parsePointString(shelter);
         console.log(shelterPoint);
 
         // Modify geoJson to include the polygon and shelter
-        geoJson.features[0].geometry.coordinates[0] = polygonPoints;
+        geoJson.features[0].geometry.coordinates[0] = polygon;
         geoJson.features[1].geometry.coordinates = shelterPoint;
 
         let data = {
@@ -179,7 +179,8 @@ async function sendEmailTolUsers(subject, html, polygon) {
   users.rows.forEach((user) => {
     const latLng = parsePointString(`${user.latitude},${user.longitude}`);
 
-    if (isPointInPolygon(latLng, polygon)) {
+    if (inside(latLng, polygon)) {
+      console.log(user.email)
       sendEmail(user.email, subject, '', html);
     }
   });
