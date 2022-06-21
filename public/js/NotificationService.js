@@ -127,21 +127,11 @@ const server = http.createServer((req, res) => {
           jObj['cap:alert']['cap:info']['cap:area']['cap:geocode']['cap:value'];
 
         // Parse the polygon to array of points
-        let polygon = areaPolygon.split(' ');
-        let polygonPoints = [];
-        for (let i = 0; i < polygon.length; i += 1) {
-          let point = polygon[i].split(',');
-          polygonPoints.push([parseFloat(point[1]), parseFloat(point[0])]);
-        }
+        let polygon = parsePolygonString(areaPolygon);
         console.log(polygonPoints);
 
         // Parse the shelter to array of points
-        let shelterPoint = [];
-        let shelterArray = shelter.split(',');
-        for (let i = 0; i < shelterArray.length; i += 2) {
-          shelterPoint.push(parseFloat(shelterArray[i + 1]));
-          shelterPoint.push(parseFloat(shelterArray[i]));
-        }
+        let shelterPoint = parsePointString(shelter);
         console.log(shelterPoint);
 
         // Modify geoJson to include the polygon and shelter
@@ -162,7 +152,7 @@ const server = http.createServer((req, res) => {
 
         // Send email to users
 
-        sendEmailToAllUsersForMoment(emailSubject, htmlToSend);
+        sendEmailTolUsers(emailSubject, htmlToSend, polygon);
 
         // console.log(jObj);
         res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -171,11 +161,7 @@ const server = http.createServer((req, res) => {
   }
 });
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
-
-async function sendEmailToAllUsersForMoment(subject, html) {
+async function sendEmailTolUsers(subject, html, polygon) {
   const { Pool } = require('pg');
   //const connectionString = 'postgres://ennfzieu:km1vCgMmJ3E__AlpbWFf7ueZuVh-lT8_@abul.db.elephantsql.com/ennfzieu'
   const pool = new Pool({
@@ -185,9 +171,69 @@ async function sendEmailToAllUsersForMoment(subject, html) {
     database: 'postgres',
     port: 5432,
   });
-  const emails = await pool.query('SELECT email FROM users');
-  console.log(emails.rows);
-  emails.rows.forEach(async (email) => {
-    sendEmail(email.email, subject, '', html);
+
+  const users = await pool.query(
+    'select * from userpreferences join users on userpreferences.userid = users.id'
+  );
+
+  users.rows.forEach((user) => {
+    const latLng = parsePointString(`${user.latitude},${user.longitude}`);
+
+    if (isPointInPolygon(latLng, polygon)) {
+      sendEmail(user.email, subject, '', html);
+    }
   });
+
+  // const emails = await pool.query('SELECT email FROM users');
+  // console.log(emails.rows);
+  // emails.rows.forEach(async (email) => {
+  //   sendEmail(email.email, subject, '', html);
+  // });
 }
+
+function inside(point, vs) {
+  // ray-casting algorithm based on
+  // https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html/pnpoly.html
+
+  let x = point[0],
+    y = point[1];
+
+  let inside = false;
+  for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+    let xi = vs[i][0],
+      yi = vs[i][1];
+    let xj = vs[j][0],
+      yj = vs[j][1];
+
+    let intersect =
+      yi > y != yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+    if (intersect) inside = !inside;
+  }
+
+  return inside;
+}
+
+function parsePolygonString(polygonString) {
+  // Parse the polygon to array of points
+  let polygon = polygonString.split(' ');
+  let polygonPoints = [];
+  for (let i = 0; i < polygon.length; i += 1) {
+    let point = polygon[i].split(',');
+    polygonPoints.push([parseFloat(point[1]), parseFloat(point[0])]);
+  }
+  return polygonPoints;
+}
+
+function parsePointString(pointString) {
+  let point = [];
+  let shelterArray = pointString.split(',');
+  for (let i = 0; i < shelterArray.length; i += 2) {
+    point.push(parseFloat(shelterArray[i + 1]));
+    point.push(parseFloat(shelterArray[i]));
+  }
+  return point;
+}
+
+server.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
+});

@@ -247,13 +247,29 @@ form.addEventListener('submit', (e) => {
   console.log(json);
 
   // Send the XML to the add-event-service
-  const xhr = new XMLHttpRequest();
-  xhr.open('POST', 'http://localhost:4003');
-  xhr.setRequestHeader('Content-Type', 'application/xml');
-  xhr.send(xmlString);
+  // const xhr = new XMLHttpRequest();
+  // xhr.open('POST', 'http://localhost:4003');
+  // xhr.setRequestHeader('Content-Type', 'application/xml');
+  // xhr.send(xmlString);
+
+  fetch('http://localhost:4003', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/xml',
+    },
+    body: xmlString,
+  });
 
   // Send the XML to notification-service
-  xhr.open('POST', 'http://localhost:4004');
-  xhr.setRequestHeader('Content-Type', 'application/xml');
-  xhr.send(xmlString);
+  // xhr.open('POST', 'http://localhost:4004');
+  // xhr.setRequestHeader('Content-Type', 'application/xml');
+  // xhr.send(xmlString);
+
+  fetch('http://localhost:4004', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/xml',
+    },
+    body: xmlString,
+  });
 });
