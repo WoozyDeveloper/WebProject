@@ -1,38 +1,59 @@
-const cardsContainer = document.querySelector('.cards');
+const cardsContainer = document.querySelector(".cards");
 
 function createCard(headline, description, eventImage) {
   // Create a new card element
-  let card_item = document.createElement('li');
-  card_item.classList.add('cards_item');
+  let card_item = document.createElement("li");
+  card_item.classList.add("cards_item");
 
-  let card = document.createElement('div');
-  card.classList.add('card');
+  let card = document.createElement("div");
+  card.classList.add("card");
 
-  let card_image = document.createElement('div');
-  card_image.classList.add('card_image');
-  let card_image_img = document.createElement('img');
+  let card_image = document.createElement("div");
+  card_image.classList.add("card_image");
+  let card_image_img = document.createElement("img");
   card_image_img.src = eventImage;
   card_image.appendChild(card_image_img);
 
-  let card_content = document.createElement('div');
-  card_content.classList.add('card_content');
+  let card_content = document.createElement("div");
+  card_content.classList.add("card_content");
 
-  let card_title = document.createElement('h2');
-  card_title.classList.add('card_title');
+  let card_title = document.createElement("h2");
+  card_title.classList.add("card_title");
   card_title.innerHTML = headline;
 
-  let card_text = document.createElement('p');
-  card_text.classList.add('card_text');
+  let card_text = document.createElement("p");
+  card_text.classList.add("card_text");
   card_text.innerHTML = description;
 
-  let actions = document.createElement('div');
-  actions.classList.add('actions');
+  let actions = document.createElement("div");
+  actions.classList.add("actions");
 
-  let card_btn_end = document.createElement('button');
-  card_btn_end.classList.add('btn');
-  card_btn_end.classList.add('card_btn');
-  card_btn_end.classList.add('btn-end');
-  card_btn_end.innerHTML = 'End';
+  let card_btn_end = document.createElement("button");
+  card_btn_end.classList.add("btn");
+  card_btn_end.classList.add("card_btn");
+  card_btn_end.classList.add("btn-end");
+  card_btn_end.innerHTML = "End";
+  card_btn_end.onclick = async function () {
+    let json = {
+      identifier: identifier,
+    };
+    const settings = {
+      method: "DELETE",
+      body: JSON.stringify(json),
+    };
+    try {
+      const fetchResponse = await fetch("http://localhost:4003", settings);
+      const response = await fetchResponse.json();
+      if (response.status === "success") {
+        console.log("S-a sters");
+        window.location.reload();
+      } else {
+        console.log("problema");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   // Append the the elements to the card
   actions.appendChild(card_btn_end);
@@ -50,19 +71,19 @@ function createCard(headline, description, eventImage) {
 }
 
 const geoJson = {
-  type: 'FeatureCollection',
+  type: "FeatureCollection",
   features: [
     {
-      type: 'Feature',
+      type: "Feature",
       properties: {
-        stroke: '#555555',
-        'stroke-width': 2,
-        'stroke-opacity': 1,
-        fill: '#b33737',
-        'fill-opacity': 0.5,
+        stroke: "#555555",
+        "stroke-width": 2,
+        "stroke-opacity": 1,
+        fill: "#b33737",
+        "fill-opacity": 0.5,
       },
       geometry: {
-        type: 'Polygon',
+        type: "Polygon",
         coordinates: [
           [
             [27.575297355651855, 47.16436280131059],
@@ -75,14 +96,14 @@ const geoJson = {
       },
     },
     {
-      type: 'Feature',
+      type: "Feature",
       properties: {
-        'marker-color': '#16d436',
-        'marker-size': 'medium',
-        'marker-symbol': 'campsite',
+        "marker-color": "#16d436",
+        "marker-size": "medium",
+        "marker-symbol": "campsite",
       },
       geometry: {
-        type: 'Point',
+        type: "Point",
         coordinates: [27.57568359375, 47.16094886127813],
       },
     },
@@ -101,17 +122,17 @@ fetch(`http://localhost:4003`)
 
       // $$$$$$$$$$$$$$$$$$$$
       // Parse the polygon to array of points
-      let polyPoints = polygon.split(' ');
+      let polyPoints = polygon.split(" ");
       let polygonPoints = [];
       for (let i = 0; i < polyPoints.length; i += 1) {
-        let point = polyPoints[i].split(',');
+        let point = polyPoints[i].split(",");
         polygonPoints.push([parseFloat(point[1]), parseFloat(point[0])]);
       }
       // console.log(polygonPoints);
 
       // Parse the shelter to array of points
       let shelterPoint = [];
-      let shelterArray = shelterlocation.split(',');
+      let shelterArray = shelterlocation.split(",");
       for (let i = 0; i < shelterArray.length; i += 2) {
         shelterPoint.push(parseFloat(shelterArray[i + 1]));
         shelterPoint.push(parseFloat(shelterArray[i]));
@@ -136,18 +157,18 @@ fetch(`http://localhost:4003`)
 function createCSV(array) {
   var keys = Object.keys(array[0]); //Collects Table Headers
 
-  var result = ''; //CSV Contents
+  var result = ""; //CSV Contents
 
-  result += keys.join(','); //Comma Seperates Headers
-  result += '\n'; //New Row
+  result += keys.join(","); //Comma Seperates Headers
+  result += "\n"; //New Row
 
   array.forEach(function (item) {
     //Goes Through Each Array Object
     keys.forEach(function (key) {
       //Goes Through Each Object value
-      result += item[key].split(',').join(':') + ','; //Comma Seperates Each Key Value in a Row
+      result += item[key].split(",").join(":") + ","; //Comma Seperates Each Key Value in a Row
     });
-    result += '\n'; //Creates New Row
+    result += "\n"; //Creates New Row
   });
 
   return result;
@@ -160,12 +181,12 @@ function exportCSV() {
     })
     .then((json) => {
       console.log(json);
-      csv = 'data:text/csv;charset=utf-8,' + createCSV(json); //Creates CSV File Format
+      csv = "data:text/csv;charset=utf-8," + createCSV(json); //Creates CSV File Format
       excel = encodeURI(csv); //Links to CSV
 
-      link = document.createElement('a');
-      link.setAttribute('href', excel); //Links to CSV File
-      link.setAttribute('download', 'Disasters.csv');
+      link = document.createElement("a");
+      link.setAttribute("href", excel); //Links to CSV File
+      link.setAttribute("download", "Disasters.csv");
       link.click();
     });
 }
