@@ -13,4 +13,5 @@ De asemenea, CoSe transmite notificări și alerte populației (afectate) prin d
 
 ### Documentatie
 
-https://woozydeveloper.github.io/WebProject/pages/doc.html :)
+
+https://woozydeveloper.github.io/WebProject/public/pages/doc.html:)
